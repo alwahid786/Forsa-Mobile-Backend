@@ -43,6 +43,7 @@ class SignupRequest extends FormRequest
             $rules['business_name'] = 'required|string';
             $rules['business_tagline'] = 'required|string';
             $rules['business_description'] = 'required|string';
+            $rules['business_image'] = 'required|string';
         }
         return $rules;
     }
