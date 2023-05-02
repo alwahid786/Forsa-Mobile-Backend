@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class OrderHistory extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'vendor_id',
+        'title',
+        'size',
+        'condition',
+        'description',
+        'category_id',
+        'brand',
+        'price',
+        'country',
+        'city',
+        'order_id',
+        'product_id',
+        'location'
+    ];
+
+    public function insertData($data, $productId, $orderId)
+    {
+        $data['product_id'] = $productId;
+        $data['order_id'] = $orderId;
+        // dd($data);
+        return $this->create($data);
+    }
+}

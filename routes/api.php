@@ -4,6 +4,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\VendorController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\SettingController;
 
 
 /*
@@ -28,12 +35,74 @@ Route::post('/reset/password', [AuthController::class, 'resetPassword']);
 Route::middleware('auth:api')->group(function () {
     Route::post('/update/to-vendor', [AuthController::class, 'updateToVendorProfile']);
 });
-
+// ------------------------Admin Routes---------------------------
 // Category Routes (with Authentication)
 Route::group(
     ['prefix' => 'category', 'middleware' => ['api', 'auth:api']],
     function () {
         Route::post('/add-category', [CategoryController::class, 'addCategory']);
         Route::post('/list', [CategoryController::class, 'categoryList']);
+    }
+);
+Route::middleware('auth:api')->group(function () {
+    Route::post('/add/banner', [AdminController::class, 'addBanner']);
+    Route::get('/banners/list', [AdminController::class, 'allBanners']);
+});
+
+// -------------------------------------Vendor Routes-------------------------------------
+
+// Product Routes (with Authentication)
+Route::group(
+    ['prefix' => 'product', 'middleware' => ['api', 'auth:api']],
+    function () {
+        Route::post('/add-product', [ProductController::class, 'addProduct']);
+    }
+);
+
+// Vendor Dashboard Routes (with Authentication)
+Route::group(
+    ['prefix' => 'vendor', 'middleware' => ['api', 'auth:api']],
+    function () {
+        Route::post('/dashboard', [VendorController::class, 'dashboardData']);
+    }
+);
+
+
+// ------------------User Side Routes---------------------
+// User Dashboard Routes (with Authentication)
+Route::group(
+    ['prefix' => 'user', 'middleware' => ['api', 'auth:api']],
+    function () {
+        Route::get('/dashboard', [UserController::class, 'dashboardData']);
+        Route::post('/product/detail', [ProductController::class, 'productDetail']);
+        Route::post('/search/product', [ProductController::class, 'searchProducts']);
+    }
+);
+
+// User Order Routes (with Authentication)
+Route::group(
+    ['prefix' => 'user', 'middleware' => ['api', 'auth:api']],
+    function () {
+        Route::post('/payment-intent', [OrderController::class, 'paymentIntent']);
+        Route::post('/place-order', [OrderController::class, 'placeOrder']);
+        Route::get('/order-history', [OrderController::class, 'orderHistory']);
+    }
+);
+
+// Common Chat Routes (with Authentication)
+Route::group(
+    ['prefix' => 'chat', 'middleware' => ['api', 'auth:api']],
+    function () {
+        Route::post('/send-message', [ChatController::class, 'sendMessage']);
+        Route::get('/all-chats', [ChatController::class, 'allChats']);
+        Route::post('/chat-details', [ChatController::class, 'chatDetail']);
+    }
+);
+
+// Settings Routes (with Authentication)
+Route::group(
+    ['prefix' => 'settings', 'middleware' => ['api', 'auth:api']],
+    function () {
+        Route::post('/get-fileLink', [SettingController::class, 'uploadFile']);
     }
 );
