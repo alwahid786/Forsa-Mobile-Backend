@@ -32,7 +32,7 @@ class SignupRequest extends FormRequest
             'name' => 'required|max:255|string',
             'last_name' => 'required|max:255|string',
             'username' => 'required|string|unique:users,username',
-            'email' => 'required|email|regex:/(.+)@(.+)\.(.+)/i|unique:users,email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed|min:8',
             'password_confirmation' => 'required',
             'country' => 'required|string',
