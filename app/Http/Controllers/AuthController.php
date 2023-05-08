@@ -110,8 +110,8 @@ class AuthController extends Controller
         if (!User::where('email', $email)->update(['otp_code' => $otp])) {
             return $this->sendError('Unable to proccess. Please try again later');
         }
-        Mail::to($email)->send(new OtpMail($otp));
-        return $this->sendResponse([], "An OTP Code is sent to your registered email.");
+        // Mail::to($email)->send(new OtpMail($otp));
+        return $this->sendResponse($otp, "An OTP Code is sent to your registered email.");
     }
 
     // Verify Otp Code Function
