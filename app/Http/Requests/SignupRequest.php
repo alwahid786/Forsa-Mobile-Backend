@@ -36,6 +36,7 @@ class SignupRequest extends FormRequest
             'password' => 'required|confirmed|min:8',
             'password_confirmation' => 'required',
             'country' => 'required|string',
+            'country_code' => 'required',
             'phone' => 'required|string|min:7|max:15',
             'is_business' => 'required|boolean',
         ];
