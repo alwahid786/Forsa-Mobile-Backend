@@ -29,8 +29,7 @@ class UserController extends Controller
         $categories = Category::all();
         $brands = Product::groupBy('brand')->pluck('brand');
         $saleProducts = Product::where('discount', '!=', null)->with('productImages')->get();
-        $favouriteProducts =
-            Product::select('products.*', DB::raw('COUNT(*) as count'))
+        $favouriteProducts = Product::select('products.*', DB::raw('COUNT(*) as count'))
             ->join('favourites', 'favourites.product_id', '=', 'products.id')
             ->groupBy('products.id')
             ->orderByDesc('count')
