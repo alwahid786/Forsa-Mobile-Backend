@@ -38,6 +38,11 @@ class ChatController extends Controller
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
+        if (filter_var("some@address.com", FILTER_VALIDATE_EMAIL)) {
+            // valid address
+        } else {
+            // invalid address
+        }
         $request->merge(['client_id' => auth()->user()->id]);
         $chat = Chat::updateOrCreate(['id' => $request->chat_id], $request->all());
 

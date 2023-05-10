@@ -55,6 +55,11 @@ class ProductController extends Controller
         $product->condition = $request->condition;
         $product->brand = $request->brand;
         $product->price = $request->price;
+        if ($request->has('discount')) {
+            $discount = ($request->price * $request->discount) / 100;
+            $product->discount = $request->discount;
+            $product->discount_price = $request->price - $discount;
+        }
         if ($request->pick_profile_location == 1) {
             $product->country = auth()->user()->country;
             $product->city = auth()->user()->city;

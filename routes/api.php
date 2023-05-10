@@ -106,3 +106,11 @@ Route::group(
         Route::post('/get-fileLink', [SettingController::class, 'uploadFile']);
     }
 );
+
+// Common Routes (with Authentication)
+Route::group(
+    ['prefix' => 'common', 'middleware' => ['api', 'auth:api']],
+    function () {
+        Route::post('/change-order-status', [OrderController::class, 'changeOrderStatus']);
+    }
+);

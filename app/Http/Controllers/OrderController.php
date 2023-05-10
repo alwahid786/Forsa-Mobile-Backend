@@ -108,4 +108,21 @@ class OrderController extends Controller
         $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
         return $this->sendResponse($order, "Order details found successfully.");
     }
+
+    // Change Order Status 
+    public function changeOrderStatus(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|exists:orders,id',
+            'status' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->messages()->all()));
+        }
+        $order = Order::where('id', $request->order_id)->update(['status' => $request->status]);
+        if ($order) {
+            return $this->sendResponse([], "Order status successfully updated");
+        }
+        return $this->sendError('Could not update status, Try later!');
+    }
 }

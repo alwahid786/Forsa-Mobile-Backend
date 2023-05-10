@@ -26,9 +26,11 @@ class UserController extends Controller
         $banners = Banner::all();
         $categories = Category::all();
         $brands = Product::groupBy('brand')->pluck('brand');
+        $saleProducts = Product::where('discount', '!=', null)->with('productImages')->get();
         $success = [];
         $success['banners'] = $banners;
         $success['categories'] = $categories;
+        $success['saleProducts'] = $saleProducts;
         $success['brands'] = $brands;
         return $this->sendResponse($success, 'User Dashboard data.');
     }
