@@ -17,6 +17,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'category_name' => 'required|string',
+            'category_image' => 'required|string',
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
@@ -28,6 +29,7 @@ class CategoryController extends Controller
         }
 
         $category->category_name = $request->category_name;
+        $category->category_image = $request->category_image;
         if (isset($request->parent_id)) {
             $category->parent_id = $request->parent_id;
         }
