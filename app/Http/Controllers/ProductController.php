@@ -157,4 +157,35 @@ class ProductController extends Controller
             return $this->sendError("No Products found against this search. Use specific name to search for better results.");
         }
     }
+
+    // Add to Favourite 
+    public function addToFavourite(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->messages()->all()));
+        }
+        $loginUserId = auth()->user()->id;
+        $isExists = Favourite::firstWhere([
+            'user_id' => $loginUserId,
+            'product_id' => $request->product_id,
+        ]);
+        if (!$isExists) {
+            $likeFav = Favourite::create([
+                'user_id' => $loginUserId,
+                'product_id' => $request->product_id,
+            ]);
+            if (!$likeFav) {
+                return $this->sendError('Something went wrong');
+            }
+            return $this->sendResponse([], 'Added to favourites list.');
+        } else {
+            if (!Favourite::where('id', $isExists->id)->delete()) {
+                return $this->sendError('Something went wrong.');
+            }
+            return $this->sendResponse([], 'Removed from favourites list.');
+        }
+    }
 }
