@@ -14,7 +14,9 @@ use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
+use App\Models\Favourite;
 use Illuminate\Support\Facades\Mail;
+use DB;
 
 class UserController extends Controller
 {
@@ -27,10 +29,19 @@ class UserController extends Controller
         $categories = Category::all();
         $brands = Product::groupBy('brand')->pluck('brand');
         $saleProducts = Product::where('discount', '!=', null)->with('productImages')->get();
+        $favouriteProducts =
+            Product::select('products.*', DB::raw('COUNT(*) as count'))
+            ->join('favourites', 'favourites.product_id', '=', 'products.id')
+            ->groupBy('products.id')
+            ->orderByDesc('count')
+            ->with('productImages')
+            ->take(10)
+            ->get();
         $success = [];
         $success['banners'] = $banners;
         $success['categories'] = $categories;
         $success['saleProducts'] = $saleProducts;
+        $success['popularProducts'] = $favouriteProducts;
         $success['brands'] = $brands;
         return $this->sendResponse($success, 'User Dashboard data.');
     }
