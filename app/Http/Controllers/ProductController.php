@@ -16,6 +16,7 @@ use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Carbon;
 
 class ProductController extends Controller
 {
@@ -121,12 +122,15 @@ class ProductController extends Controller
         }
 
         Views::updateOrCreate(['product_id' => $productId, 'user_id' => auth()->user()->id]);
+        $carbon = new Carbon($product->created_at);
+        $formatted_date = $carbon->format('M d, Y');
 
         $success['productDetail'] = $product;
         $success['views'] = $views;
         $success['favourites'] = $favourites;
         $success['buyerProtectionFees'] = $protectionfees + 0.70;
         $success['total'] = $protectionfees + 0.70 + $product->price;
+        $success['uploaded'] = $formatted_date;
         $success['products'] = $allProducts;
         return $this->sendResponse($success, 'Product Details');
     }
