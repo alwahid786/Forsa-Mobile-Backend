@@ -112,7 +112,7 @@ class ProductController extends Controller
 
         $protectionfees = ($product->price * 5) / 100;
 
-        $allProducts = Product::where('vendor_id', auth()->user()->id)->limit(5)->get();
+        $allProducts = Product::where('vendor_id', $product->vendor_id)->limit(5)->get();
         if (!empty($allProducts)) {
             foreach ($allProducts as $productNew) {
                 $productNew['images'] = ProductImage::where('product_id', $productNew->id)->get();

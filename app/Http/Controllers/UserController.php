@@ -27,7 +27,7 @@ class UserController extends Controller
     {
         $banners = Banner::all();
         $categories = Category::all();
-        $brands = Product::groupBy('brand')->pluck('brand');
+        $brands = Product::groupBy('brand')->with('vendor')->pluck('brand');
         $saleProducts = Product::where('discount', '!=', null)->with('productImages')->get();
         $favouriteProducts = Product::select('products.*', DB::raw('COUNT(*) as count'))
             ->join('favourites', 'favourites.product_id', '=', 'products.id')

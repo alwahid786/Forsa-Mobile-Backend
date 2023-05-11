@@ -27,7 +27,6 @@ class CategoryController extends Controller
         } else {
             $category = new Category;
         }
-
         $category->category_name = $request->category_name;
         $category->category_image = $request->category_image;
         if (isset($request->parent_id)) {
