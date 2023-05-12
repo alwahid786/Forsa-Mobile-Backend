@@ -101,12 +101,15 @@ class OrderController extends Controller
     public function orderHistory(Request $request)
     {
         $loginUserId = auth()->user()->id;
-        $order = Order::where('user_id', $loginUserId)->with('orderHistory')->first();
-        $order->statusText = $order->status_text;
-
-        $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
-        $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
-        return $this->sendResponse($order, "Order details found successfully.");
+        $orders = Order::where('user_id', $loginUserId)->with('orderHistory')->get();
+        if (!empty($orders)) {
+            foreach ($orders as $order) {
+                $order->statusText = $order->status_text;
+                $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
+                $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
+            }
+        }
+        return $this->sendResponse($orders, "Order details found successfully.");
     }
 
     // Change Order Status 
