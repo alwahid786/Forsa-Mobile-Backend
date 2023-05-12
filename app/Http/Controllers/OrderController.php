@@ -96,7 +96,6 @@ class OrderController extends Controller
         return $this->sendResponse($pay_int_res, 'Payment Intent');
     }
 
-
     // Order history 
     public function orderHistory(Request $request)
     {
@@ -105,6 +104,7 @@ class OrderController extends Controller
         if (!empty($orders)) {
             foreach ($orders as $order) {
                 $order->statusText = $order->status_text;
+                $order->orderDate = date('M d, Y',strtotime($order->created_at));
                 $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
                 $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
             }
