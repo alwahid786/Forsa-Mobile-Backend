@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class OrderHistory extends Model
 {
     use HasFactory;
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'product_id');
+    }
 
     protected $fillable = [
         'vendor_id',
