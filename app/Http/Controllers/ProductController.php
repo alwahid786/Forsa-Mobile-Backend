@@ -139,7 +139,7 @@ class ProductController extends Controller
     public function searchProducts(Request $request)
     {
         if ($request->has('name')) {
-            $productsData = Product::where('title', 'LIKE', '%' . $request->name . '%');
+            $productsData = Product::where('title', 'LIKE', '%' . $request->name . '%')->with('productImages');
         } else {
             $productsData = (new Product())->newQuery();
             if ($request->has('country')) {
