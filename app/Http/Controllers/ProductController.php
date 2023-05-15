@@ -139,7 +139,7 @@ class ProductController extends Controller
     public function searchProducts(Request $request)
     {
         if ($request->has('name')) {
-            $productsData = Product::where('title', 'LIKE', '%' . $request->name . '%')->with('productImages');
+            $productsData = Product::where('title', 'LIKE', '%' . $request->name . '%');
         } else {
             $productsData = (new Product())->newQuery();
             if ($request->has('country')) {
@@ -156,6 +156,9 @@ class ProductController extends Controller
         }
         $products = $productsData->get();
         if (count($products) > 0) {
+            foreach ($products as $product) {
+                $product['images'] = ProductImage::where('product_id', $product->id)->get();
+            }
             return $this->sendResponse($products, 'Available products matching your search criteria');
         } else {
             return $this->sendError("No Products found against this search. Use specific name to search for better results.");
