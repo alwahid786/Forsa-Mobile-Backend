@@ -125,8 +125,8 @@ class OrderController extends Controller
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
         if ($request->status == 5) {
-            $orderStatus = Order::where('id', $request->order_id)->pluck('status');
-            if ($orderStatus != 4) {
+            $orderStatus = Order::where('id', $request->order_id)->first();
+            if ($orderStatus->status != 4) {
                 return $this->sendError('This order is not delivered yet! You cannot complete it before it is delivered.');
             }
         }
@@ -152,8 +152,7 @@ class OrderController extends Controller
         }
         // Check Order status if Completed 
         $orderStatus = Order::where('id', $request->order_id)->first();
-        dd($orderStatus->status);
-        if ($orderStatus != 5) {
+        if ($orderStatus->status != 5) {
             return $this->sendError('You cannot add review on an uncompleted order!');
         }
         // Check if rating is in between 1-5 
