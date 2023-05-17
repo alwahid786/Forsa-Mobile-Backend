@@ -146,4 +146,15 @@ class AuthController extends Controller
         }
         return $this->sendResponse([], 'Your Password has been successfully updated!');
     }
+
+    // Logout API 
+    public function logout()
+    {
+        if (Auth::check()) {
+            // Log the user out
+            Auth::logout();
+            return $this->sendResponse([], "logged Out Successfully!");
+        }
+        return $this->sendError('Unauthorized');
+    }
 }
