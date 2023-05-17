@@ -88,6 +88,7 @@ Route::group(
         Route::get('/order-history', [OrderController::class, 'orderHistory']);
         Route::post('/add-favourite', [ProductController::class, 'addToFavourite']);
         Route::post('/add-review', [OrderController::class, 'addReview']);
+        Route::get('/favourites-list', [ProductController::class, 'favouritesList']);
     }
 );
 

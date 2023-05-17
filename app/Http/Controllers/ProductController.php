@@ -198,4 +198,15 @@ class ProductController extends Controller
             return $this->sendResponse([], 'Removed from favourites list.');
         }
     }
+
+    // Fvaourite products List 
+    public function favouritesList(Request $request)
+    {
+        $loginUserId = auth()->user()->id;
+        $favourites = Favourite::where('user_id', $loginUserId)->with('product', 'product.productImages')->get();
+        if (count($favourites) > 0) {
+            return $this->sendResponse($favourites, 'Your favourites list');
+        }
+        return $this->sendError('No Products found in your Favourites List!');
+    }
 }
