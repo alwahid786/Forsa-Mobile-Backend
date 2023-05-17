@@ -152,6 +152,7 @@ class OrderController extends Controller
         }
         // Check Order status if Completed 
         $orderStatus = Order::where('id', $request->order_id)->pluck('status');
+        dd($orderStatus);
         if ($orderStatus != 5) {
             return $this->sendError('You cannot add review on an uncompleted order!');
         }
