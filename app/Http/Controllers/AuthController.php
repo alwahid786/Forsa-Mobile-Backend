@@ -152,7 +152,7 @@ class AuthController extends Controller
     {
         if (Auth::check()) {
             // Log the user out
-            Auth::logout();
+            Auth::guard('session')->logout();
             return $this->sendResponse([], "logged Out Successfully!");
         }
         return $this->sendError('Unauthorized');
