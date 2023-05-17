@@ -13,6 +13,8 @@ use App\Models\Views;
 use App\Models\Favourite;
 use App\Models\Order;
 use App\Models\OrderHistory;
+use App\Models\Review;
+use App\Models\ReviewImage;
 use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
@@ -104,7 +106,7 @@ class OrderController extends Controller
         if (!empty($orders)) {
             foreach ($orders as $order) {
                 $order->statusText = $order->status_text;
-                $order->orderDate = date('M d, Y',strtotime($order->created_at));
+                $order->orderDate = date('M d, Y', strtotime($order->created_at));
                 $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
                 $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
             }
@@ -122,10 +124,59 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
+        if ($request->status == 5) {
+            $orderStatus = Order::where('id', $request->order_id)->pluck('status');
+            if ($orderStatus != 4) {
+                return $this->sendError('This order is not delivered yet! You cannot complete it before it is delivered.');
+            }
+        }
         $order = Order::where('id', $request->order_id)->update(['status' => $request->status]);
         if ($order) {
             return $this->sendResponse([], "Order status successfully updated");
         }
         return $this->sendError('Could not update status, Try later!');
+    }
+
+    // Add Review Function 
+    public function addReview(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'order_id' => 'required|exists:orders,id',
+            'user_id' => 'required|exists:users,id',
+            'rating' => 'required',
+            'review_text' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->messages()->all()));
+        }
+        // Check Order status if Completed 
+        $orderStatus = Order::where('order_id', $request->order_id)->pluck('status');
+        if ($orderStatus != 5) {
+            return $this->sendError('You cannot add review on an uncompleted order!');
+        }
+        // Check if rating is in between 1-5 
+        if($request->rating < 1 || $request->rating > 5){
+            return $this->sendError('Rating should be in between 1 to 5');
+        }
+        // Add review 
+        $review = new Review;
+        $review->product_id = $request->product_id;
+        $review->user_id = $request->user_id;
+        $review->rating = $request->rating;
+        $review->review_text = $request->review_text;
+        $reviewStatus = $review->save();
+        if ($reviewStatus) {
+            if ($request->has('review_images') && !empty($request->review_images)) {
+                foreach ($request->review_images as $image) {
+                    $reviewImage = new ReviewImage;
+                    $reviewImage->review_id = $review->id;
+                    $reviewImage->review_image = $image;
+                    $reviewImage->save();
+                }
+            }
+            return $this->sendResponse([], 'Review Added successfully');
+        }
+        return $this->sendError('Something went wrong! try again later.');
     }
 }

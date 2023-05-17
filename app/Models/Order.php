@@ -30,7 +30,7 @@ class Order extends Model
                 return 'Ready To Deliver';
             case 3:
                 return 'On The Way';
-            case 4:
+            case 4: 
                 return 'Delivered';
             case 5:
                 return 'Completed';
