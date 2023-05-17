@@ -161,7 +161,10 @@ class ProductController extends Controller
             }
             return $this->sendResponse($products, 'Available products matching your search criteria');
         } else {
-            return $this->sendError("No Products found against this search. Use specific name to search for better results.");
+            if ($request->has('name')) {
+                return $this->sendError("No Products found against this search. Use specific name to search for better results.");
+            }
+            return $this->sendError("No Products found against this filter.");
         }
     }
 
