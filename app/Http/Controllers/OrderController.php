@@ -151,8 +151,8 @@ class OrderController extends Controller
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
         // Check Order status if Completed 
-        $orderStatus = Order::where('id', $request->order_id)->first('status');
-        dd($orderStatus);
+        $orderStatus = Order::where('id', $request->order_id)->first();
+        dd($orderStatus->status);
         if ($orderStatus != 5) {
             return $this->sendError('You cannot add review on an uncompleted order!');
         }
