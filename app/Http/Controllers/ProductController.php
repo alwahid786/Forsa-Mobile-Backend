@@ -12,7 +12,7 @@ use App\Models\Category;
 use App\Models\Views;
 use App\Models\Favourite;
 use App\Http\Requests\SignupRequest;
-use App\Http\Traits\ResponseTrait;
+use App\Http\Traits\ResponseTrait;  
 use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;

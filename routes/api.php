@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ContactController;
 
 
 /*
@@ -30,6 +31,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotEmail']);
 Route::post('/verify/otp', [AuthController::class, 'verifyOtp']);
 Route::post('/reset/password', [AuthController::class, 'resetPassword']);
+
+// Setting Routes (without Authentication)
+Route::post('/contact', [ContactController::class, 'contactUs']);
 
 // Auth Routes (with Authentication)
 Route::middleware('auth:api')->group(function () {
