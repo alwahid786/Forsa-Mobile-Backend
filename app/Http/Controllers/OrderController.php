@@ -151,12 +151,12 @@ class OrderController extends Controller
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
         // Check Order status if Completed 
-        $orderStatus = Order::where('order_id', $request->order_id)->pluck('status');
+        $orderStatus = Order::where('id', $request->order_id)->pluck('status');
         if ($orderStatus != 5) {
             return $this->sendError('You cannot add review on an uncompleted order!');
         }
         // Check if rating is in between 1-5 
-        if($request->rating < 1 || $request->rating > 5){
+        if ($request->rating < 1 || $request->rating > 5) {
             return $this->sendError('Rating should be in between 1 to 5');
         }
         // Add review 
