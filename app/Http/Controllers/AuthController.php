@@ -148,11 +148,11 @@ class AuthController extends Controller
     }
 
     // Logout API 
-    public function logout()
+    public function logout(Request $request)
     {
         if (Auth::check()) {
             // Log the user out
-            Auth::guard('session')->logout();
+            $request->user()->tokens()->delete();
             return $this->sendResponse([], "logged Out Successfully!");
         }
         return $this->sendError('Unauthorized');
