@@ -191,13 +191,15 @@ class ProductController extends Controller
                 return $this->sendError('Something went wrong');
             }
             $favourite = 'red';
-            return $this->sendResponse($favourite, 'Added to favourites list.');
+            $success['favourite'] = $favourite;
+            return $this->sendResponse($success, 'Added to favourites list.');
         } else {
             if (!Favourite::where('id', $isExists->id)->delete()) {
                 return $this->sendError('Something went wrong.');
             }
             $favourite = 'white';
-            return $this->sendResponse($favourite, 'Removed from favourites list.');
+            $success['favourite'] = $favourite;
+            return $this->sendResponse($success, 'Removed from favourites list.');
         }
     }
 
