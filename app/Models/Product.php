@@ -13,18 +13,35 @@ class Product extends Model
         'views'
     ];
 
+    protected $append = [
+        "favourites_count",
+        "is_favourite"
+    ];
+
     public function productImages()
     {
         return $this->hasMany(ProductImage::class);
+    }
+    public function favourites()
+    {
+        return $this->hasMany(Favourite::class);
     }
 
     public function vendor()
     {
         return $this->belongsTo(User::class);
     }
-    
+
     public function getProductById($id)
     {
         return $this->where('id', $id)->first();
+    }
+    public function getFavouritesCountAttribute()
+    {
+        return $this->favourites()->count();
+    }
+    public function getIsFavouriteAttribute()
+    {
+        return $this->favourites()->where('user_id', auth()->user()->id)->count();
     }
 }

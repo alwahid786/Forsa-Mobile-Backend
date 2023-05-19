@@ -34,7 +34,6 @@ class UserController extends Controller
             ->groupBy('products.id')
             ->orderByDesc('count')
             ->with('productImages')
-            ->take(10)
             ->get();
         $success = [];
         $success['banners'] = $banners;
