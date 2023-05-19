@@ -81,6 +81,7 @@ Route::group(
         Route::get('/dashboard', [UserController::class, 'dashboardData']);
         Route::post('/product/detail', [ProductController::class, 'productDetail']);
         Route::post('/search/product', [ProductController::class, 'searchProducts']);
+        Route::post('/update-profile', [UserController::class, 'updateProfile']);
     }
 );
 

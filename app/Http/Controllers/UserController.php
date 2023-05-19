@@ -43,4 +43,21 @@ class UserController extends Controller
         $success['brands'] = $brands;
         return $this->sendResponse($success, 'User Dashboard data.');
     }
+
+    // Update profile function 
+    public function updateProfile(Request $request)
+    {
+        // $user = (new User())->newQuery();
+        // if ($request->has('')) {
+        //     $productsData->where('country', $request->country);
+        // }
+        // if ($request->has('sub_category')) {
+        //     $productsData->where('category_id', $request->sub_category);
+        // }
+        // if (!$request->has('sub_category')) {
+        //     if ($request->has('category')) {
+        //         $productsData->where('category_id', $request->category);
+        //     }
+        // }
+    }
 }
