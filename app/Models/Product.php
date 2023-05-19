@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Favourite;
 
 class Product extends Model
 {
@@ -13,11 +12,11 @@ class Product extends Model
     protected $hidden = [
         'views'
     ];
+    protected $appends = [
+        'favourites_count',
+        'is_favourite'
+    ];
 
-    // protected $append = [
-    //     "favourites_count",
-    //     "is_favourite"
-    // ];
 
     public function productImages()
     {
