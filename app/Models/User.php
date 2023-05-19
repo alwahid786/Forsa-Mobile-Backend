@@ -26,7 +26,8 @@ class User extends Authenticatable
         'username',
         'last_name',
         'country',
-        'is_business'
+        'is_business',
+        'country_code'
     ];
 
     /**
