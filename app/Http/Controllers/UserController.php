@@ -50,7 +50,8 @@ class UserController extends Controller
         $data = $request->except('_token');
         $profile = User::where('id', auth()->user()->id)->update($data);
         if ($profile) {
-            return $this->sendResponse($profile, 'User Profile updated Successfully!.');
+            $user = User::find(auth()->user()->id);
+            return $this->sendResponse($user, 'User Profile updated Successfully!.');
         }
         return $this->sendError('Your Profile cannot be updated at the moment. Please Try again later.');
     }
