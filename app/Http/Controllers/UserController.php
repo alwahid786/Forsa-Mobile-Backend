@@ -47,17 +47,11 @@ class UserController extends Controller
     // Update profile function 
     public function updateProfile(Request $request)
     {
-        // $user = (new User())->newQuery();
-        // if ($request->has('')) {
-        //     $productsData->where('country', $request->country);
-        // }
-        // if ($request->has('sub_category')) {
-        //     $productsData->where('category_id', $request->sub_category);
-        // }
-        // if (!$request->has('sub_category')) {
-        //     if ($request->has('category')) {
-        //         $productsData->where('category_id', $request->category);
-        //     }
-        // }
+        $data = $request->except('_token');
+        $profile = User::where('id', auth()->user()->id)->update($data);
+        if ($profile) {
+            return $this->sendResponse($profile, 'User Profile updated Successfully!.');
+        }
+        return $this->sendError('Your Profile cannot be updated at the moment. Please Try again later.');
     }
 }
