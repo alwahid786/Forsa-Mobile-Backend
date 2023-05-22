@@ -17,6 +17,7 @@ use App\Models\Review;
 use App\Models\ReviewImage;
 use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Http\Traits\NotificationTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
@@ -24,7 +25,7 @@ use Stripe;
 
 class OrderController extends Controller
 {
-    use ResponseTrait;
+    use ResponseTrait, NotificationTrait;
 
     // Place Order Function 
     public function placeOrder(Request $request)
@@ -61,6 +62,18 @@ class OrderController extends Controller
         $orderHistory = new OrderHistory;
         $status = $orderHistory->insertData($productData->toArray(), $request->product_id, $order->id);
         $order['productDetails'] = $status;
+
+        // Send Notification to Vendor 
+        $userName = auth()->user()->name;
+        $message = $userName . ' placed an order on your product ' . $productData['title'];
+        $image = ProductImage::where('product_id', $request->product_id)->first('image');
+        $data = [
+            'action' => 'ORDER_PLACED',
+            'image' => $image->image
+        ];
+        $this->createNotification($request->vendor_id, $message, $data, 'Order Placed');
+
+        // Return response 
         return $this->sendResponse($order, 'Order created successfully.');
     }
 
@@ -124,13 +137,30 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
+        $orderStatus = Order::where('id', $request->order_id)->first();
         if ($request->status == 5) {
-            $orderStatus = Order::where('id', $request->order_id)->first();
             if ($orderStatus->status != 4) {
                 return $this->sendError('This order is not delivered yet! You cannot complete it before it is delivered.');
             }
         }
         $order = Order::where('id', $request->order_id)->update(['status' => $request->status]);
+
+        // Send Notification 
+        if ($request->status == 5) {
+            $message = 'Your order #' . $request->order_id . ' has been marked as completed.';
+            $receiverId = $orderStatus->vendor_id;
+        } else {
+            $message = 'Your order #' . $request->order_id . ' status has been changed';
+            $receiverId = $orderStatus->user_id;
+        }
+        $image = ProductImage::where('product_id', $orderStatus->product_id)->first('image');
+        $data = [
+            'action' => 'ORDER_STATUS_CHANGED',
+            'image' => $image->image
+        ];
+        $this->createNotification($receiverId, $message, $data, 'Order Status Changed');
+
+        // Return response 
         if ($order) {
             return $this->sendResponse([], "Order status successfully updated");
         }
@@ -175,6 +205,19 @@ class OrderController extends Controller
                     $reviewImage->save();
                 }
             }
+
+            // Send Notification 
+            $userName = auth()->user()->name;
+            $message = $userName . ' has added a review on your product.';
+            $product = Product::where('id', $request->product_id)->first();
+            $receiverId = $product->vendor_id;
+            $image = ProductImage::where('product_id', $product->id)->first('image');
+            $data = [
+                'action' => 'REVIEW_ADDED',
+                'image' => $image->image
+            ];
+            $this->createNotification($receiverId, $message, $data, 'Review Added');
+
             return $this->sendResponse([], 'Review Added successfully');
         }
         return $this->sendError('Something went wrong! try again later.');

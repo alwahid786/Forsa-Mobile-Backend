@@ -12,6 +12,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NotificationController;
 
 
 /*
@@ -121,5 +122,8 @@ Route::group(
     ['prefix' => 'common', 'middleware' => ['api', 'auth:api']],
     function () {
         Route::post('/change-order-status', [OrderController::class, 'changeOrderStatus']);
+        Route::get('/notifications', [NotificationController::class, 'getNotifications']);
+        Route::post('/notifications/mark-read', [NotificationController::class, 'markNotificationAsRead']);
+        Route::post('/notifications/delete', [NotificationController::class, 'deleteNotification']);
     }
 );
