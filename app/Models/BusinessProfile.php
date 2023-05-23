@@ -22,4 +22,19 @@ class BusinessProfile extends Model
         'business_image',
         'profile_status'
     ];
+    protected $appends = [
+        'rating'
+    ];
+
+    public function getRatingAttribute()
+    {
+        $vendorId = $this->user_id;
+        $ratingCount = Review::where('vendor_id', $vendorId)->count();
+        if ($ratingCount > 0) {
+            $ratingSum = Review::where('vendor_id', $vendorId)->sum('rating');
+            $avgRating = $ratingSum / $ratingCount;
+            return $avgRating;
+        }
+        return $ratingCount;
+    }
 }

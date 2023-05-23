@@ -174,6 +174,7 @@ class OrderController extends Controller
             'product_id' => 'required|exists:products,id',
             'order_id' => 'required|exists:orders,id',
             'user_id' => 'required|exists:users,id',
+            'vendor_id' => 'required|exists:users,id',
             'rating' => 'required',
             'review_text' => 'required'
         ]);
@@ -193,6 +194,7 @@ class OrderController extends Controller
         $review = new Review;
         $review->product_id = $request->product_id;
         $review->user_id = $request->user_id;
+        $review->vendor_id = $request->vendor_id;
         $review->rating = $request->rating;
         $review->review_text = $request->review_text;
         $reviewStatus = $review->save();

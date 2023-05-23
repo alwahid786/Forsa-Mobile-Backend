@@ -127,3 +127,4 @@ Route::group(
         Route::post('/notifications/delete', [NotificationController::class, 'deleteNotification']);
     }
 );
+ 
