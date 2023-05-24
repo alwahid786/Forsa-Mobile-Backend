@@ -48,7 +48,8 @@ class SettingController extends Controller
                 $message = $e->getMessage();
                 return $this->failure($message);
             }
-            return $this->sendResponse($fileNames, 'Image Links');
+            $success['file_links'] = $fileNames;
+            return $this->sendResponse($success, 'File Links');
         }
     }
 }

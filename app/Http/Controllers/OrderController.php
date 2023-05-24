@@ -38,6 +38,7 @@ class OrderController extends Controller
             'longitude' => 'required',
             'payment_intent' => 'required',
             'intent_id' => 'required',
+            'total' => 'required'
         ]);
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
@@ -53,6 +54,7 @@ class OrderController extends Controller
         $order->payment_intent = $request->payment_intent;
         $order->intent_id = $request->intent_id;
         $order->user_id = auth()->user()->id;
+        $order->total = $request->total;
         $order->save();
 
         // Get Product 

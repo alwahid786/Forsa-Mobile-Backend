@@ -13,7 +13,9 @@ use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
+use App\Models\Order;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Carbon;
 
 class VendorController extends Controller
 {
@@ -22,22 +24,60 @@ class VendorController extends Controller
     // Get vendor dashboard Data 
     public function dashboardData(Request $request)
     {
-        $loginUserId = auth()->user()->id;
-        $products = Product::where('vendor_id', auth()->user()->id)->get();
-        if (!empty($products)) {
-            foreach ($products as $product) {
-                $product['images'] = ProductImage::where('product_id', $product->id)->get();
-            }
+
+        $months = 5;
+        if ($request->has('months')) {
+            $months = $request->months;
         }
+        $loginUserId = auth()->user()->id;
+        $products = Product::where('vendor_id', auth()->user()->id)->with('productImages')->get();
+
         $totalStock = Product::where('vendor_id', $loginUserId)->sum('quantity');
         $availableStock = Product::where('vendor_id', $loginUserId)->sum('remaining_items');
         $soldStock = $totalStock - $availableStock;
+        // Last Month Income 
+        $lastMonthIncome = Order::whereDate('created_at', '>=', Carbon::now()->subMonth())->where(['status' => 5, 'vendor_id' => $loginUserId])->sum('total');
 
+        // Get Last Month Percentage 
+        
+
+        // Create graph data 
+        $graphData = $this->getPreviousMonthsInfo($months, $loginUserId);
+
+        // Create Response 
         $success = [];
+        $success['lastMonthIncome'] = $lastMonthIncome;
+        $success['graphData'] = $graphData;
+
         $success['products'] = $products;
         $success['totalStock'] = $totalStock;
         $success['availableStock'] = $availableStock;
         $success['soldStock'] = $soldStock;
         return $this->sendResponse($success, 'Dashboard Data');
+    }
+
+    // Function for getting Graph data 
+    public function getPreviousMonthsInfo($duration, $loginUserId)
+    {
+        $months = [];
+
+        for ($i = 0; $i < $duration; $i++) {
+            $month = Carbon::now()->subMonths($i)->format('F Y');
+            $orders = Order::whereMonth('created_at', $month)->where(['status' => 5, 'vendor_id' => $loginUserId])->get();
+
+            $totalIncome = 0;
+            $totalProducts = count($orders);
+
+            foreach ($orders as $order) {
+                $totalIncome += $order->total;
+            }
+
+            $months[] = [
+                'month' => $month,
+                'total_income' => $totalIncome,
+                'total_sold' => $totalProducts,
+            ];
+        }
+        return $months;
     }
 }
