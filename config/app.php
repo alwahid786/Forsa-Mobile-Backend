@@ -123,6 +123,14 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+
+    // Stripe Credentials 
+    'stripe_client_id' => env('stripe_client_id', 'Laravel'),
+    'stripe_redirected_url' => env('stripe_redirected_url', 'Laravel'),
+    'stripe_key' => env('STRIPE_KEY', 'Laravel'),
+    'stripe_secret' => env('STRIPE_SECRET', 'Laravel'),
+    'name' => env('APP_NAME', 'Laravel'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

@@ -39,7 +39,40 @@ class VendorController extends Controller
         $lastMonthIncome = Order::whereDate('created_at', '>=', Carbon::now()->subMonth())->where(['status' => 5, 'vendor_id' => $loginUserId])->sum('total');
 
         // Get Last Month Percentage 
-        
+        $thirdLastMonthIncome = Order::whereDate('created_at', '>=', Carbon::now()->subMonth(2))->where(['status' => 5, 'vendor_id' => $loginUserId])->sum('total');
+        $lastMonthIncome = Order::whereDate('created_at', '>=', Carbon::now()->subMonth(1))->where(['status' => 5, 'vendor_id' => $loginUserId])->sum('total');
+        $incomeDifference = $lastMonthIncome - $thirdLastMonthIncome;
+        if ($lastMonthIncome > 0) {
+            if ($thirdLastMonthIncome > 0) {
+                $lastMonth = ($incomeDifference / $thirdLastMonthIncome) * 100;
+                $lastMonthPercentage = round($lastMonth, 2);
+            } else {
+                $lastMonthPercentage = 100;
+            }
+        } else {
+            $lastMonthPercentage = -100;
+        }
+
+        // Balance Calculations 
+        $totalBalance = Order::where([['vendor_id', '=', $loginUserId], ['status', '!=', 6]])->sum('total');
+        $withdrawAvailable = $totalBalance;
+        $lastWithdraw = 0;
+        // Get current Month Percentage
+        $currentMonthIncome = Order::whereMonth('created_at', '=', Carbon::now()->month)
+            ->where(['status' => 5, 'vendor_id' => $loginUserId])
+            ->sum('total');
+        $currentIncomeDifference = $currentMonthIncome - $lastMonthIncome;
+        if ($currentMonthIncome > 0) {
+            if ($lastMonthIncome > 0) {
+                $lastMonth = ($currentIncomeDifference / $lastMonthIncome) * 100;
+                $currentMonthPercentage = round($lastMonth, 2);
+            } else {
+                $currentMonthPercentage = 100;
+            }
+        } else {
+            $currentMonthPercentage = -100;
+        }
+
 
         // Create graph data 
         $graphData = $this->getPreviousMonthsInfo($months, $loginUserId);
@@ -48,11 +81,17 @@ class VendorController extends Controller
         $success = [];
         $success['lastMonthIncome'] = $lastMonthIncome;
         $success['graphData'] = $graphData;
-
-        $success['products'] = $products;
+        $success['lastMonthPercentage'] = $lastMonthPercentage;
+        $success['lastMonthIncome'] = $lastMonthIncome;
+        $success['currentMonthPercentage'] = $currentMonthPercentage;
+        $success['currentMonthIncome'] = $currentMonthIncome;
+        $success['totalBalance'] = $totalBalance;
+        $success['lastWithdraw'] = $lastWithdraw;
+        $success['withdrawAvailable'] = $withdrawAvailable;
         $success['totalStock'] = $totalStock;
         $success['availableStock'] = $availableStock;
         $success['soldStock'] = $soldStock;
+        $success['products'] = $products;
         return $this->sendResponse($success, 'Dashboard Data');
     }
 

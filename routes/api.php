@@ -13,6 +13,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\StripeController;
 
 
 /*
@@ -70,8 +71,11 @@ Route::group(
     ['prefix' => 'vendor', 'middleware' => ['api', 'auth:api']],
     function () {
         Route::post('/dashboard', [VendorController::class, 'dashboardData']);
+        Route::get('/stripe_connect_url', [StripeController::class, 'stripeConnectUrl']);
+        Route::post('/withdraw', [StripeController::class, 'withdrawAmount']);
     }
 );
+Route::get('vendor/stripe_redirect_url', [StripeController::class, 'stripeRedirectUrl']);
 
 
 // ------------------User Side Routes---------------------
@@ -127,4 +131,3 @@ Route::group(
         Route::post('/notifications/delete', [NotificationController::class, 'deleteNotification']);
     }
 );
- 
