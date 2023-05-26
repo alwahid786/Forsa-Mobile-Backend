@@ -34,6 +34,7 @@ class UserController extends Controller
             ->get();
         if ($request->has('category_id')) {
             $saleProducts = Product::where('discount', '!=', null)->where('category_id', $request->category_id)->with('productImages')->get();
+            dd($saleProducts);
             $favouriteProducts = Product::select('products.*', DB::raw('COUNT(*) as count'))
                 ->join('favourites', 'favourites.product_id', '=', 'products.id')
                 ->groupBy('products.id')
