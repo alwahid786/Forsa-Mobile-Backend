@@ -115,7 +115,7 @@ Route::group(
 
 // Settings Routes (with Authentication)
 Route::group(
-    ['prefix' => 'settings', 'middleware' => ['api', 'auth:api']],
+    ['prefix' => 'settings'],
     function () {
         Route::post('/get-fileLink', [SettingController::class, 'uploadFile']);
     }
