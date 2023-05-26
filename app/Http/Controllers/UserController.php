@@ -25,9 +25,6 @@ class UserController extends Controller
     // Get dashboard data for User 
     public function dashboardData(Request $request)
     {
-        $banners = Banner::all();
-        $categories = Category::all();
-        $brands = Product::groupBy('brand')->with('vendor')->pluck('brand');
         $saleProducts = Product::where('discount', '!=', null)->with('productImages')->get();
         $favouriteProducts = Product::select('products.*', DB::raw('COUNT(*) as count'))
             ->join('favourites', 'favourites.product_id', '=', 'products.id')
@@ -35,6 +32,19 @@ class UserController extends Controller
             ->orderByDesc('count')
             ->with('productImages')
             ->get();
+        if ($request->has('category_id')) {
+            $saleProducts = Product::where('discount', '!=', null)->where('category_id', $request->category_id)->with('productImages')->get();
+            $favouriteProducts = Product::select('products.*', DB::raw('COUNT(*) as count'))
+                ->join('favourites', 'favourites.product_id', '=', 'products.id')
+                ->groupBy('products.id')
+                ->orderByDesc('count')
+                ->where('category_id', $request->category_id)
+                ->with('productImages')
+                ->get();
+        }
+        $banners = Banner::all();
+        $categories = Category::all();
+        $brands = Product::groupBy('brand')->with('vendor')->pluck('brand');
         $success = [];
         $success['banners'] = $banners;
         $success['categories'] = $categories;

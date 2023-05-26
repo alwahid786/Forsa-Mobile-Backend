@@ -83,7 +83,7 @@ Route::get('vendor/stripe_redirect_url', [StripeController::class, 'stripeRedire
 Route::group(
     ['prefix' => 'user', 'middleware' => ['api', 'auth:api']],
     function () {
-        Route::get('/dashboard', [UserController::class, 'dashboardData']);
+        Route::post('/dashboard', [UserController::class, 'dashboardData']);
         Route::post('/product/detail', [ProductController::class, 'productDetail']);
         Route::post('/search/product', [ProductController::class, 'searchProducts']);
         Route::post('/update-profile', [UserController::class, 'updateProfile']);
