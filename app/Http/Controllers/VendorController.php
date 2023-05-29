@@ -14,6 +14,7 @@ use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
 use App\Models\Order;
+use App\Models\Withdraw;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
 
@@ -55,8 +56,10 @@ class VendorController extends Controller
 
         // Balance Calculations 
         $totalBalance = Order::where([['vendor_id', '=', $loginUserId], ['status', '!=', 6]])->sum('total');
-        $withdrawAvailable = $totalBalance;
-        $lastWithdraw = 0;
+        $totalWithdraws = Withdraw::where('vendor_id', $loginUserId)->sum('amount');
+        $withdrawAvailable = $totalBalance - $totalWithdraws;
+
+        $lastWithdraw = Withdraw::where('vendor_id', $loginUserId)->orderBy('created_at', 'DESC')->first(); // Get last withdraw 
         // Get current Month Percentage
         $currentMonthIncome = Order::whereMonth('created_at', '=', Carbon::now()->month)
             ->where(['status' => 5, 'vendor_id' => $loginUserId])
@@ -73,6 +76,13 @@ class VendorController extends Controller
             $currentMonthPercentage = -100;
         }
 
+        $allWithdraws = Withdraw::where('vendor_id', $loginUserId)->get();
+        if (count($allWithdraws) > 0) {
+            foreach ($allWithdraws as $withdraw) {
+                $withdraw['time'] = date('h:i A', strtotime($withdraw->created_at));
+                $withdraw['date'] = date('M d, Y', strtotime($withdraw->created_at));
+            }
+        }
 
         // Create graph data 
         $graphData = $this->getPreviousMonthsInfo($months, $loginUserId);
@@ -92,6 +102,7 @@ class VendorController extends Controller
         $success['availableStock'] = $availableStock;
         $success['soldStock'] = $soldStock;
         $success['products'] = $products;
+        $success['withdraws'] = $allWithdraws;
         return $this->sendResponse($success, 'Dashboard Data');
     }
 
