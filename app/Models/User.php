@@ -27,7 +27,8 @@ class User extends Authenticatable
         'last_name',
         'country',
         'is_business',
-        'country_code'
+        'country_code',
+        'profile_img'
     ];
 
     /**

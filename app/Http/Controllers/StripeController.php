@@ -14,6 +14,7 @@ use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
 use App\Models\Order;
+use App\Models\Withdraw;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
 use Stripe;
@@ -35,7 +36,7 @@ class StripeController extends Controller
     {
         // Retrieve the authorization code from the request
         $authorizationCode = $request->query('code');
-        
+
         // Exchange the authorization code for an access token
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $response = $stripe->oauth->token([
@@ -49,7 +50,7 @@ class StripeController extends Controller
             []
         );
         $loginUserId = $request->query('state');
-        $profiles = BusinessProfile::where('user_id', $loginUserId)->update(['stripe_client_id'=> $response['stripe_user_id']]);
+        $profiles = BusinessProfile::where('user_id', $loginUserId)->update(['stripe_client_id' => $response['stripe_user_id']]);
         if ($profiles) {
             return view('connect-success');
         }
@@ -69,15 +70,38 @@ class StripeController extends Controller
         $stripeId = BusinessProfile::where('user_id', $loginUserId)->first('stripe_client_id');
         if ($stripeId != '') {
             $stripe = new \Stripe\StripeClient(env(
-                'STRIPE_SECRET_KEY'
+                'STRIPE_SECRET'
             ));
 
+            // Transfer Amount to connected Account 
             $transfer = $stripe->transfers->create([
                 'amount' => $request->input('amount'),
                 'currency' => 'usd',
-                'destination' => $stripeId,
+                'destination' => $stripeId['stripe_client_id'],
             ]);
-            dd($transfer);
+            // If transfer succeeded 
+            if (isset($transfer->id) && !empty($transfer->id)) {
+                $withdraw = new Withdraw();
+                $withdraw->vendor_id = $loginUserId;
+                $withdraw->amount = $request->amount;
+                $withdraw->status = 1;
+                $withdraw->transaction_id = $transfer->id;
+                $result = $withdraw->save();
+                if ($result) {
+                    $message = 'Amount of $' . $request->amount . ' has been successfully transferred to your account. Thank You for using FORSA.';
+                    return $this->sendResponse($withdraw, $message);
+                }
+                // If Data not saved in record then create a refund 
+                try {
+                    $refund = \Stripe\Refund::create([
+                        'charge' => $transfer->id,
+                        'amount' => $request->price,
+                    ]);
+                    return $this->sendError('Something went wrong while saving record. Apologies for inconvenience. Please try again in a while.');
+                } catch (\Stripe\Exception\ApiErrorException $e) {
+                    return $this->sendError('Something went wrong while saving record. Apologies for inconvenience. Please try again in a while.');
+                }
+            }
         }
         return $this->sendError('Warning! You have not coonected you stripe account yet!');
     }

@@ -34,6 +34,7 @@ class AuthController extends Controller
                     'profile_status' => 1,
                 ]);
             }
+            $user = User::find($user->id);
             return $this->sendResponse($user, 'Your profile has been successfully created!');
         } else {
             return $this->sendError('Your profile cannot be created at the moment, Try signing up later.');
