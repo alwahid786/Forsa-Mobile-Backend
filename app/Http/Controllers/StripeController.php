@@ -67,8 +67,12 @@ class StripeController extends Controller
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
         $loginUserId = auth()->user()->id;
-        $stripeId = BusinessProfile::where('user_id', $loginUserId)->first('stripe_client_id');
-        if ($stripeId != '') {
+        $stripeUser = BusinessProfile::where('user_id', $loginUserId)->first();
+        if ($stripeUser != '') {
+            // Check If Withdraw amount is > available balance 
+            if ($stripeUser->availableBalance < $request->amount) {
+                return $this->sendError('Warning! Your available balance is less than your withdraw request!');
+            }
             $stripe = new \Stripe\StripeClient(env(
                 'STRIPE_SECRET'
             ));
@@ -77,7 +81,7 @@ class StripeController extends Controller
             $transfer = $stripe->transfers->create([
                 'amount' => $request->input('amount'),
                 'currency' => 'usd',
-                'destination' => $stripeId['stripe_client_id'],
+                'destination' => $stripeUser['stripe_client_id'],
             ]);
             // If transfer succeeded 
             if (isset($transfer->id) && !empty($transfer->id)) {
@@ -103,6 +107,6 @@ class StripeController extends Controller
                 }
             }
         }
-        return $this->sendError('Warning! You have not coonected you stripe account yet!');
+        return $this->sendError('Warning! You have not connected you stripe account yet!');
     }
 }

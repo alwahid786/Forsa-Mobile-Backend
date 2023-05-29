@@ -23,7 +23,8 @@ class BusinessProfile extends Model
         'profile_status'
     ];
     protected $appends = [
-        'rating'
+        'rating',
+        'availableBalance'
     ];
 
     public function getRatingAttribute()
@@ -36,5 +37,13 @@ class BusinessProfile extends Model
             return $avgRating;
         }
         return $ratingCount;
+    }
+    
+    public function getAvailableBalanceAttribute()
+    {
+        $totalBalance = Order::where([['vendor_id', '=', $this->user_id], ['status', '!=', 6]])->sum('total');
+        $totalWithdraws = Withdraw::where('vendor_id', $this->user_id)->sum('amount');
+        $availableBalance = $totalBalance - $totalWithdraws;
+        return $availableBalance;
     }
 }
