@@ -96,7 +96,7 @@ class VendorController extends Controller
         $success['currentMonthPercentage'] = $currentMonthPercentage;
         $success['currentMonthIncome'] = $currentMonthIncome;
         $success['totalBalance'] = $totalBalance;
-        $success['lastWithdraw'] = $lastWithdraw;
+        $success['lastWithdraw'] = $lastWithdraw ?? 0;
         $success['withdrawAvailable'] = $withdrawAvailable;
         $success['totalStock'] = $totalStock;
         $success['availableStock'] = $availableStock;
