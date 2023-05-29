@@ -60,7 +60,9 @@ class VendorController extends Controller
         $withdrawAvailable = $totalBalance - $totalWithdraws;
 
         $lastWithdraw = Withdraw::where('vendor_id', $loginUserId)->orderBy('created_at', 'DESC')->first('amount');
-        $lastWithdraw = $lastWithdraw->amount; // Get last withdraw 
+        if (!empty($lastWithdraw)) {
+            $lastWithdraw = $lastWithdraw->amount; // Get last withdraw 
+        }
         // Get current Month Percentage
         $currentMonthIncome = Order::whereMonth('created_at', '=', Carbon::now()->month)
             ->where(['status' => 5, 'vendor_id' => $loginUserId])
