@@ -238,4 +238,29 @@ class ProductController extends Controller
         }
         return $this->sendError('Something went wrong! Try later.');
     }
+
+    // Delete Product Function 
+    public function deleteProduct(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->messages()->all()));
+        }
+        // Get Product 
+        $product = Product::find($request->product_id);
+        $loginUserId = auth()->user()->id;
+
+        if ($product->vendor_id != $loginUserId) {
+            return $this->sendError('Warning! You are not owner of this product, You cannot delete it.');
+        }
+
+        // Delete Status 
+        $deleteStatus = $product->delete();
+        if ($deleteStatus) {
+            return $this->sendResponse([], 'Your product has been deleted Successfully!');
+        }
+        return $this->sendError('Something went wrong! Try later.');
+    }
 }
