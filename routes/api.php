@@ -73,6 +73,7 @@ Route::group(
         Route::post('/dashboard', [VendorController::class, 'dashboardData']);
         Route::get('/stripe_connect_url', [StripeController::class, 'stripeConnectUrl']);
         Route::post('/withdraw', [StripeController::class, 'withdrawAmount']);
+        Route::post('/product/add-to-sold', [ProductController::class, 'addToSoldProduct']);
     }
 );
 Route::get('vendor/stripe_redirect_url', [StripeController::class, 'stripeRedirectUrl']);

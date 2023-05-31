@@ -75,6 +75,9 @@ class OrderController extends Controller
         ];
         $this->createNotification($request->vendor_id, $message, $data, 'Order Placed');
 
+        // Update Product Quantity 
+        Product::where('id', $request->product_id)->decrement('remaining_items', 1);
+
         // Return response 
         return $this->sendResponse($order, 'Order created successfully.');
     }
@@ -144,6 +147,10 @@ class OrderController extends Controller
             if ($orderStatus->status != 4) {
                 return $this->sendError('This order is not delivered yet! You cannot complete it before it is delivered.');
             }
+        }
+        // If cancelled then update Quantity 
+        if ($request->status == 6) {
+            Product::where('id', $orderStatus->product_id)->increment('remaining_items', 1);
         }
         $order = Order::where('id', $request->order_id)->update(['status' => $request->status]);
 

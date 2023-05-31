@@ -12,7 +12,7 @@ use App\Models\Category;
 use App\Models\Views;
 use App\Models\Favourite;
 use App\Http\Requests\SignupRequest;
-use App\Http\Traits\ResponseTrait;  
+use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
@@ -212,5 +212,30 @@ class ProductController extends Controller
             return $this->sendResponse($favourites, 'Your favourites list');
         }
         return $this->sendError('No Products found in your Favourites List!');
+    }
+
+    // Add Product To Sold Function
+    public function addToSoldProduct(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->messages()->all()));
+        }
+        // Get Product 
+        $product = new Product;
+        $productData = $product->getProductById($request->product_id);
+
+        $loginUserId = auth()->user()->id;
+
+        if ($productData->vendor_id != $loginUserId) {
+            return $this->sendError('Warning! You are not owner of this product.');
+        }
+        $status = Product::where('id', $request->product_id)->update(['remaining_items' => 0]);
+        if ($status) {
+            return $this->sendResponse([], 'Your product has been sold Successfully!');
+        }
+        return $this->sendError('Something went wrong! Try later.');
     }
 }
