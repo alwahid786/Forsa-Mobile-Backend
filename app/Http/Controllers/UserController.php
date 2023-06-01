@@ -65,7 +65,7 @@ class UserController extends Controller
             $profile = User::where('id', auth()->user()->id)->update($data);
         }
         if ($profile) {
-            $user = User::find(auth()->user()->id)->with('businessProfile');
+            $user = User::where('id',auth()->user()->id)->with('businessProfile')->get();
             return $this->sendResponse($user, 'User Profile updated Successfully!.');
         }
         return $this->sendError('Your Profile cannot be updated at the moment. Please Try again later.');
