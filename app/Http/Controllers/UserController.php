@@ -58,7 +58,11 @@ class UserController extends Controller
     public function updateProfile(Request $request)
     {
         $data = $request->except('_token');
-        $profile = User::where('id', auth()->user()->id)->update($data);
+        if ($request->has('is_business') && !empty($request->is_business)) {
+            $profile = BusinessProfile::where('user_id', auth()->user()->id)->update($data);
+        } else {
+            $profile = User::where('id', auth()->user()->id)->update($data);
+        }
         if ($profile) {
             $user = User::find(auth()->user()->id);
             return $this->sendResponse($user, 'User Profile updated Successfully!.');
