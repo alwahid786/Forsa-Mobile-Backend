@@ -120,7 +120,11 @@ class OrderController extends Controller
     public function orderHistory(Request $request)
     {
         $loginUserId = auth()->user()->id;
+        $userType = auth()->user()->is_business;
         $orders = Order::where('user_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages')->get();
+        if($userType == 1){
+            $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages')->get();
+        }
         if (!empty($orders)) {
             foreach ($orders as $order) {
                 $order->statusText = $order->status_text;
