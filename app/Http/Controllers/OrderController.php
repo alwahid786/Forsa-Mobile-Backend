@@ -126,7 +126,6 @@ class OrderController extends Controller
             $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages')->get();
         }
         $orders = json_decode($orders);
-        dd($orders);
         if (!empty($orders)) {
             foreach ($orders as $order) {
                 $order->statusText = $order->status_text;
