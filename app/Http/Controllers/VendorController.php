@@ -14,6 +14,7 @@ use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
 use App\Models\Order;
+use App\Models\Location;
 use App\Models\Withdraw;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
@@ -132,5 +133,29 @@ class VendorController extends Controller
             ];
         }
         return $months;
+    }
+
+    // Add Update Location for Vendor 
+    public function addUpdateLocation(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'country' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'location' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
+        $data = $request->except('_token');
+        $request->merge(['user_id' => auth()->user()->id]);
+        $status = Location::updateOrCreate($data);
+        if($status){
+            $location = Location::where('user_id', auth()->user()->id)->get();
+            return $this->sendResponse($location, 'Location Added Successfully');
+        }
+        return $this->sendError('Something went wrong. Try again later');
     }
 }

@@ -75,6 +75,7 @@ Route::group(
         Route::post('/withdraw', [StripeController::class, 'withdrawAmount']);
         Route::post('/product/add-to-sold', [ProductController::class, 'addToSoldProduct']);
         Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
+        Route::post('/location', [VendorController::class, 'addUpdateLocation']);
     }
 );
 Route::get('vendor/stripe_redirect_url', [StripeController::class, 'stripeRedirectUrl']);
