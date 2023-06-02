@@ -151,7 +151,7 @@ class VendorController extends Controller
         }
         $request->merge(['user_id' => auth()->user()->id]);
         $data = $request->except('_token');
-        $status = Location::updateOrCreate(['user_id', auth()->user()->id], $data);
+        $status = Location::updateOrCreate(['user_id'=> auth()->user()->id], $data);
         if ($status) {
             $location = Location::where('user_id', auth()->user()->id)->get();
             return $this->sendResponse($location, 'Location Added Successfully');
