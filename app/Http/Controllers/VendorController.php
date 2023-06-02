@@ -149,8 +149,8 @@ class VendorController extends Controller
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
-        $data = $request->except('_token');
         $request->merge(['user_id' => auth()->user()->id]);
+        $data = $request->except('_token');
         $status = Location::updateOrCreate($data);
         if($status){
             $location = Location::where('user_id', auth()->user()->id)->get();
