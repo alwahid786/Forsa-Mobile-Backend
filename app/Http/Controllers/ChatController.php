@@ -22,10 +22,33 @@ use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use Stripe;
 use App\Http\Controllers\SettingController;
+use libphonenumber\PhoneNumberUtil;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\NumberParseException;
 
 class ChatController extends Controller
 {
     use ResponseTrait;
+
+    // Check phone number 
+    public function checkNumber($phoneNumber)
+    {
+        $phoneNumberUtil = PhoneNumberUtil::getInstance();
+
+        try {
+            $parsedNumber = $phoneNumberUtil->parse($phoneNumber, null);
+            if ($phoneNumberUtil->isValidNumber($parsedNumber)) {
+                // The string is a valid phone number
+                return true;
+            } else {
+                // The string is not a valid phone number
+                return false;
+            }
+        } catch (NumberParseException $e) {
+            // The string is not a valid phone number
+            return false;
+        }
+    }
 
     // Send message or create chat 
     public function sendMessage(Request $request)
@@ -40,6 +63,10 @@ class ChatController extends Controller
         }
         if (filter_var($request->content, FILTER_VALIDATE_EMAIL)) {
             return $this->sendError('Warning! You cannot send emails in chat.');
+        }
+        $isNumber = $this->checkNumber($request->content);
+        if ($isNumber) {
+            return $this->sendError('Warning! You cannot send contact number in chat.');
         }
         $request->merge(['client_id' => auth()->user()->id]);
         $chat = Chat::updateOrCreate(['id' => $request->chat_id], $request->all());
