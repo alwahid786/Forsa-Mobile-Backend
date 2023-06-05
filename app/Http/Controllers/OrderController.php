@@ -71,6 +71,7 @@ class OrderController extends Controller
         $image = ProductImage::where('product_id', $request->product_id)->first('image');
         $data = [
             'action' => 'ORDER_PLACED',
+            'orderId' => $order->id,
             'image' => $image->image
         ];
         $this->createNotification($request->vendor_id, $message, $data, 'Order Placed');
@@ -169,6 +170,7 @@ class OrderController extends Controller
         $image = ProductImage::where('product_id', $orderStatus->product_id)->first('image');
         $data = [
             'action' => 'ORDER_STATUS_CHANGED',
+            'orderId' => $request->order_id,
             'image' => $image->image
         ];
         $this->createNotification($receiverId, $message, $data, 'Order Status Changed');
