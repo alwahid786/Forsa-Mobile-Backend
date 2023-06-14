@@ -18,6 +18,7 @@ use App\Models\Location;
 use App\Models\Withdraw;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class VendorController extends Controller
 {
@@ -111,51 +112,29 @@ class VendorController extends Controller
     }
 
     // Function for getting Graph data 
-    // public function getPreviousMonthsInfo($duration, $loginUserId)
-    // {
-    //     $months = [];
-
-    //     for ($i = 0; $i < $duration; $i++) {
-    //         $month = Carbon::now()->subMonths($i)->format('M');
-    //         $orders = Order::whereMonth('created_at', $month)->where(['status' => 5, 'vendor_id' => $loginUserId])->get();
-    //         dd($orders);
-    //         $totalIncome = 0;
-    //         $totalProducts = count($orders);
-
-    //         foreach ($orders as $order) {
-    //             $totalIncome += $order->total;
-    //         }
-
-    //         $months[] = [
-    //             'month' => $month,
-    //             'total_income' => $totalIncome,
-    //             'total_sold' => $totalProducts,
-    //         ];
-    //     }
-    //     return $months;
-    // }
-
     public function getPreviousMonthsInfo($duration, $loginUserId)
     {
-        $months = range(0, $duration - 1);
-        $months = array_map(function ($i) use ($loginUserId) {
-            $month = Carbon::now()->subMonths($i)->format('M');
-            $orders = Order::whereMonth('created_at', $month)
-                ->where(['status' => 5, 'vendor_id' => $loginUserId])->get();
+        $months = [];
+        for ($i = 0; $i < $duration; $i++) {
+            $month = Carbon::now()->subMonths($i)->format('m');
+            $monthName = Carbon::now()->subMonths($i)->format('M');
+            $orders = Order::whereMonth('created_at', $month)->where(['status' => 5, 'vendor_id' => $loginUserId])->get();
 
-            $totalIncome = $orders->sum('total');
-            $totalProducts = $orders->count();
+            $totalIncome = 0;
+            $totalProducts = count($orders);
 
-            return [
-                'month' => $month,
+            foreach ($orders as $order) {
+                $totalIncome += $order->total;
+            }
+
+            $months[] = [
+                'month' => $monthName,
                 'total_income' => $totalIncome,
                 'total_sold' => $totalProducts,
             ];
-        }, $months);
-
+        }
         return $months;
     }
-
 
     // Add Update Location for Vendor 
     public function addUpdateLocation(Request $request)
@@ -173,7 +152,7 @@ class VendorController extends Controller
         }
         $request->merge(['user_id' => auth()->user()->id]);
         $data = $request->except('_token');
-        $status = Location::updateOrCreate(['user_id'=> auth()->user()->id], $data);
+        $status = Location::updateOrCreate(['user_id' => auth()->user()->id], $data);
         if ($status) {
             $location = Location::where('user_id', auth()->user()->id)->get();
             return $this->sendResponse($location, 'Location Added Successfully');
