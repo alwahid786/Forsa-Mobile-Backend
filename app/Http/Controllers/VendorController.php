@@ -111,29 +111,51 @@ class VendorController extends Controller
     }
 
     // Function for getting Graph data 
+    // public function getPreviousMonthsInfo($duration, $loginUserId)
+    // {
+    //     $months = [];
+
+    //     for ($i = 0; $i < $duration; $i++) {
+    //         $month = Carbon::now()->subMonths($i)->format('M');
+    //         $orders = Order::whereMonth('created_at', $month)->where(['status' => 5, 'vendor_id' => $loginUserId])->get();
+    //         dd($orders);
+    //         $totalIncome = 0;
+    //         $totalProducts = count($orders);
+
+    //         foreach ($orders as $order) {
+    //             $totalIncome += $order->total;
+    //         }
+
+    //         $months[] = [
+    //             'month' => $month,
+    //             'total_income' => $totalIncome,
+    //             'total_sold' => $totalProducts,
+    //         ];
+    //     }
+    //     return $months;
+    // }
+
     public function getPreviousMonthsInfo($duration, $loginUserId)
     {
-        $months = [];
-
-        for ($i = 0; $i < $duration; $i++) {
+        $months = range(0, $duration - 1);
+        $months = array_map(function ($i) use ($loginUserId) {
             $month = Carbon::now()->subMonths($i)->format('M');
-            $orders = Order::whereMonth('created_at', $month)->where(['status' => 5, 'vendor_id' => $loginUserId])->get();
-            dd($orders);
-            $totalIncome = 0;
-            $totalProducts = count($orders);
+            $orders = Order::whereMonth('created_at', $month)
+                ->where(['status' => 5, 'vendor_id' => $loginUserId])->get();
 
-            foreach ($orders as $order) {
-                $totalIncome += $order->total;
-            }
+            $totalIncome = $orders->sum('total');
+            $totalProducts = $orders->count();
 
-            $months[] = [
+            return [
                 'month' => $month,
                 'total_income' => $totalIncome,
                 'total_sold' => $totalProducts,
             ];
-        }
+        }, $months);
+
         return $months;
     }
+
 
     // Add Update Location for Vendor 
     public function addUpdateLocation(Request $request)
