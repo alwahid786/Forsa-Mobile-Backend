@@ -117,7 +117,7 @@ class VendorController extends Controller
 
         for ($i = 0; $i < $duration; $i++) {
             $month = Carbon::now()->subMonths($i)->format('M');
-            $orders = Order::whereDate('created_at', '>=', $month)->where(['status' => 5, 'vendor_id' => $loginUserId])->get();
+            $orders = Order::whereMonth('created_at', $month)->where(['status' => 5, 'vendor_id' => $loginUserId])->get();
 
             $totalIncome = 0;
             $totalProducts = count($orders);
