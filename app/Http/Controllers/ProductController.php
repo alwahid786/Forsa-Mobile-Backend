@@ -108,6 +108,10 @@ class ProductController extends Controller
         $productId = $request->product_id;
         $product = Product::where('id', $productId)->with('productImages', 'vendor', 'vendor.businessProfile')->first();
         $product = json_decode($product);
+
+        $category = Category::find($product->category_id);
+        $product->parentCategoryId = $category->parent_id;
+
         $views = Views::where('product_id', $productId)->count();
         $favourites = Favourite::where('product_id', $productId)->count();
 
