@@ -128,8 +128,10 @@ class OrderController extends Controller
         }
         if (!empty($orders)) {
             foreach ($orders as $order) {
+                print_r($order['orderHistory']['price']);
                 $order->statusText = $order->status_text;
                 $order->orderDate = date('M d, Y', strtotime($order->created_at));
+
                 $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
                 $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
             }
