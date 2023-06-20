@@ -126,16 +126,16 @@ class OrderController extends Controller
         if ($userType == 1) {
             $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages')->get();
         }
-        if (!empty($orders)) {
-            foreach ($orders as $order) {
-                print_r($order['orderHistory']['price']);
-                $order->statusText = $order->status_text;
-                $order->orderDate = date('M d, Y', strtotime($order->created_at));
+        // if (!empty($orders)) {
+        //     foreach ($orders as $order) {
+        //         print_r($order['orderHistory']['price']);
+        //         $order->statusText = $order->status_text;
+        //         $order->orderDate = date('M d, Y', strtotime($order->created_at));
 
-                $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
-                $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
-            }
-        }
+        //         $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
+        //         $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
+        //     }
+        // }
         return $this->sendResponse($orders, "Order details found successfully.");
     }
 
