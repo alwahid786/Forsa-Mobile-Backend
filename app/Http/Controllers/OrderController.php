@@ -130,7 +130,7 @@ class OrderController extends Controller
             foreach ($orders as $order) {
                 $order->statusText = $order->status_text;
                 $order->orderDate = date('M d, Y', strtotime($order->created_at));
-                $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
+                // $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
                 $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
             }
         }
