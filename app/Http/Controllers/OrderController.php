@@ -127,7 +127,7 @@ class OrderController extends Controller
             $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages')->get();
         }
         if (!empty($orders)) {
-            print_r($orders);
+            print_r(json_decode($orders));
             foreach ($orders as $order) {
                 $order->statusText = $order->status_text;
                 $order->orderDate = date('M d, Y', strtotime($order->created_at));
