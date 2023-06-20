@@ -127,10 +127,11 @@ class OrderController extends Controller
             $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages')->get();
         }
         if (!empty($orders)) {
+            print_r($orders);
             foreach ($orders as $order) {
                 $order->statusText = $order->status_text;
                 $order->orderDate = date('M d, Y', strtotime($order->created_at));
-                // $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
+                $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
                 $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
             }
         }
