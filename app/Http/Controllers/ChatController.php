@@ -54,7 +54,7 @@ class ChatController extends Controller
     public function sendMessage(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'vendor_id' => 'required|exists:users,id',
+            'otherUserId' => 'required|exists:users,id',
             'content' => 'required',
             'type' => 'required'
         ]);
@@ -69,7 +69,14 @@ class ChatController extends Controller
             return $this->sendError('Warning! You cannot send contact number in chat.');
         }
         $request->merge(['client_id' => auth()->user()->id]);
-        $chat = Chat::updateOrCreate(['id' => $request->chat_id], $request->all());
+        if (auth()->user()->is_business == 0) {
+            $userId = auth()->user()->id;
+            $vendorId = $request->otherUserId;
+        } else {
+            $vendorId = auth()->user()->id;
+            $userId = $request->otherUserId;
+        }
+        $chat = Chat::updateOrCreate(['client_id' => $userId, 'vendor_id'=>$vendorId]);
 
         $message = new Message;
         $message->chat_id = $chat->id;
