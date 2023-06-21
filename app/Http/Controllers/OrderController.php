@@ -20,6 +20,7 @@ use App\Http\Traits\ResponseTrait;
 use App\Http\Traits\NotificationTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Mail;
 use Stripe;
 
@@ -139,7 +140,7 @@ class OrderController extends Controller
         }
         return $this->sendResponse($orders, "Order details found successfully.");
     }
- 
+
     // Change Order Status 
     public function changeOrderStatus(Request $request)
     {
@@ -176,8 +177,12 @@ class OrderController extends Controller
             'orderId' => $request->order_id,
             'image' => $image->image
         ];
-        $this->createNotification($receiverId, $message, $data, 'Order Status Changed');
- 
+        if (isset($request->notification_id) && !empty($request->notification_id)) {
+            Notification::where('id', $request->notification_id)->update(['data' => $data]);
+        } else {
+            $this->createNotification($receiverId, $message, $data, 'Order Status Changed');
+        }
+
         // Return response 
         if ($order) {
             return $this->sendResponse([], "Order status successfully updated");
