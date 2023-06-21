@@ -139,7 +139,7 @@ class OrderController extends Controller
         }
         return $this->sendResponse($orders, "Order details found successfully.");
     }
-
+ 
     // Change Order Status 
     public function changeOrderStatus(Request $request)
     {
@@ -177,7 +177,7 @@ class OrderController extends Controller
             'image' => $image->image
         ];
         $this->createNotification($receiverId, $message, $data, 'Order Status Changed');
-
+ 
         // Return response 
         if ($order) {
             return $this->sendResponse([], "Order status successfully updated");

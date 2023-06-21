@@ -144,7 +144,6 @@ class VendorController extends Controller
             'longitude' => 'required',
             'country' => 'required',
             'city' => 'required',
-            'state' => 'required',
             'location' => 'required',
         ]);
         if ($validator->fails()) {
