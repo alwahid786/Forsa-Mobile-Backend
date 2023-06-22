@@ -98,7 +98,10 @@ class ChatController extends Controller
 
         if (count($chats) > 0) {
             foreach ($chats as $chat) {
-                $chat['unreadCount'] = Message::where(['chat_id'=> $chat->id, 'is_read' => 0])->count();
+                $chat['unreadCount'] = 0;
+                if (!empty($chat['lastMessage']) && $chat['lastMessage'][0]['sender_id'] !== auth()->user()->id) {
+                    $chat['unreadCount'] = Message::where(['chat_id' => $chat->id, 'is_read' => 0])->count();
+                }
                 if ($chat['client_id'] != $loginUserId) {
                     $chat['userData'] = User::find($chat['client_id']);
                 } elseif ($chat['vendor_id'] != $loginUserId) {
@@ -127,7 +130,7 @@ class ChatController extends Controller
             ->limit(1)
             ->pluck('sender_id')
             ->first();
-        if($lastMsgSenderId !== $loginUserId){
+        if ($lastMsgSenderId !== $loginUserId) {
             Message::where('chat_id', $request->chat_id)->update(['is_read' => 1]);
         }
         $chat = Chat::find($request->chat_id);
