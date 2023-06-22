@@ -76,7 +76,7 @@ class ChatController extends Controller
             $vendorId = auth()->user()->id;
             $userId = $request->otherUserId;
         }
-        $chat = Chat::updateOrCreate(['client_id' => $userId, 'vendor_id'=>$vendorId]);
+        $chat = Chat::updateOrCreate(['client_id' => $userId, 'vendor_id' => $vendorId]);
 
         $message = new Message;
         $message->chat_id = $chat->id;
@@ -98,6 +98,7 @@ class ChatController extends Controller
 
         if (count($chats) > 0) {
             foreach ($chats as $chat) {
+                $chat['unreadCount'] = Message::where(['chat_id'=> $chat->id, 'is_read' => 0])->count();
                 if ($chat['client_id'] != $loginUserId) {
                     $chat['userData'] = User::find($chat['client_id']);
                 } elseif ($chat['vendor_id'] != $loginUserId) {
@@ -121,16 +122,24 @@ class ChatController extends Controller
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
+        $lastMsgSenderId = Message::where('chat_id', $request->chat_id)
+            ->latest('created_at')
+            ->limit(1)
+            ->pluck('sender_id')
+            ->first();
+        if($lastMsgSenderId !== $loginUserId){
+            Message::where('chat_id', $request->chat_id)->update(['is_read' => 1]);
+        }
         $chat = Chat::find($request->chat_id);
         if ($request->type == 'before') {
-            $orderDate = Order::where(['user_id' => $chat->client_id, 'vendor_id' => $chat->vendor_id])->pluck('created_at');
+            $orderDate = Order::where(['user_id' => $chat->client_id, 'vendor_id' => $chat->vendor_id])->first('created_at');
             if ($orderDate != null) {
                 $chatMessages = Message::where('chat_id', $request->chat_id)->whereDate('created_at', '<', $orderDate)->orderBy('created_at', 'DESC')->get();
             } else {
                 $chatMessages = Message::where('chat_id', $request->chat_id)->orderBy('created_at', 'DESC')->get();
             }
         } elseif ($request->type == 'after') {
-            $orderDate = Order::where(['user_id' => $chat->client_id, 'vendor_id' => $chat->vendor_id])->pluck('created_at');
+            $orderDate = Order::where(['user_id' => $chat->client_id, 'vendor_id' => $chat->vendor_id])->first('created_at');
             if ($orderDate != null) {
                 $chatMessages = Message::where('chat_id', $request->chat_id)->whereDate('created_at', '>', $orderDate)->orderBy('created_at', 'DESC')->get();
             } else {
