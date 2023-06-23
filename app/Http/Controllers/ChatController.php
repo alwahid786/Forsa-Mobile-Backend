@@ -132,7 +132,7 @@ class ChatController extends Controller
                     unset($request->chat_id);
                     
                     $chat_id = $existingChat->id;
-                    $request->merge(['chat_id']);
+                    $request->merge(['chat_id'=>$chat_id]);
                 } else {
                     return $this->sendError(implode(",", $validator->messages()->all()));
                 }
