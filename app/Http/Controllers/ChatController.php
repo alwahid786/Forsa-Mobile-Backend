@@ -137,6 +137,8 @@ class ChatController extends Controller
                 } else {
                     return $this->sendError(implode(",", $validator->messages()->all()));
                 }
+            } else {
+                return $this->sendError(implode(",", $validator->messages()->all()));
             }
         }
         $lastMsgSenderId = Message::where('chat_id', $request->chat_id)
