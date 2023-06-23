@@ -134,6 +134,7 @@ class ChatController extends Controller
                     return $this->sendError(implode(",", $validator->messages()->all()));
                 }
             }
+            dd('coming');
         }
         $lastMsgSenderId = Message::where('chat_id', $request->chat_id)
             ->latest('created_at')
