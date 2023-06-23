@@ -61,6 +61,9 @@ class ChatController extends Controller
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
+        if ($request->otherUserId === auth()->user()->id) {
+            return $this->sendError('Warning! You cannot send message to yourself.');
+        }
         if (filter_var($request->content, FILTER_VALIDATE_EMAIL)) {
             return $this->sendError('Warning! You cannot send emails in chat.');
         }
