@@ -126,9 +126,9 @@ class ChatController extends Controller
             'type' => 'required',
         ]);
         if ($validator->fails()) {
+            dd($request->otherUserId);
             if (isset($request->otherUserId) && !empty($request->otherUserId)) {
                 $existingChat = Chat::where(['client_id' => $loginUserId, 'vendor_id' => $request->otherUserId])->orWhere(['client_id' => $request->otherUserId, 'vendor_id' => $loginUserId])->first();
-                dd($existingChat);
                 if (!empty($existingChat)) {
                     unset($request->chat_id);
 
