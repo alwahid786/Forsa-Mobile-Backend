@@ -126,7 +126,14 @@ class ChatController extends Controller
             'type' => 'required',
         ]);
         if ($validator->fails()) {
-            return $this->sendError(implode(",", $validator->messages()->all()));
+            if (isset($request->otherUserId) && !empty($request->otherUserId)) {
+                $existingChat = Chat::where(['client_id' => $loginUserId, 'vendor_id' => $request->otherUserId])->orWhere(['client_id' => $request->otherUserId, 'vendor_id' => $loginUserId])->first();
+                if (!empty($existingChat)) {
+                    $request->chat_id = $existingChat->id;
+                } else {
+                    return $this->sendError(implode(",", $validator->messages()->all()));
+                }
+            }
         }
         $lastMsgSenderId = Message::where('chat_id', $request->chat_id)
             ->latest('created_at')
