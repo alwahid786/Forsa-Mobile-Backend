@@ -129,7 +129,10 @@ class ChatController extends Controller
             if (isset($request->otherUserId) && !empty($request->otherUserId)) {
                 $existingChat = Chat::where(['client_id' => $loginUserId, 'vendor_id' => $request->otherUserId])->orWhere(['client_id' => $request->otherUserId, 'vendor_id' => $loginUserId])->first();
                 if (!empty($existingChat)) {
-                    $request->chat_id = $existingChat->id;
+                    unset($request->chat_id);
+                    
+                    $chat_id = $existingChat->id;
+                    $request->merge(['chat_id']);
                 } else {
                     return $this->sendError(implode(",", $validator->messages()->all()));
                 }
