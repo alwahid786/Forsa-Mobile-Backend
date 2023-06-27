@@ -37,7 +37,7 @@ class Chat extends Model
 
     public function lastMessage()
     {
-        return $this->hasMany(Message::class)->latest('created_at')->limit(1);
+        return $this->hasMany(Message::class)->latest('created_at')->limit(1)->first();
     }
 
     public function LastMessageTimeDifference()

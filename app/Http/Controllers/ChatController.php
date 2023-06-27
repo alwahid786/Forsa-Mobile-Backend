@@ -100,7 +100,7 @@ class ChatController extends Controller
         $chats = Chat::where('client_id', $loginUserId)->orWhere('vendor_id', $loginUserId)->with('lastMessage')->first();
 
         dd(json_decode($chats));
-        if (count($chats) > 0) {
+        if (!empty($chats)) {
             foreach ($chats as $chat) {
                 $chat['unreadCount'] = 0;
                 if (!empty($chat['lastMessage']) && $chat['lastMessage'][0]['sender_id'] !== auth()->user()->id) {
