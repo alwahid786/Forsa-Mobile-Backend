@@ -103,7 +103,7 @@ class ChatController extends Controller
         if (!empty($chats)) {
             foreach ($chats as $chat) {
                 $chat['unreadCount'] = 0;
-                if (!empty($chat['lastMessage']) && $chat['lastMessage'][0]['sender_id'] !== auth()->user()->id) {
+                if (!empty($chat['lastMessage']) && $chat['lastMessage']['sender_id'] !== auth()->user()->id) {
                     $chat['unreadCount'] = Message::where(['chat_id' => $chat->id, 'is_read' => 0])->count();
                 }
                 if ($chat['client_id'] != $loginUserId) {
