@@ -82,7 +82,7 @@ class ChatController extends Controller
         $chat = Chat::updateOrCreate(['client_id' => $userId, 'vendor_id' => $vendorId]);
 
         if ($request->type == 'image') {
-            if(is_array($request->content) && !empty($request->content)){
+            if (is_array($request->content) && !empty($request->content)) {
                 foreach ($request->content as $content) {
                     $message = new Message;
                     $message->chat_id = $chat->id;
@@ -91,6 +91,8 @@ class ChatController extends Controller
                     $message->content = json_encode($content);
                     $message->save();
                 }
+            } else {
+                return $this->sendError('Content must be array.');
             }
         } else {
             $message = new Message;
