@@ -80,7 +80,7 @@ class ChatController extends Controller
             $userId = $request->otherUserId;
         }
         $chat = Chat::updateOrCreate(['client_id' => $userId, 'vendor_id' => $vendorId]);
-
+        dd($request->content);
         if ($request->type == 'image') {
             if (is_array($request->content) && !empty($request->content)) {
                 foreach ($request->content as $content) {
