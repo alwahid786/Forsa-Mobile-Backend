@@ -81,12 +81,25 @@ class ChatController extends Controller
         }
         $chat = Chat::updateOrCreate(['client_id' => $userId, 'vendor_id' => $vendorId]);
 
-        $message = new Message;
-        $message->chat_id = $chat->id;
-        $message->sender_id = auth()->user()->id;
-        $message->type = $request->type;
-        $message->content = json_encode($request->content);
-        $message->save();
+        if ($request->type == 'image') {
+            if(is_array($request->content) && !empty($request->content)){
+                foreach ($request->content as $content) {
+                    $message = new Message;
+                    $message->chat_id = $chat->id;
+                    $message->sender_id = auth()->user()->id;
+                    $message->type = $request->type;
+                    $message->content = json_encode($content);
+                    $message->save();
+                }
+            }
+        } else {
+            $message = new Message;
+            $message->chat_id = $chat->id;
+            $message->sender_id = auth()->user()->id;
+            $message->type = $request->type;
+            $message->content = json_encode($request->content);
+            $message->save();
+        }
         if ($message) {
             return $this->sendResponse($message, 'Message sent Successfully.');
         }
