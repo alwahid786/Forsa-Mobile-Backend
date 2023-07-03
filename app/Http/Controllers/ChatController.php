@@ -64,7 +64,7 @@ class ChatController extends Controller
         if ($request->otherUserId === auth()->user()->id) {
             return $this->sendError('Warning! You cannot send message to yourself.');
         }
-        if ($request->type == 'image') {
+        if ($request->type == 'text') {
             if (filter_var($request->content, FILTER_VALIDATE_EMAIL)) {
                 return $this->sendError('Warning! You cannot send emails in chat.');
             }
