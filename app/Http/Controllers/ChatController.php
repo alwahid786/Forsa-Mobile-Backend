@@ -101,9 +101,9 @@ class ChatController extends Controller
         dd(json_decode($chats));
         if (!empty($chats)) {
             foreach ($chats as $chat) {
-                $chat->unreadCount = 0;
+                $chat['unreadCount'] = 0;
                 if (!empty($chat['lastMessage']) && $chat['lastMessage']['sender_id'] !== auth()->user()->id) {
-                    $chat->unreadCount = Message::where(['chat_id' => $chat->id, 'is_read' => 0])->count();
+                    $chat['unreadCount'] = Message::where(['chat_id' => $chat->id, 'is_read' => 0])->count();
                 }
                 if ($chat['client_id'] != $loginUserId) {
                     $chat['userData'] = User::find($chat['client_id']);
