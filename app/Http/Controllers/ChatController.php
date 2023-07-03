@@ -64,12 +64,14 @@ class ChatController extends Controller
         if ($request->otherUserId === auth()->user()->id) {
             return $this->sendError('Warning! You cannot send message to yourself.');
         }
-        if (filter_var($request->content, FILTER_VALIDATE_EMAIL)) {
-            return $this->sendError('Warning! You cannot send emails in chat.');
-        }
-        $isNumber = $this->checkNumber($request->content);
-        if ($isNumber) {
-            return $this->sendError('Warning! You cannot send contact number in chat.');
+        if ($request->type == 'image') {
+            if (filter_var($request->content, FILTER_VALIDATE_EMAIL)) {
+                return $this->sendError('Warning! You cannot send emails in chat.');
+            }
+            $isNumber = $this->checkNumber($request->content);
+            if ($isNumber) {
+                return $this->sendError('Warning! You cannot send contact number in chat.');
+            }
         }
         $request->merge(['client_id' => auth()->user()->id]);
         if (auth()->user()->is_business == 0) {
@@ -79,8 +81,8 @@ class ChatController extends Controller
             $vendorId = auth()->user()->id;
             $userId = $request->otherUserId;
         }
+
         $chat = Chat::updateOrCreate(['client_id' => $userId, 'vendor_id' => $vendorId]);
-        dd($request->content);
         if ($request->type == 'image') {
             if (is_array($request->content) && !empty($request->content)) {
                 foreach ($request->content as $content) {
