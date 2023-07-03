@@ -97,7 +97,7 @@ class ChatController extends Controller
     public function allChats(Request $request)
     {
         $loginUserId = auth()->user()->id;
-        $chats = Chat::where('client_id', $loginUserId)->orWhere('vendor_id', $loginUserId)->with('lastMessage')->first();
+        $chats = Chat::where('client_id', $loginUserId)->orWhere('vendor_id', $loginUserId)->with('lastMessage')->get();
         dd(json_decode($chats));
         if (!empty($chats)) {
             foreach ($chats as $chat) {
