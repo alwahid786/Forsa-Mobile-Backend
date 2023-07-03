@@ -86,7 +86,6 @@ class ChatController extends Controller
         if ($request->type == 'image') {
             if (is_array($request->content) && !empty($request->content)) {
                 foreach ($request->content as $content) {
-                    dd($content);
                     $message = new Message;
                     $message->chat_id = $chat->id;
                     $message->sender_id = auth()->user()->id;
