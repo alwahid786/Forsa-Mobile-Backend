@@ -168,16 +168,16 @@ class ChatController extends Controller
         if ($request->type == 'before') {
             $orderDate = Order::where(['user_id' => $chat->client_id, 'vendor_id' => $chat->vendor_id])->first('created_at');
             if ($orderDate != null) {
-                $chatMessages = Message::where('chat_id', $request->chat_id)->whereDate('created_at', '<', $orderDate)->orderBy('created_at', 'DESC')->get();
+                $chatMessages = Message::where('chat_id', $request->chat_id)->whereDate('created_at', '<', $orderDate)->get();
             } else {
-                $chatMessages = Message::where('chat_id', $request->chat_id)->orderBy('created_at', 'DESC')->get();
+                $chatMessages = Message::where('chat_id', $request->chat_id)->get();
             }
         } elseif ($request->type == 'after') {
             $orderDate = Order::where(['user_id' => $chat->client_id, 'vendor_id' => $chat->vendor_id])->first('created_at');
             if ($orderDate != null) {
-                $chatMessages = Message::where('chat_id', $request->chat_id)->whereDate('created_at', '>', $orderDate)->orderBy('created_at', 'DESC')->get();
+                $chatMessages = Message::where('chat_id', $request->chat_id)->whereDate('created_at', '>', $orderDate)->get();
             } else {
-                $chatMessages = Message::where('chat_id', $request->chat_id)->orderBy('created_at', 'DESC')->get();
+                $chatMessages = Message::where('chat_id', $request->chat_id)->get();
             }
         }
         return $this->sendResponse($chatMessages, 'All chat messages');
