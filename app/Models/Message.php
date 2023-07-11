@@ -20,4 +20,9 @@ class Message extends Model
     {
         return json_decode($value);
     }
+
+    public function chat()
+    {
+        return $this->belongsTo(Chat::class);
+    }
 }

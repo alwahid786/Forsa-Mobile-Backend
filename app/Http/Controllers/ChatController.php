@@ -180,6 +180,8 @@ class ChatController extends Controller
                 $chatMessages = Message::where('chat_id', $request->chat_id)->get();
             }
         }
-        return $this->sendResponse($chatMessages, 'All chat messages');
+        $success['chat'] = $chat;
+        $success['messages'] = $chatMessages;
+        return $this->sendResponse($success, 'All chat messages');
     }
 }
