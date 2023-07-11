@@ -19,6 +19,14 @@ class Order extends Model
         return $this->hasOne(OrderHistory::class);
     }
 
+    public function userProfile()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    public function vendorProfile()
+    {
+        return $this->belongsTo(BusinessProfile::class, 'vendor_id', 'user_id');
+    }
     public function getStatusTextAttribute()
     {
         switch ($this->status) {
