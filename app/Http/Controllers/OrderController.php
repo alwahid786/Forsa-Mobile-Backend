@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Views;
 use App\Models\Favourite;
 use App\Models\Order;
+use App\Models\Chat;
 use App\Models\OrderHistory;
 use App\Models\Review;
 use App\Models\ReviewImage;
@@ -130,6 +131,11 @@ class OrderController extends Controller
         if (!empty($orders)) {
             foreach ($orders as $order) {
                 if (isset($order['orderHistory']) && $order['orderHistory'] !== null) {
+                    $chat = Chat::where(['client_id'=> $order->user_id, 'vendor_id' => $order->vendor_id])->orwhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])->first();
+                    $order->chat_id = null;
+                    if(!empty($chat)){
+                        $order->chat_id = $chat->id;
+                    }
                     $order->statusText = $order->status_text;
                     $order->orderDate = date('M d, Y', strtotime($order->created_at));
 
