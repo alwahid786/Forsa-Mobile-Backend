@@ -25,6 +25,7 @@ use App\Http\Controllers\SettingController;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\NumberParseException;
+use DB;
 
 class ChatController extends Controller
 {
