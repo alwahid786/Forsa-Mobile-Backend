@@ -152,7 +152,7 @@ class ChatController extends Controller
                         ->where(['vendor_id' => $loginUserId]);
                     });
                 })->first();
-                dd(DB::getQueryLog());
+                dd(json_decode($existingChat));
                 if (!empty($existingChat)) {
                     unset($request->chat_id);
 
