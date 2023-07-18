@@ -143,7 +143,7 @@ class ChatController extends Controller
         ]);
         if ($validator->fails()) {
             if (isset($request->otherUserId)) {
-                $existingChat = Chat::where(['client_id' => $loginUserId, 'vendor_id' => $request->otherUserId])->first();
+                $existingChat = Chat::where(['client_id' => $request->otherUserId, 'vendor_id' => $loginUserId])->first();
                 dd(json_decode($existingChat));
                 if (!empty($existingChat)) {
                     unset($request->chat_id);
