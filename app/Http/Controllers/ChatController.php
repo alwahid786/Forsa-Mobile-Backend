@@ -147,7 +147,10 @@ class ChatController extends Controller
                 DB::enableQueryLog();
                 $existingChat = Chat::where(function ($query) use ($loginUserId, $request) {
                     $query->where(['client_id' => $loginUserId, 'vendor_id' => $request->otherUserId])
-                        ->orWhere(['client_id' => $request->otherUserId, 'vendor_id' => $loginUserId]);
+                    ->orWhere(function ($query) use ($loginUserId, $request) {
+                        $query->where(['client_id' => $request->otherUserId])
+                        ->where(['vendor_id' => $loginUserId]);
+                    });
                 })->first();
                 dd(DB::getQueryLog());
                 if (!empty($existingChat)) {
