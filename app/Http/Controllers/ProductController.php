@@ -11,6 +11,7 @@ use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Views;
 use App\Models\Favourite;
+use App\Models\Chat;
 use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
@@ -128,10 +129,15 @@ class ProductController extends Controller
         Views::updateOrCreate(['product_id' => $productId, 'user_id' => auth()->user()->id]);
         $carbon = new Carbon($product->created_at);
         $formatted_date = $carbon->format('M d, Y');
-
+        $chat = Chat::where(['client_id' => auth()->user()->id, 'vendor_id' => $product->vendor_id])->orwhere(['client_id' => $product->vendor_id, 'vendor_id' => auth()->user()->id])->first();
+        $chat_id = null;
+        if (!empty($chat)) {
+            $chat_id = $chat->id;
+        }
         $success['productDetail'] = $product;
         $success['views'] = $views;
         $success['favourites'] = $favourites;
+        $success['chat_id'] = $chat_id;
         $success['buyerProtectionFees'] = $protectionfees + 0.70;
         $success['total'] = $protectionfees + 0.70 + $product->price;
         $success['uploaded'] = $formatted_date;
