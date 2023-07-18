@@ -145,7 +145,10 @@ class ChatController extends Controller
         if ($validator->fails()) {
             if (isset($request->otherUserId)) {
                 DB::enableQueryLog();
-                $existingChat = Chat::where(['client_id' => $loginUserId, 'vendor_id' => $request->otherUserId])->orWhere(['client_id' => $request->otherUserId, 'vendor_id' => $loginUserId])->first();
+                $existingChat = Chat::where(function ($query) use ($loginUserId, $request) {
+                    $query->where(['client_id' => $loginUserId, 'vendor_id' => $request->otherUserId])
+                        ->orWhere(['client_id' => $request->otherUserId, 'vendor_id' => $loginUserId]);
+                })->first();
                 dd(DB::getQueryLog());
                 if (!empty($existingChat)) {
                     unset($request->chat_id);
