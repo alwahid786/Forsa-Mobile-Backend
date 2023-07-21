@@ -8,7 +8,7 @@
         <div class="col-12 pl-0 d-flex justify-content-between">
             <div class="heading-top">
                 <h1 class="mb-0 pl-0">Dashboard</h1>
-                <p class="pl-0">Welcome to Property Management Platform</p>
+                <p class="pl-0">Welcome to Forsa Platform</p>
             </div>
             <div>
                 <div class="calendar-range-picker">
@@ -23,20 +23,50 @@
 
             </div>
         </div>
-        <div class="row">
-            <div class="col-xl-9">
+        {{-- cards-section --}}
+        <div class="dashbord-card-main row">
+            <div class="dashbord-cards col-md-4">
+              <div class="card-counter primary">
+                <i class="fa fa-code-fork"></i>
+                <span class="count-name">Vendors</span>
+                <span class="count-numbers">2000</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-counter info">
+                  <i class="fa fa-users"></i>
+                  <span class="count-name">Users</span>
+                  <span class="count-numbers">3000</span>
+                </div>
+              </div>
+        
+            <div class="col-md-4">
+              <div class="card-counter danger">
+                <i class="fa fa-ticket"></i>
+                <span class="count-name">Products</span>
+                <span class="count-numbers">780</span>
+              </div>
+            </div>
+        
+            
+          </div>
+        {{-- cards-section-ends --}}
+
+
+
+        {{-- chart --}}
+        <div class="row mt-3">
+            <div class="col-xl-12">
                 <div class="tabs">
                     <div class="tabs-header">
                         <div class="tabs-header-left d-flex justify-content-between">
 
                             <div class="tabs-header-left-content">
-                                <h1>Property Revenue Overview</h1>
+                                <h1>Revenue</h1>
                                 <img src="{{ asset('public/assets/images/revenue-icon.svg') }}" alt="icon">
-                                <p>Show overview Jan 2022 - Dec 2022</p>
+                                {{-- <p>Show overview Jan 2022 - Dec 2022</p> --}}
                             </div>
-                            <div class="tabs-header-right-content">
-                                <button> <img class="pr-2" src="{{ asset('public/assets/images/report-icon.svg') }}" alt="icon">Download Report</button>
-                            </div>
+                           
 
                         </div>
 
@@ -69,10 +99,49 @@
                 </div>
 
             </div>
-            <div class="col-xl-3">
-
-            </div>
+           
         </div>
+        {{-- chart-ends --}}
+
+        {{-- top products --}}
+       
+            <div class="top-product container-fluid  pt-3" >
+               <div class="heading-top top-product-heading">
+                  <h1>Top Products</h1>
+               </div>
+               <div class="client-table product-table">
+                <table id="detail-table" class="detail-client-table" >
+                    <thead>
+                      <tr>
+                        <th class="table-heading" >Name Vendor</th>
+                        <th class="table-heading">Product Name</th>
+                        <th class="table-heading total-products">Total Products</th>
+                        <th class="table-heading">Product Sold</th>
+                        <th class="table-heading">Product Price</th>
+                       
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Anyone</td>
+                        <td>Anything</td>
+                        <td>500</td>
+                        <td>260</td>
+                        <td>$60</td> 
+                      </tr>
+                      <tr>
+                        <td>Anyone</td>
+                        <td>Anything</td>
+                        <td>500</td>
+                        <td>260</td>
+                        <td>$60</td> 
+                      </tr>
+                    </tbody>
+                  </table>
+               </div>
+            </div>
+    
+        {{-- top products-ends --}}
 
 
     </div>
