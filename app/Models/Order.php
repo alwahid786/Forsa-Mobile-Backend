@@ -27,7 +27,7 @@ class Order extends Model
     {
         return $this->belongsTo(BusinessProfile::class, 'vendor_id', 'user_id');
     }
-    public function vendorUserProfile()
+    public function vendorUserProfile() 
     {
         return $this->belongsTo(User::class, 'vendor_id', 'id');
     }
