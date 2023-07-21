@@ -124,7 +124,7 @@ class OrderController extends Controller
     {
         $loginUserId = auth()->user()->id;
         $userType = auth()->user()->is_business;
-        $orders = Order::where('user_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile')->get();
+        $orders = Order::where('user_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorProfile.userProfile')->get();
         if ($userType == 1) {
             $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory','orderHistory.productImages', 'userProfile', 'vendorProfile')->get();
         }
