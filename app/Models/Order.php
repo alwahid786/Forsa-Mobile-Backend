@@ -27,6 +27,10 @@ class Order extends Model
     {
         return $this->belongsTo(BusinessProfile::class, 'vendor_id', 'user_id');
     }
+    public function vendorUserProfile()
+    {
+        return $this->belongsTo(User::class, 'vendor_id', 'id');
+    }
     public function getStatusTextAttribute()
     {
         switch ($this->status) {
@@ -38,7 +42,7 @@ class Order extends Model
                 return 'Ready To Deliver';
             case 3:
                 return 'On The Way';
-            case 4: 
+            case 4:
                 return 'Delivered';
             case 5:
                 return 'Completed';
