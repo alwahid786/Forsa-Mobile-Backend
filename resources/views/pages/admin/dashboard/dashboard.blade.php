@@ -72,29 +72,14 @@
 
                     </div>
                     <h1 class="overview">Overview</h1>
-                    <ul class="nav nav-tabs ml-auto" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Week</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Month</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Year</a>
-                        </li>
-                    </ul><!-- Tab panes -->
+                    
                     <div class="tab-content">
                         <div class="tab-pane active " id="tabs-1" role="tabpanel">
                             <div class="bar-graph">
                                 <div id="chart"></div>
                             </div>
                         </div>
-                        <div class="tab-pane" id="tabs-2" role="tabpanel">
-                            <p>Second Panel</p>
-                        </div>
-                        <div class="tab-pane" id="tabs-3" role="tabpanel">
-                            <p>Third Panel</p>
-                        </div>
+                        
                     </div>
                 </div>
 
