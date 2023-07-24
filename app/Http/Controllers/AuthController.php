@@ -70,7 +70,7 @@ class AuthController extends Controller
         $userId = Auth::user()->id;
         $userType = Auth::user()->is_business;
         $businessProfile = BusinessProfile::where('user_id', $userId)->first();
-        dd($businessProfile);
+        // dd($businessProfile);
         if ($userType === 0) {
             if ($businessProfile == null) {
                 $validator = Validator::make($request->all(), [
@@ -87,6 +87,15 @@ class AuthController extends Controller
                 $data['profile_status'] = 1;
                 $business = BusinessProfile::create($data);
             } else {
+                $validator = Validator::make($request->all(), [
+                    'business_name' => 'required|string',
+                    'business_tagline' => 'required|string',
+                    'business_description' => 'required|string',
+                    'business_image' => 'required|string',
+                ]);
+                if ($validator->fails()) {
+                    return $this->sendError('Validation Error.', $validator->errors());
+                }
                 $businessProfile->update($request->except('_token'));
             }
             $userData = User::where('id', $userId)->first();
