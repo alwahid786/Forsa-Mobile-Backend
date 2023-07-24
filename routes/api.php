@@ -53,6 +53,7 @@ Route::group(
 Route::middleware('auth:api')->group(function () {
     Route::post('/add/banner', [AdminController::class, 'addBanner']);
     Route::get('/banners/list', [AdminController::class, 'allBanners']);
+    Route::get('/add/size', [AdminController::class, 'addSize']);
     Route::get('/logout', [AuthController::class, 'logout']);
 });
 

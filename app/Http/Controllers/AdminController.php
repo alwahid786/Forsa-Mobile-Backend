@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Banner;
+use App\Models\Size;
 use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
@@ -39,11 +40,35 @@ class AdminController extends Controller
         return $this->sendResponse($success, 'Banners added successfully');
     }
 
+    // Add Size API
+    public function addSize(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->messages()->all()));
+        }
+        if ($request->has('id') && !empty($request->id)) {
+            $size = Size::find($request->id);
+        } else {
+            $size = new Size();
+        }
+        $size->size = $request->title;
+        $size->category_id = $request->category_id;
+        $success = $size->save();
+        if ($success) {
+            return $this->sendResponse($size, 'Size added successfully');
+        } else {
+            return $this->sendError('Something went wrong, Try again later!');
+        }
+    }
+
     // get list of banners 
     public function allBanners()
     {
         $banners = Banner::all();
         return $this->sendResponse($banners, 'Banners List');
-
     }
 }

@@ -104,7 +104,7 @@ class AuthController extends Controller
             $userData = json_decode($userData, true);
             $user = auth()->user();
             $userData['token'] = $user->createToken('API Token')->accessToken;
-            return $this->sendResponse($userData, 'Profile role switched successfully!');
+            return $this->sendResponse($userData, 'Profile role switched to vendor successfully!');
         } else {
             $userData = User::where('id', $userId)->first();
             $userData->update(['is_business' => 0]);
@@ -112,7 +112,7 @@ class AuthController extends Controller
             $userData = json_decode($userData, true);
             $user = auth()->user();
             $userData['token'] = $user->createToken('API Token')->accessToken;
-            return $this->sendResponse($userData, 'Profile role switched successfully!');
+            return $this->sendResponse($userData, 'Profile role switched to user successfully!');
         }
     }
 

@@ -41,9 +41,9 @@ class CategoryController extends Controller
     public function categoryList(Request $request)
     {
         if ($request->has('category_id')) {
-            $categories = Category::where('id', $request->category_id)->with('parentCategory', 'subCategories')->get();
+            $categories = Category::where('id', $request->category_id)->with('parentCategory', 'subCategories', 'size')->get();
         } else {
-            $categories = Category::with('parentCategory', 'subCategories')->get();
+            $categories = Category::with('parentCategory', 'subCategories' , 'size')->get();
         }
         return $this->sendResponse($categories, 'All Categories list');
     }
