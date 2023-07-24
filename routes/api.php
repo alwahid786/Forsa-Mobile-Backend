@@ -39,7 +39,7 @@ Route::post('/contact', [ContactController::class, 'contactUs']);
 
 // Auth Routes (with Authentication)
 Route::middleware('auth:api')->group(function () {
-    Route::post('/update/to-vendor', [AuthController::class, 'updateToVendorProfile']);
+    Route::post('/switch-profile', [AuthController::class, 'updateToVendorProfile']);
 });
 // ------------------------Admin Routes---------------------------
 // Category Routes (with Authentication)

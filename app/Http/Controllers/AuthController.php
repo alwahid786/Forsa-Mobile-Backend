@@ -68,33 +68,42 @@ class AuthController extends Controller
     public function updateToVendorProfile(Request $request)
     {
         $userId = Auth::user()->id;
-        $validator = Validator::make($request->all(), [
-            'business_name' => 'required|string',
-            'business_tagline' => 'required|string',
-            'business_description' => 'required|string',
-            'business_image' => 'required|string',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
-        }
-        $data = $request->all();
-        $data['user_id'] = $userId;
-        $data['profile_status'] = 1;
-
-        $userData = User::where('id', $userId)->first();
-        if ($userData->is_business == 1) {
-            return $this->sendError('This user already have a business profile.');
-        }
-        $userData->update(['is_business' => 1]);
-        $business = BusinessProfile::create($data);
-        if ($business) {
+        $userType = Auth::user()->is_business;
+        $businessProfile = BusinessProfile::where('user_id', $userId)->first();
+        if ($userType === 0) {
+            if ($businessProfile == null) {
+                $validator = Validator::make($request->all(), [
+                    'business_name' => 'required|string',
+                    'business_tagline' => 'required|string',
+                    'business_description' => 'required|string',
+                    'business_image' => 'required|string',
+                ]);
+                if ($validator->fails()) {
+                    return $this->sendError('Validation Error.', $validator->errors());
+                }
+                $data = $request->all();
+                $data['user_id'] = $userId;
+                $data['profile_status'] = 1;
+                $business = BusinessProfile::create($data);
+            } else {
+                $businessProfile->update($request->except('_token'));
+            }
+            $userData = User::where('id', $userId)->first();
+            $userData->update(['is_business' => 1]);
             $userData = User::where('id', $userId)->with('businessProfile')->first();
             $userData = json_decode($userData, true);
             $user = auth()->user();
             $userData['token'] = $user->createToken('API Token')->accessToken;
-            return $this->sendResponse($userData, 'Your business profile has been created successfully!');
+            return $this->sendResponse($userData, 'Profile role switched successfully!');
+        } else {
+            $userData = User::where('id', $userId)->first();
+            $userData->update(['is_business' => 0]);
+            $userData = User::where('id', $userId)->with('businessProfile')->first();
+            $userData = json_decode($userData, true);
+            $user = auth()->user();
+            $userData['token'] = $user->createToken('API Token')->accessToken;
+            return $this->sendResponse($userData, 'Profile role switched successfully!');
         }
-        return $this->sendError('An error occured during request, Try again in a while');
     }
 
     // Reset password Function 
