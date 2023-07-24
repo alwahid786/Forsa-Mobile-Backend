@@ -70,6 +70,7 @@ class AuthController extends Controller
         $userId = Auth::user()->id;
         $userType = Auth::user()->is_business;
         $businessProfile = BusinessProfile::where('user_id', $userId)->first();
+        dd($businessProfile);
         if ($userType === 0) {
             if ($businessProfile == null) {
                 $validator = Validator::make($request->all(), [
