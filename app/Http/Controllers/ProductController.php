@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Views;
 use App\Models\Favourite;
 use App\Models\Chat;
+use App\Models\Location;
 use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
@@ -63,9 +64,13 @@ class ProductController extends Controller
             $product->discount_price = $request->price - $discount;
         }
         if ($request->pick_profile_location == 1) {
-            $product->country = auth()->user()->country;
-            $product->city = auth()->user()->city;
-            $product->location = auth()->user()->location;
+            $location = Location::where('user_id', $loginUserId)->first();
+            if (empty($location) && $location != null) {
+                return $this->sendError('You have not added any location in your Profile. Please add your location manually to continue.');
+            }
+            $product->country = $location->country;
+            $product->city = $location->city;
+            $product->location = $location->location;
         } else {
             $product->country = $request->country;
             $product->city = $request->city;
@@ -129,7 +134,7 @@ class ProductController extends Controller
         Views::updateOrCreate(['product_id' => $productId, 'user_id' => auth()->user()->id]);
         $carbon = new Carbon($product->created_at);
         $formatted_date = $carbon->format('M d, Y');
-        
+
         $success['productDetail'] = $product;
         if (auth()->user()->is_business === 0) {
             $chat = Chat::where(['client_id' => auth()->user()->id, 'vendor_id' => $product->vendor_id])->orwhere(['client_id' => $product->vendor_id, 'vendor_id' => auth()->user()->id])->first();
