@@ -177,4 +177,50 @@ class AuthController extends Controller
         }
         return $this->sendError('Unauthorized');
     }
+
+    // Social Login Callback Function
+    public function handleSocialiteCallback(Request $request)
+    {
+        $isUserExist = User::where(
+            'email',
+            $request->email
+        )->first();
+        if ($isUserExist) {
+            User::where('email', $request->email)->update([
+                'social_id' => $request->social_id,
+                'social_type' => $request->social_type
+            ]);
+            $getUpdatedUserData = User::where('email', $request->email)->first();
+            $success['token'] =  $isUserExist->createToken('MyApp')->accessToken;
+            $success['user'] =  $getUpdatedUserData;
+            return $this->sendResponse($success, 'Login Successfull!');
+            // return $this->respondSuccessJson(
+            //     'login successfully.',
+            //     [
+            //         'userData' => $success
+            //     ]
+            // );
+        } else {
+            $createNewUser = User::create([
+                'name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'password' => bcrypt('123456dummy'),
+                'social_type' => $request->social_type,
+                'social_id' => $request->social_id,
+                'is_business' => $request->is_business,
+                'location' => $request->location
+            ]);
+            $success['token'] =  $createNewUser->createToken('MyApp')->accessToken;
+            $success['user'] =  $createNewUser;
+            return $this->sendResponse($success, 'Login Successfull!');
+
+            // return $this->respondSuccessJson(
+            //     'login successfully.',
+            //     [
+            //         'userData' => $success
+            //     ]
+            // );
+        }
+    }
 }

@@ -43,7 +43,7 @@ class CategoryController extends Controller
         if ($request->has('category_id')) {
             $categories = Category::where('id', $request->category_id)->with('parentCategory', 'subCategories', 'size')->get();
         } else {
-            $categories = Category::where('parent_id', null)->with('parentCategory', 'subCategories' , 'size')->get();
+            $categories = Category::where('parent_id', null)->with('parentCategory', 'subCategories', 'size')->get();
         }
         return $this->sendResponse($categories, 'All Categories list');
     }

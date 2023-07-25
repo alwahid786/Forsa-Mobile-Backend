@@ -34,6 +34,9 @@ Route::post('/forgot-password', [AuthController::class, 'forgotEmail']);
 Route::post('/verify/otp', [AuthController::class, 'verifyOtp']);
 Route::post('/reset/password', [AuthController::class, 'resetPassword']);
 
+// Social Logins 
+Route::post('/social-login', [AuthController::class, 'handleSocialiteCallback']);
+
 // Setting Routes (without Authentication)
 Route::post('/contact', [ContactController::class, 'contactUs']);
 
