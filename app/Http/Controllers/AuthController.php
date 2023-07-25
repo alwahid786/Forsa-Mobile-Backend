@@ -203,13 +203,13 @@ class AuthController extends Controller
         } else {
             $createNewUser = User::create([
                 'name' => $request->first_name,
+                'username' => $request->first_name . "forsa",
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'password' => bcrypt('123456dummy'),
                 'social_type' => $request->social_type,
                 'social_id' => $request->social_id,
                 'is_business' => $request->is_business,
-                'location' => $request->location
             ]);
             $success['token'] =  $createNewUser->createToken('MyApp')->accessToken;
             $success['user'] =  $createNewUser;
