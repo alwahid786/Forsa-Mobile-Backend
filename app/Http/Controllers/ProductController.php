@@ -30,7 +30,7 @@ class ProductController extends Controller
         $id = $request->id;
         $loginUserId = Auth::user()->id;
         // $businessProfile = Auth::user()->buisnessProfile;
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'title' => 'required',
             'size' => 'required',
             'condition' => 'required',
@@ -41,7 +41,15 @@ class ProductController extends Controller
             'quantity' => 'required',
             'pick_profile_location' => 'required|boolean',
             'images' => 'required|array'
-        ]);
+        ];
+        if ($request->pick_profile_location == 0) {
+            $rules['country'] = 'required';
+            $rules['city'] = 'required';
+            $rules['location'] = 'required';
+            $rules['lat'] = 'required';
+            $rules['long'] = 'required';
+        }
+        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
@@ -71,10 +79,14 @@ class ProductController extends Controller
             $product->country = $location->country;
             $product->city = $location->city;
             $product->location = $location->location;
+            $product->lat = $location->latitude;
+            $product->long = $location->longitude;
         } else {
             $product->country = $request->country;
             $product->city = $request->city;
             $product->location = $request->location;
+            $product->lat = $request->lat;
+            $product->long = $request->long;
         }
         $product->quantity = $request->quantity;
         $product->remaining_items = $request->quantity;

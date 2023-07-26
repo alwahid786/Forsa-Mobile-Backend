@@ -26,7 +26,9 @@ class OrderHistory extends Model
         'city',
         'order_id',
         'product_id',
-        'location'
+        'location',
+        'lat',
+        'long'
     ];
 
     public function insertData($data, $productId, $orderId)
