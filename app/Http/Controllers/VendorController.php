@@ -158,4 +158,15 @@ class VendorController extends Controller
         }
         return $this->sendError('Something went wrong. Try again later');
     }
+
+    // Get Profile Location Function 
+    public function getLocation()
+    {
+        $loginUserId = auth()->user()->id;
+        $location = Location::where('user_id', $loginUserId)->first();
+        if (empty($location) || $location == null) {
+            return $this->sendError('You have not added any location yet!');
+        }
+        return $this->sendResponse($location, 'Location fetched successfully!');
+    }
 }
