@@ -34,7 +34,8 @@ class ProductController extends Controller
             'title' => 'required',
             'size' => 'required',
             'condition' => 'required',
-            'category_id' => 'required|integer',
+            'category_id' => 'required',
+            'sub_category_id' => 'required',
             'description' => 'required',
             'brand' => 'required',
             'price' => 'required',
@@ -62,6 +63,9 @@ class ProductController extends Controller
         $product->vendor_id = $loginUserId;
         $product->description = $request->description;
         $product->category_id = $request->category_id;
+        if ($product->sub_category_id != "" || $product->sub_category_id !=  null) {
+            $product->sub_categoryId = $request->sub_category_id;
+        }
         $product->size = $request->size;
         $product->condition = $request->condition;
         $product->brand = $request->brand;
