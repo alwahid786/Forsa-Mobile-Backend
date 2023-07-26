@@ -73,7 +73,7 @@ class ProductController extends Controller
         }
         if ($request->pick_profile_location == 1) {
             $location = Location::where('user_id', $loginUserId)->first();
-            if (empty($location) && $location != null) {
+            if (empty($location) || $location == null) {
                 return $this->sendError('You have not added any location in your Profile. Please add your location manually to continue.');
             }
             $product->country = $location->country;
