@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Location;
 use App\Models\BusinessProfile;
 use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
@@ -59,7 +60,9 @@ class AuthController extends Controller
             return $this->sendError('Incorrect Email or Password, Try again or click Forget Password.');
         }
         $user = auth()->user();
+        $location = Location::where('user_id', $user->id)->first();
         $userData = User::where('id', $user->id)->with('businessProfile')->first();
+        $userData['location'] = $location;
         $userData['token'] = $user->createToken('API Token')->accessToken;
         return $this->sendResponse($userData, 'Logged in Successfully!');
     }
