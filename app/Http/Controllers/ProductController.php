@@ -63,7 +63,7 @@ class ProductController extends Controller
         $product->vendor_id = $loginUserId;
         $product->description = $request->description;
         $product->category_id = $request->category_id;
-        if ($product->sub_category_id != "" || $product->sub_category_id !=  null) {
+        if ($request->sub_category_id != "" || $request->sub_category_id !=  null) {
             $product->sub_categoryId = $request->sub_category_id;
         }
         $product->size = $request->size;
