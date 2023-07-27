@@ -28,13 +28,17 @@
                 <label for="loginemail">Email</label>
                 {{-- <img src="{{asset('assets/images/mail.svg')}}" alt="image"> --}}
                 <input type="email" name="email" class="form-control" id="loginemail" aria-describedby="emailHelp" placeholder="Enter your email">
-
+                @if ($errors->has('email'))
+                  <span class="text-danger">{{ $errors->first('email') }}</span>
+                @endif
               </div>
               <div class="form-group login-email-field pt-3">
                 <label for="loginpassword">Password</label>
                 <i class="fa fa-eye-slash" aria-hidden="true" onclick="passView()"></i>
                 <input type="password" class="form-control" id="loginpassword" name="password" placeholder="Enter your password">
-
+                @if ($errors->has('password'))
+                  <span class="text-danger">{{ $errors->first('password') }}</span>
+                @endif
               </div>
 
 
