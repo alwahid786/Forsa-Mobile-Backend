@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,14 @@ Route::get('/stripe/connect-success', function () {
 });
 
 
-Route::get('/login', function () {
-    return view('pages.admin.auth.login');
-});
+// auth routes
+
+Route::any('login', [AuthController::class, 'login'])->name('login_post');
+
+
+// Route::get('/login', function () {
+//     return view('pages.admin.auth.login');
+// });
 
 Route::get('/dashboard', function () {
     return view('pages.admin.dashboard.dashboard');
