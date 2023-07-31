@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Repositories\Interfaces\AuthRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -35,7 +36,7 @@ class AuthController extends Controller
             if($result == true)
             {
 
-                return redirect()->back()->with('message', "Login Successfully");
+                return redirect('dashboard')->with('success', 'Logged In Successfully');
 
             }
 
@@ -45,6 +46,11 @@ class AuthController extends Controller
 
         return view('pages.admin.auth.login');
 
+    }
+
+    public function logout(){
+        Auth::logout();
+        return redirect('login')->with('success', 'Logged Out Successfully');
     }
 
 }

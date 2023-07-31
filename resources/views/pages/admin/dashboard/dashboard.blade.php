@@ -11,15 +11,6 @@
                 <p class="pl-0">Welcome to Forsa Platform</p>
             </div>
             <div>
-                <div class="calendar-range-picker">
-                    {{-- <img src="{{asset('public/assets/images/calendar-icon.svg')}}" alt="icon">
-                    <input type="text" name="daterange" value="" />
-                    <img src="{{asset('public/assets/images/calendar-arrow.svg')}}" alt="icon"> --}}
-                    <div id="reportrange">
-                        <i class="fa fa-calendar"></i>&nbsp;
-                        <span></span> <i class="fa fa-caret-down"></i>
-                    </div>
-                </div>
 
             </div>
         </div>
@@ -29,14 +20,14 @@
               <div class="card-counter primary">
                 <i class="fa fa-code-fork"></i>
                 <span class="count-name">Vendors</span>
-                <span class="count-numbers">2000</span>
+                <span class="count-numbers">{{$total_vendors ?? '-'}}</span>
               </div>
             </div>
             <div class="col-md-4">
                 <div class="card-counter info">
                   <i class="fa fa-users"></i>
                   <span class="count-name">Users</span>
-                  <span class="count-numbers">3000</span>
+                  <span class="count-numbers">{{$total_users ?? '-'}}</span>
                 </div>
               </div>
         
@@ -44,7 +35,7 @@
               <div class="card-counter danger">
                 <i class="fa fa-ticket"></i>
                 <span class="count-name">Products</span>
-                <span class="count-numbers">780</span>
+                <span class="count-numbers">{{$total_products ?? '-'}}</span>
               </div>
             </div>
         
@@ -100,27 +91,22 @@
                       <tr>
                         <th class="table-heading" >Name Vendor</th>
                         <th class="table-heading">Product Name</th>
-                        <th class="table-heading total-products">Total Products</th>
-                        <th class="table-heading">Product Sold</th>
+                        <th class="table-heading">No of Solds</th>
                         <th class="table-heading">Product Price</th>
                        
                       </tr>
                     </thead>
                     <tbody>
+                        @if(sizeof($topProducts)>0)
+                        @foreach($topProducts as $topProduct)
                       <tr>
-                        <td>Anyone</td>
-                        <td>Anything</td>
-                        <td>500</td>
-                        <td>260</td>
-                        <td>$60</td> 
+                        <td>{{$topProduct['vendor']['name'] ?? '-'}}</td>
+                        <td>{{$topProduct['title'] ?? '-'}}</td>
+                        <td>{{$topProduct['orders_count'] ?? '-'}}</td>
+                        <td>${{$topProduct['price'] ?? '-'}}</td> 
                       </tr>
-                      <tr>
-                        <td>Anyone</td>
-                        <td>Anything</td>
-                        <td>500</td>
-                        <td>260</td>
-                        <td>$60</td> 
-                      </tr>
+                      @endforeach
+                      @endif
                     </tbody>
                   </table>
                </div>

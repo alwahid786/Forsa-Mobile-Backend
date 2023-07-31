@@ -11,7 +11,7 @@ class AuthRepository implements AuthRepositoryInterface
     {
 
         $credentials = $request->only('email', 'password');
-
+        $credentials['user_type'] = 'admin';
         if (Auth::attempt($credentials))
         {
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,16 +22,15 @@ Route::get('/stripe/connect-success', function () {
 
 // auth routes
 
-Route::any('login', [AuthController::class, 'login'])->name('login_post');
-
+Route::any('login', [AuthController::class, 'login'])->name('login');
 
 // Route::get('/login', function () {
 //     return view('pages.admin.auth.login');
 // });
-
-Route::get('/dashboard', function () {
-    return view('pages.admin.dashboard.dashboard');
-});
+Route::middleware(['auth'])->group(function () {
+    
+Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/plot', function () {
     return view('pages.admin.plots.plot');
@@ -54,4 +54,5 @@ Route::get('/manager', function () {
 
 Route::get('/manager-detail', function () {
     return view('pages.admin.managers.manager-detail');
+});
 });

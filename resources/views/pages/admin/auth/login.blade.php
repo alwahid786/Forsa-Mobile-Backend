@@ -22,7 +22,7 @@
           @endif
 
           <div class="login-form">
-            <form method="post" action="{{ route('login_post') }}">
+            <form method="post" action="{{ route('login') }}">
               @csrf
               <div class="form-group login-email-field">
                 <label for="loginemail">Email</label>

@@ -45,4 +45,8 @@ class Product extends Model
     {
         return $this->favourites()->where('user_id', auth()->user()->id)->count();
     }
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'product_id');
+    }
 }
