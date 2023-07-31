@@ -30,10 +30,10 @@ class NotificationController extends Controller
         $loginUserId = auth()->user()->id;
         $notifications = Notification::where('receiver_id', $loginUserId)->get();
         if (count($notifications) > 0) {
-            foreach($notifications as $noti){
-                $notiData = $noti['data'];
-                $notiData['id'] = intval($notiData['id']);
-            }
+            // foreach($notifications as $noti){
+            //     $notiData = $noti['data'];
+            //     $notiData['id'] = intval($notiData['id']);
+            // }
             return $this->sendResponse($notifications, 'All notifications');
         } else {
             return $this->sendError('You have no notifications!');
