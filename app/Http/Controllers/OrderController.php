@@ -126,14 +126,14 @@ class OrderController extends Controller
         $userType = auth()->user()->is_business;
         $orders = Order::where('user_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')->get();
         if ($userType == 1) {
-            $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory','orderHistory.productImages', 'userProfile', 'vendorProfile')->get();
+            $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile')->get();
         }
         if (!empty($orders)) {
             foreach ($orders as $order) {
                 if (isset($order['orderHistory']) && $order['orderHistory'] !== null) {
-                    $chat = Chat::where(['client_id'=> $order->user_id, 'vendor_id' => $order->vendor_id])->orwhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])->first();
+                    $chat = Chat::where(['client_id' => $order->user_id, 'vendor_id' => $order->vendor_id])->orwhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])->first();
                     $order->chat_id = null;
-                    if(!empty($chat)){
+                    if (!empty($chat)) {
                         $order->chat_id = $chat->id;
                     }
                     $order->statusText = $order->status_text;
@@ -180,7 +180,7 @@ class OrderController extends Controller
         $image = ProductImage::where('product_id', $orderStatus->product_id)->first('image');
         $data = [
             'action' => 'ORDER_STATUS_CHANGED',
-            'orderId' => $request->order_id,
+            'orderId' => intval($request->order_id),
             'image' => $image->image
         ];
         if (isset($request->notification_id) && !empty($request->notification_id)) {
