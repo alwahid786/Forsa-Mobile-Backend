@@ -32,7 +32,7 @@ class NotificationController extends Controller
         if (count($notifications) > 0) {
             foreach($notifications as $noti){
                 $notiData = $noti['data'];
-                $notiData->id = intval($notiData->id);
+                $notiData['id'] = intval($notiData['id']);
             }
             return $this->sendResponse($notifications, 'All notifications');
         } else {
