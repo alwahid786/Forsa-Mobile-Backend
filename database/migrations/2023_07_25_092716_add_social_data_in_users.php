@@ -31,12 +31,12 @@ class AddSocialDataInUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('social_id');
-            $table->dropColumn('social_type');
-            $table->dropColumn('phone');
-            $table->dropColumn('country');
-            $table->dropColumn('country_code');
-            $table->dropColumn('last_name');
+            $table->string('social_id')->nullable(false)->change();
+            $table->string('social_type')->nullable(false)->change();
+            $table->string('phone')->nullable(false)->change();
+            $table->string('country')->nullable(false)->change();
+            $table->string('country_code')->nullable(false)->change();
+            $table->string('last_name')->nullable(false)->change();
         });
     }
 }
