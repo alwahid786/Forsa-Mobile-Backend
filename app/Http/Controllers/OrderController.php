@@ -183,8 +183,8 @@ class OrderController extends Controller
             'orderId' => $request->order_id,
             'image' => $image->image
         ];
-        if (isset($request->notification_id) && !empty($request->notification_id)) {
-            Notification::where('id', $request->notification_id)->update(['data' => $data]);
+        if (isset($request->notiId) && !empty($request->notiId)) {
+            Notification::where('id', $request->notiId)->update(['data' => $data]);
         }
         $this->createNotification($receiverId, $message, $data, 'Order Status Changed');
 
