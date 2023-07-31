@@ -180,7 +180,7 @@ class OrderController extends Controller
         $image = ProductImage::where('product_id', $orderStatus->product_id)->first('image');
         $data = [
             'action' => 'ORDER_STATUS_CHANGED',
-            'orderId' => intval($orderStatus->id),
+            'orderId' => $request->order_id,
             'image' => $image->image
         ];
         if (isset($request->notification_id) && !empty($request->notification_id)) {
