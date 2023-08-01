@@ -25,13 +25,11 @@ Route::get('/stripe/connect-success', function () {
 
 Route::any('login', [AuthController::class, 'login'])->name('login');
 
-// Route::get('/login', function () {
-//     return view('pages.admin.auth.login');
-// });
 Route::middleware(['auth'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('category', [CategoryController::class, 'category'])->name('category.post');
+    Route::any('category', [CategoryController::class, 'category'])->name('category.post');
+    Route::post('delete_category', [CategoryController::class, 'deleteCategory'])->name('delete.category');
 });
