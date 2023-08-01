@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,31 +29,9 @@ Route::any('login', [AuthController::class, 'login'])->name('login');
 //     return view('pages.admin.auth.login');
 // });
 Route::middleware(['auth'])->group(function () {
-    
-Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/plot', function () {
-    return view('pages.admin.plots.plot');
-});
+    Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/plot-detail', function () {
-    return view('pages.admin.plots.plot-detail');
-});
-
-Route::get('/client', function () {
-    return view('pages.admin.clients.client');
-});
-
-Route::get('/client-detail', function () {
-    return view('pages.admin.clients.client-detail');
-});
-
-Route::get('/manager', function () {
-    return view('pages.admin.managers.manager');
-});
-
-Route::get('/manager-detail', function () {
-    return view('pages.admin.managers.manager-detail');
-});
+    Route::get('category', [CategoryController::class, 'category'])->name('category.post');
 });

@@ -30,7 +30,7 @@
                   <span class="count-numbers">{{$total_users ?? '-'}}</span>
                 </div>
               </div>
-        
+
             <div class="col-md-4">
               <div class="card-counter danger">
                 <i class="fa fa-ticket"></i>
@@ -38,8 +38,8 @@
                 <span class="count-numbers">{{$total_products ?? '-'}}</span>
               </div>
             </div>
-        
-            
+
+
           </div>
         {{-- cards-section-ends --}}
 
@@ -57,30 +57,30 @@
                                 <img src="{{ asset('public/assets/images/revenue-icon.svg') }}" alt="icon">
                                 {{-- <p>Show overview Jan 2022 - Dec 2022</p> --}}
                             </div>
-                           
+
 
                         </div>
 
                     </div>
                     <h1 class="overview">Overview</h1>
-                    
+
                     <div class="tab-content">
                         <div class="tab-pane active " id="tabs-1" role="tabpanel">
                             <div class="bar-graph">
                                 <div id="chart"></div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
             </div>
-           
+
         </div>
         {{-- chart-ends --}}
 
         {{-- top products --}}
-       
+
             <div class="top-product container-fluid  pt-3" >
                <div class="heading-top top-product-heading">
                   <h1>Top Products</h1>
@@ -93,7 +93,7 @@
                         <th class="table-heading">Product Name</th>
                         <th class="table-heading">No of Solds</th>
                         <th class="table-heading">Product Price</th>
-                       
+
                       </tr>
                     </thead>
                     <tbody>
@@ -103,7 +103,7 @@
                         <td>{{$topProduct['vendor']['name'] ?? '-'}}</td>
                         <td>{{$topProduct['title'] ?? '-'}}</td>
                         <td>{{$topProduct['orders_count'] ?? '-'}}</td>
-                        <td>${{$topProduct['price'] ?? '-'}}</td> 
+                        <td>${{$topProduct['price'] ?? '-'}}</td>
                       </tr>
                       @endforeach
                       @endif
@@ -111,7 +111,7 @@
                   </table>
                </div>
             </div>
-    
+
         {{-- top products-ends --}}
 
 
@@ -124,6 +124,15 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
+
+    var totalProfitData = @json($revnueGraph);
+
+    var monthName = Object.keys(totalProfitData?.monthly_total_amount);
+    var totalAmountValue = Object.values(totalProfitData?.monthly_total_amount);
+
+    var totalProfiltValue = Object.values(totalProfitData?.profit);
+
+    // console.log('myArr', totalProfitData);
     var options = {
         legend: {
             horizontalAlign: 'left',
@@ -133,14 +142,17 @@
 
             },
         },
-        series: [{
-            name: 'Expense',
-            data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+        series: [
+            {
+                name: 'Total Amount',
+                data: totalAmountValue
 
-        }, {
-            name: 'Income',
-            data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-        }],
+            },
+            {
+                name: 'Total Profit',
+                data: totalProfiltValue
+            }
+        ],
         chart: {
             type: 'bar',
             height: 350,
@@ -168,7 +180,7 @@
             colors: ['transparent']
         },
         xaxis: {
-            categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+            categories: monthName,
         },
         yaxis: {
             title: {
