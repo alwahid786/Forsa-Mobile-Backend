@@ -15,6 +15,11 @@
                     Dashboard<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item ">
+                <a class="nav-link sidenav-item" href="{{ url('category') }}"><img src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30" height="30">
+                    <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30" height="30">
+                    Categories</a>
+            </li>
+            <li class="nav-item ">
                 <a class="nav-link sidenav-item" href="#"><img src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30" height="30">
                     <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30" height="30">
                     All Vendors</a>
@@ -24,11 +29,7 @@
                     <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30" height="30">
                     All Users</a>
             </li>
-            <li class="nav-item ">
-                <a class="nav-link sidenav-item" href="#"><img src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30" height="30">
-                    <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30" height="30">
-                    Categories</a>
-            </li>
+
             <li class="nav-item ">
                 <a class="nav-link sidenav-item" href="#"><img src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30" height="30">
                     <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30" height="30">
@@ -42,7 +43,7 @@
 
         </ul>
         <form class="form-inline  mt-2 mt-md-0 ml-auto navbar-header-right-section pt-2 pt-lg-0">
-          
+
             <div class="form-group has-search profile mr-4">
                 <!-- <img src="{{asset('public/assets/images/profile.svg')}}" class="mr-2"> -->
                 <span>{{auth()->user()->name}}</span>
