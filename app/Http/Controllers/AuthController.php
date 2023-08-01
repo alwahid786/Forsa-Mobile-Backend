@@ -194,9 +194,9 @@ class AuthController extends Controller
                 'social_type' => $request->social_type
             ]);
             $getUpdatedUserData = User::where('email', $request->email)->first();
-            $success['user'] =  $getUpdatedUserData;
-            $success['token'] =  $isUserExist->createToken('MyApp')->accessToken;
-            return $this->sendResponse($success, 'Login Successfull!');
+            // $success['user'] =  $getUpdatedUserData;
+            $getUpdatedUserData['token'] =  $isUserExist->createToken('MyApp')->accessToken;
+            return $this->sendResponse($getUpdatedUserData, 'Login Successfull!');
         } else {
             $createNewUser = User::create([
                 'name' => $request->first_name,
@@ -208,9 +208,9 @@ class AuthController extends Controller
                 'social_id' => $request->social_id,
                 'is_business' => $request->is_business,
             ]);
-            $success['user'] =  $createNewUser;
-            $success['token'] =  $createNewUser->createToken('MyApp')->accessToken;
-            return $this->sendResponse($success, 'Login Successfull!');
+            // $success['user'] =  $createNewUser;
+            $createNewUser['token'] =  $createNewUser->createToken('MyApp')->accessToken;
+            return $this->sendResponse($createNewUser, 'Login Successfull!');
 
            
         }
