@@ -7,7 +7,7 @@
 
 
 
-    <div class="col-sm-12 col-md-12 text-center">
+    <div class="">
       @if(Session::has('success'))
         <p class="alert {{ Session::get('alert-class', 'alert-success') }}">{{ Session::get('success') }}</p>
       @endif
@@ -16,14 +16,21 @@
         <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('error') }}</p>
       @endif
 
-      <form class="form-inline categoryForm " method="post" action="{{ route('category.post') }}" enctype="multipart/form-data">
+      <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post" action="{{ route('category.post') }}" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
           <input type="text" name="category_name" class="form-control" style="width: 400px;height: 50px;" id="exampleInputName2" placeholder="Category Name" required>
 
         </div>
         <div class="form-group">
-          <input name="category_image" style="width: 400px;" class="ml-3" type="file" required>
+
+          <label class="picture" for="picture__input" tabIndex="0">
+            <span class="picture__image"></span>
+          </label>
+
+          <input type="file" name="category_image" id="picture__input" required>
+
+          {{-- <input name="category_image" style="width: 400px;" class="ml-3" type="file" required> --}}
 
         </div>
         <button type="submit" class="btn btn-success">Add Category</button>
@@ -120,6 +127,36 @@
     }
   }
     });
+
+    const inputFile = document.querySelector("#picture__input");
+const pictureImage = document.querySelector(".picture__image");
+const pictureImageTxt = "Choose an image";
+pictureImage.innerHTML = pictureImageTxt;
+
+inputFile.addEventListener("change", function (e) {
+  const inputTarget = e.target;
+  const file = inputTarget.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.addEventListener("load", function (e) {
+      const readerTarget = e.target;
+
+      const img = document.createElement("img");
+      img.src = readerTarget.result;
+      img.classList.add("picture__img");
+
+      pictureImage.innerHTML = "";
+      pictureImage.appendChild(img);
+    });
+
+    reader.readAsDataURL(file);
+  } else {
+    pictureImage.innerHTML = pictureImageTxt;
+  }
+});
+
 });
 </script>
 <script>
