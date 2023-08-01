@@ -185,8 +185,9 @@ class OrderController extends Controller
         ];
         if (isset($request->notiId) && !empty($request->notiId)) {
             Notification::where('id', $request->notiId)->update(['data' => $data]);
+        } else {
+            $this->createNotification($receiverId, $message, $data, 'Order Status Changed');
         }
-        $this->createNotification($receiverId, $message, $data, 'Order Status Changed');
 
         // Return response 
         if ($order) {
