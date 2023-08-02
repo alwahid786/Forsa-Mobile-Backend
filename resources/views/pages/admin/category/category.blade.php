@@ -121,22 +121,11 @@
           <input type="text" name="category_name" class="form-control" style="width: 400px;height: 50px;" id="category_name" placeholder="Category Name" required>
 
         </div>
-        <button type="submit" class="btn btn-success">Add Category</button>
+        <button type="submit" class="btn btn-success">Update Category</button>
       </form>
 
       </div>
-      <div class="modal-footer">
 
-        <form action="{{ route('delete.category') }}" method="post">
-          @csrf
-          <input type="hidden" class="categoryId" name="category_id">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-danger">Delete</button>
-
-        </form>
-
-
-      </div>
     </div>
   </div>
 </div>
