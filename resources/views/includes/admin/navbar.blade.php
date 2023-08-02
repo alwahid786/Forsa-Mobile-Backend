@@ -20,7 +20,7 @@
                     Categories</a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link sidenav-item" href="#"><img src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30" height="30">
+                <a class="nav-link sidenav-item" href="{{ url('vendor_list') }}"><img src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30" height="30">
                     <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30" height="30">
                     All Vendors</a>
             </li>

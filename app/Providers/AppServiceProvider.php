@@ -10,6 +10,8 @@ use App\Repositories\Interfaces\DashboardRepositoryInterface;
 use App\Repositories\DashboardRepository;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\CategoryRepository;
+use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\UserRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,9 +22,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
         $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
         $this->app->bind(DashboardRepositoryInterface::class, DashboardRepository::class);
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+
     }
 
     /**

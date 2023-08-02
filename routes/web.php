@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,5 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::any('category', [CategoryController::class, 'category'])->name('category.post');
     Route::post('delete_category', [CategoryController::class, 'deleteCategory'])->name('delete.category');
     Route::post('edit_category', [CategoryController::class, 'editCategory'])->name('edit.category');
+
+    Route::any('vendor_list', [UserController::class, 'listOfAllVendor']);
+
 
 });
