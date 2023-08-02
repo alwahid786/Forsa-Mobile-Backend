@@ -45,6 +45,12 @@ class CategoryController extends Controller
 
     }
 
+    /**
+     * delete category
+     *
+     * @return \Illuminate\Http\Response
+    */
+
     public function deleteCategory(Request $request)
     {
 
@@ -58,6 +64,12 @@ class CategoryController extends Controller
         }
 
     }
+
+    /**
+     * edit category
+     *
+     * @return \Illuminate\Http\Response
+    */
 
     public function editCategory(Request $request)
     {
