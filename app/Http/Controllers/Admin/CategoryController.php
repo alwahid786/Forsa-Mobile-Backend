@@ -59,4 +59,19 @@ class CategoryController extends Controller
 
     }
 
+    public function editCategory(Request $request)
+    {
+
+        $id = $request->id;
+
+        $editCategory = $this->category->editCategory($id);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $editCategory,
+            'message' => 'category data!'
+        ], 200);
+
+    }
+
 }

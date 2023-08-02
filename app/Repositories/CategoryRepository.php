@@ -57,4 +57,13 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
     }
 
+    public function editCategory($id)
+    {
+
+        $query = Category::where('id', $id)->first();
+
+        return $query;
+
+    }
+
 }

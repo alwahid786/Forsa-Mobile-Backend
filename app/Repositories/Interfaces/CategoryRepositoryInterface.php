@@ -11,4 +11,6 @@ interface CategoryRepositoryInterface
 
     public function deletecategory($id);
 
+    public function editCategory($id);
+
 }
