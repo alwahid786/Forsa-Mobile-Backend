@@ -33,6 +33,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::any('category', [CategoryController::class, 'category'])->name('category.post');
     Route::post('delete_category', [CategoryController::class, 'deleteCategory'])->name('delete.category');
+    Route::post('edit_category_view', [CategoryController::class, 'editCategoryData'])->name('edit.category.view');
     Route::post('edit_category', [CategoryController::class, 'editCategory'])->name('edit.category');
 
     Route::any('vendor_list', [UserController::class, 'listOfAllVendor']);

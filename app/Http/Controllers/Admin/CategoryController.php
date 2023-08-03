@@ -71,18 +71,29 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
     */
 
-    public function editCategory(Request $request)
+    public function editCategoryData(Request $request)
     {
 
         $id = $request->id;
 
-        $editCategory = $this->category->editCategory($id);
+        $editCategory = $this->category->editCategoryData($id);
 
         return response()->json([
             'status' => 'success',
             'data' => $editCategory,
             'message' => 'category data!'
         ], 200);
+
+    }
+
+    public function editCategory(Request $request)
+    {
+
+        $result = $this->category->editcategory($request);
+
+        if($result == true) {
+            return redirect()->back()->with('success', 'Update Category Successfully.');
+        }
 
     }
 

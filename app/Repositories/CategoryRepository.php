@@ -57,12 +57,51 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
     }
 
-    public function editCategory($id)
+    public function editCategoryData($id)
     {
 
         $query = Category::where('id', $id)->first();
 
         return $query;
+
+    }
+
+    public function editcategory($request)
+    {
+
+        $file = $request->file('category_image');
+
+        if($file && !empty($file))
+        {
+
+            $fileName = time() . '_' . $file->getClientOriginalName();
+
+            $file->move(public_path('category'), $fileName);
+
+            $updateCategory = Category::where('id', $request->category_id)->update([
+                'category_name' =>  $request->category_name,
+                'category_image' =>  $fileName,
+                'parent_id' => NULL,
+            ]);
+
+        } else {
+
+            $updateCategory = Category::where('id', $request->category_id)->update([
+                'category_name' => $request->category_name,
+                'parent_id' => null,
+            ]);
+
+        }
+
+
+        if($updateCategory)
+        {
+            return true;
+        } else {
+            return false;
+        }
+
+
 
     }
 
