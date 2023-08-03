@@ -13,4 +13,10 @@ class UserRepository implements UserRepositoryInterface
         return $query;
     }
 
+    public function allUser()
+    {
+        $query = User::where('user_type', 'user')->get();
+        return $query;
+    }
+
 }

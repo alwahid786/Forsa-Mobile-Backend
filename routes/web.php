@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('edit_category', [CategoryController::class, 'editCategory'])->name('edit.category');
 
     Route::any('vendor_list', [UserController::class, 'listOfAllVendor']);
+    Route::any('user_list', [UserController::class, 'listOfAllUsers']);
 
 
 });

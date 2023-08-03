@@ -22,4 +22,10 @@ class UserController extends Controller
         return view('pages.admin.vendor.vendor', ['vendor' => $vendor]);
     }
 
+    public function listOfAllUsers(Request $request)
+    {
+        $user = $this->user->allUser();
+        return view('pages.admin.user.user', ['users' => $user]);
+    }
+
 }

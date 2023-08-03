@@ -7,5 +7,7 @@ interface UserRepositoryInterface
 
     public function allVendor();
 
+    public function allUser();
+
 }
 
