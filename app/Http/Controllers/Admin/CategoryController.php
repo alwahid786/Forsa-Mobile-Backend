@@ -86,15 +86,4 @@ class CategoryController extends Controller
 
     }
 
-    public function editCategory(Request $request)
-    {
-
-        $result = $this->category->editcategory($request);
-
-        if($result == true) {
-            return redirect()->back()->with('success', 'Update Category Successfully.');
-        }
-
-    }
-
 }

@@ -35,9 +35,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('delete_category', [CategoryController::class, 'deleteCategory'])->name('delete.category');
     Route::post('edit_category_view', [CategoryController::class, 'editCategoryData'])->name('edit.category.view');
     Route::post('edit_category', [CategoryController::class, 'editCategory'])->name('edit.category');
-
+    
     Route::any('vendor_list', [UserController::class, 'listOfAllVendor']);
     Route::any('user_list', [UserController::class, 'listOfAllUsers']);
 
+    // haider_dev
+    
+    Route::any('sub_category', [CategoryController::class, 'sub_category'])->name('subcategory.post');
 
 });
