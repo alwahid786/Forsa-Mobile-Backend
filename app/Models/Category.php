@@ -26,4 +26,5 @@ class Category extends Model
     {
         return $this->hasMany(Size::class);
     }
+
 }

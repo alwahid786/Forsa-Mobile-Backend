@@ -38,6 +38,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::any('vendor_list', [UserController::class, 'listOfAllVendor']);
     Route::any('user_list', [UserController::class, 'listOfAllUsers']);
-
+    //haider
+    Route::any('sub_category', [CategoryController::class, 'subcategory'])->name('subcategory.post');
+    Route::any('banner', [CategoryController::class, 'banner'])->name('banner.post');
+    Route::post('delete_banner', [CategoryController::class, 'deletebanner'])->name('delete.banner');
+    Route::post('edit_subcategory', [CategoryController::class, 'editsubcategory'])->name('edit.subcategory');
+    Route::post('edit_banner', [CategoryController::class, 'editbanner'])->name('edit.banner');
+    Route::post('edit_banner_view', [CategoryController::class, 'editbannerData'])->name('edit.banner.view');
 
 });

@@ -64,6 +64,19 @@ class CategoryController extends Controller
         }
 
     }
+      public function deletebanner(Request $request)
+    {
+
+        $id = $request->category_id;
+
+        $deletecategory = $this->category->deletebanner($id);
+
+        if($deletecategory == true)
+        {
+            return redirect()->back()->with('error', 'Delete Category Successfully.');
+        }
+
+    }
 
     /**
      * edit category
@@ -85,6 +98,19 @@ class CategoryController extends Controller
         ], 200);
 
     }
+        public function editbannerData(Request $request)
+    {
+        $id = $request->id;
+
+        $editbanner = $this->category->editbannerData($id);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $editbanner,
+            'message' => 'category data!'
+        ], 200);
+
+    }
 
     public function editCategory(Request $request)
     {
@@ -96,5 +122,67 @@ class CategoryController extends Controller
         }
 
     }
+        public function editsubcategory(Request $request)
+    {
+        $result = $this->category->editsubcategory($request);
+
+        if($result == true) {
+            return redirect()->back()->with('success', 'Update Category Successfully.');
+        }
+
+    }
+    public function subcategory(Request $request)
+    {
+
+        if($request->isMethod('post'))
+        {
+            $result = $this->category->saveSubcategory($request);
+
+            if($result == true)
+            {
+                return redirect()->back()->with('success', 'Add Category Successfully.');
+
+            } else {
+
+                return redirect()->back()->with('error', 'Add Category Failed.');
+            }
+        }
+
+        $allCategory = $this->category->getcategory();
+
+        return view('pages.admin.category.SubCategory', ['category' => $allCategory]);
+
+    }
+      public function banner(Request $request)
+    {
+         if($request->isMethod('post'))
+        {
+            $result = $this->category->savebanner($request);
+
+            if($result == true)
+            {
+                return redirect()->back()->with('success', 'Add Category Successfully.');
+
+            } else {
+
+                return redirect()->back()->with('error', 'Add Category Failed.');
+            }
+        }
+
+        $banner = $this->category->getbanner();
+        return view('pages.admin.category.Banner', ['banner' => $banner ]);
+
+    }
+            public function editbanner(Request $request)
+    {
+        $result = $this->category->editbanner($request);
+
+        if($result == true) {
+            return redirect()->back()->with('success', 'Update Category Successfully.');
+        }
+
+    }
+
+
 
 }
