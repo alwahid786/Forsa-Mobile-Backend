@@ -19,4 +19,11 @@ class UserRepository implements UserRepositoryInterface
         return $query;
     }
 
+    public function viewDetail($id)
+    {
+        $query = User::where('id', $id)->first();
+        return $query;
+    }
+
+
 }

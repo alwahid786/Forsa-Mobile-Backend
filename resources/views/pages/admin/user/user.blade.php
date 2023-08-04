@@ -17,12 +17,8 @@
               <tr>
                 <th >Name</th>
                 <th>Email</th>
-                <th>User Name</th>
                 <th>Phone Number</th>
-                <th>Country</th>
-                <th>City</th>
-                <th>Location</th>
-                <th>Profile Image</th>
+                <th>Detail</th>
               </tr>
             </thead>
             <tbody>
@@ -32,12 +28,10 @@
 
                   <td>{{ $user->name }}</td>
                   <td>{{ $user->email }}</td>
-                  <td>{{ $user->username }}</td>
                   <td>{{ $user->phone }}</td>
-                  <td>{{ $user->country }}</td>
-                  <td>{{ $user->city }}</td>
-                  <td>{{ $user->location }}</td>
-                  <td><img src="{{ $user->profile_img }}" alt=""></td>
+                  <td>
+                    <a href="{{ url('user_detail') }}/{{ $user->id }}"><button class='btn btn-primary'>View Detail</button></a>
+                  </td>
 
                 </tr>
               @endforeach
