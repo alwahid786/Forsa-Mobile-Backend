@@ -43,29 +43,31 @@
           {{-- <h1>All Clients</h1> --}}
        </div>
        <div class="client-table pt-2">
-        <table id="detail-table"  style="width:100%">
-            <thead>
-              <tr>
-                <th >Category Name</th>
-                <th>Category Image</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              @foreach ($category as $cat)
-                <tr>
-                  <td>{{ $cat->category_name }}</td>
-                  <td > <img style="width: 145px;" src="{{ asset('public/category/'.($cat->category_image)) }}" alt="{{ $cat->category_image }}"> </td>
-                  <td >
-                    <button type="button" class="btn btn-primary" onclick="editModal({{ $cat->id }})">Edit</button>
-                    <button type="button" class="btn btn-danger deleteButton" src-attr="{{ $cat->id }}" onclick="deleteModal({{ $cat->id }})">Delete</button>
-                  </td>
-                </tr>
-              @endforeach
-
-            </tbody>
-          </table>
+        <table id="detail-table" style="width: 100%">
+          <thead>
+            <tr>
+              <th>Category Name</th>
+              <th>Category Image</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($category as $cat)
+            @if ($cat->parent_id === null)
+            <tr>
+              <td>{{ $cat->category_name }}</td>
+              <td><img style="width: 145px;" src="{{ asset('public/category/'.($cat->category_image)) }}"
+                  alt="{{ $cat->category_image }}"></td>
+              <td>
+                <button type="button" class="btn btn-primary" onclick="editModal({{ $cat->id }})">Edit</button>
+                <button type="button" class="btn btn-danger deleteButton" src-attr="{{ $cat->id }}"
+                  onclick="deleteModal({{ $cat->id }})">Delete</button>
+              </td>
+            </tr>
+            @endif
+            @endforeach
+          </tbody>
+        </table>
        </div>
     </div>
 </main>

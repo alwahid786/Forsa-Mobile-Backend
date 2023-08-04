@@ -27,9 +27,11 @@
             </div>
             <div class="form-group select_field">
                 <select id="subcategory" name="selected_category_id">
-                    <option value="" disabled selected>Select Subcategory</option>
+                    <option value="" disabled selected>Select Category</option>
                     @foreach ($category as $cat)
-                    <option value="{{ $cat->id }}">{{$cat->category_name}}</option>
+                    @if ($cat->parent_id === null)
+                    <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
+                    @endif
                     @endforeach
                 </select>
 
@@ -70,7 +72,8 @@
                                 alt="{{ $cat->category_image }}">
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary" onclick="editModal({{ $cat->id }})">Edit</button>
+                            <button type="button" class="btn btn-primary"
+                                onclick="editModal({{ $cat->id }})">Edit</button>
                             <button type="button" class="btn btn-danger deleteButton" src-attr="{{ $cat->id }}"
                                 onclick="deleteModal({{ $cat->id }})">Delete</button>
                         </td>
@@ -89,7 +92,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <h4 class="text-center">Are you sure you want to delete this category</h4>
+                <h4 class="text-center">Are you sure you want to delete this Subcategory</h4>
             </div>
             <div class="modal-footer">
 
@@ -119,34 +122,34 @@
                 <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post"
                     action="{{ route('edit.subcategory') }}" enctype="multipart/form-data">
                     @csrf
-                
+
                     <div class="form-group">
-                
+
                         {{-- image --}}
-                
+
                         <label class="picture_d" for="picture__input_modal" tabIndex="0">
                             <span class="picture__image_d"><img src="" alt="" id="modalImageSrc"></span>
                         </label>
-                
+
                         <input type="file" name="category_image" id="picture__input_modal">
-                
+
                         <input type="hidden" name="category_id" id="category_id">
-                
+
                         {{-- end image --}}
-                
+
                     </div>
-             <div class="form-group select_field">
-                <select id="subcategory" name="selected_category_id">
-                    <option value="" disabled selected>Select Subcategory</option>
-                    @foreach ($category as $cat)
-                    <option value="{{ $cat->id }}">{{$cat->category_name}}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                        <input type="text" name="category_name" class="form-control" style="width: 400px;height: 50px;" id="category_name"
-                            placeholder="Category Name" required>
-                    
+                    <div class="form-group select_field">
+                        <select id="subcategory" name="selected_category_id">
+                            <option value="" disabled selected>Select Subcategory</option>
+                            @foreach ($category as $cat)
+                            <option value="{{ $cat->id }}">{{$cat->category_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="category_name" class="form-control" style="width: 400px;height: 50px;"
+                            id="category_name" placeholder="Category Name" required>
+
                     </div>
                     <button type="submit" class="btn btn-success">Update Category</button>
                 </form>
