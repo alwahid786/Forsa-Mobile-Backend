@@ -73,7 +73,7 @@ class CategoryController extends Controller
 
         if($deletecategory == true)
         {
-            return redirect()->back()->with('error', 'Delete Category Successfully.');
+            return redirect()->back()->with('error', 'Delete banner Successfully.');
         }
 
     }
@@ -127,7 +127,7 @@ class CategoryController extends Controller
         $result = $this->category->editsubcategory($request);
 
         if($result == true) {
-            return redirect()->back()->with('success', 'Update Category Successfully.');
+            return redirect()->back()->with('success', 'Update SubCategory Successfully.');
         }
 
     }
@@ -140,11 +140,11 @@ class CategoryController extends Controller
 
             if($result == true)
             {
-                return redirect()->back()->with('success', 'Add Category Successfully.');
+                return redirect()->back()->with('success', 'Add SubCategory Successfully.');
 
             } else {
 
-                return redirect()->back()->with('error', 'Add Category Failed.');
+                return redirect()->back()->with('error', 'Add SubCategory Failed.');
             }
         }
 
@@ -161,11 +161,11 @@ class CategoryController extends Controller
 
             if($result == true)
             {
-                return redirect()->back()->with('success', 'Add Category Successfully.');
+                return redirect()->back()->with('success', 'Add banner Successfully.');
 
             } else {
 
-                return redirect()->back()->with('error', 'Add Category Failed.');
+                return redirect()->back()->with('error', 'Add banner Failed.');
             }
         }
 
@@ -178,7 +178,7 @@ class CategoryController extends Controller
         $result = $this->category->editbanner($request);
 
         if($result == true) {
-            return redirect()->back()->with('success', 'Update Category Successfully.');
+            return redirect()->back()->with('success', 'Update banner Successfully.');
         }
 
     }
