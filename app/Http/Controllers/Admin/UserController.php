@@ -28,4 +28,16 @@ class UserController extends Controller
         return view('pages.admin.user.user', ['users' => $user]);
     }
 
+    public function vendorDetail(Request $request, $id)
+    {
+        $vendorDetail = $this->user->viewDetail($id);
+        return view('pages.admin.vendor.vendor_detail', ['vendorDetail'=> $vendorDetail]);
+    }
+
+    public function userDetail(Request $request, $id)
+    {
+        $userDetail = $this->user->viewDetail($id);
+        return view('pages.admin.user.user_detail', ['userDetail'=> $userDetail]);
+    }
+
 }

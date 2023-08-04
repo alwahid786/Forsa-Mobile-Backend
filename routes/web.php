@@ -39,5 +39,8 @@ Route::middleware(['auth'])->group(function () {
     Route::any('vendor_list', [UserController::class, 'listOfAllVendor']);
     Route::any('user_list', [UserController::class, 'listOfAllUsers']);
 
+    Route::get('vendor_detail/{id}', [UserController::class, 'vendorDetail']);
+    Route::get('user_detail/{id}', [UserController::class, 'userDetail']);
+
 
 });
