@@ -46,4 +46,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('edit_banner', [CategoryController::class, 'editbanner'])->name('edit.banner');
     Route::post('edit_banner_view', [CategoryController::class, 'editbannerData'])->name('edit.banner.view');
 
+    Route::get('vendor_detail/{id}', [UserController::class, 'vendorDetail']);
+    Route::get('user_detail/{id}', [UserController::class, 'userDetail']);
+
+
 });
