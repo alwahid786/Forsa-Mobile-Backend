@@ -115,7 +115,7 @@
 
 <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
 
@@ -140,9 +140,11 @@
                     </div>
                     <div class="form-group select_field">
                         <select id="subcategory" name="selected_category_id">
-                            <option value="" disabled selected>Select Subcategory</option>
+                            {{-- <option value="" disabled selected>Select Category</option> --}}
                             @foreach ($category as $cat)
-                            <option value="{{ $cat->id }}">{{$cat->category_name}}</option>
+                                @if($cat->parent_id == NULL)
+                                    <option value="{{ $cat->id }}"  >{{$cat->category_name}}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
@@ -185,25 +187,31 @@ headers: {
 
 $.ajax({
 
-url: '{{ route("edit.category.view") }}',
-type: "POST",
-data: {id : id},
-dataType: 'json',
+    url: '{{ route("edit.category.view") }}',
+    type: "POST",
+    data: {id : id},
+    dataType: 'json',
 
-success: function(data) {
+    success: function(data) {
 
-var categoryName = data.data.category_name;
-var categoryImage = '{{ asset('public/category') }}' + '/' + data.data.category_image;
+    var categoryName = data.data.category_name;
+    var parentCategory = data.data.parent_category.id;
 
-$("#category_name").val(categoryName)
-$('#modalImageSrc').attr('src', categoryImage)
-$('#category_id').val(id)
-$("#editmodal").modal('show');
+    // alert(parentCategory)
 
-},
-error: function(data) {
+    var categoryImage = '{{ asset('public/category') }}' + '/' + data.data.category_image;
 
-}
+
+    $("#category_name").val(categoryName)
+    $('#modalImageSrc').attr('src', categoryImage)
+    $('#category_id').val(id)
+    $("#editmodal").modal('show');
+    $("#subcategory").val(parentCategory).attr('selected', true)
+
+    },
+    error: function(data) {
+
+    }
 
 });
 

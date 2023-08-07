@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Http\Request;
+use App\Models\Category;
 
 class CategoryController extends Controller
 {
@@ -98,7 +99,7 @@ class CategoryController extends Controller
         ], 200);
 
     }
-        public function editbannerData(Request $request)
+    public function editbannerData(Request $request)
     {
         $id = $request->id;
 
@@ -122,7 +123,7 @@ class CategoryController extends Controller
         }
 
     }
-        public function editsubcategory(Request $request)
+    public function editsubcategory(Request $request)
     {
         $result = $this->category->editsubcategory($request);
 
@@ -148,7 +149,7 @@ class CategoryController extends Controller
             }
         }
 
-        $allCategory = $this->category->getcategory();
+        $allCategory = Category::get();
 
         return view('pages.admin.category.SubCategory', ['category' => $allCategory]);
 

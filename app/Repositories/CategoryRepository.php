@@ -76,12 +76,14 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function editCategoryData($id)
     {
 
-        $query = Category::where('id', $id)->first();
+        $query = Category::where('id', $id)->with('parentCategory')->first();
+
+        // dd($query->name->category_name);
 
         return $query;
 
     }
-        public function editbannerData($id)
+    public function editbannerData($id)
     {
         $query = Banner::where('id', $id)->first();
 
@@ -91,7 +93,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function editcategory($request)
     {
-           
+
         $file = $request->file('category_image');
 
         if($file && !empty($file))
@@ -134,7 +136,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         if($file && !empty($file))
         {
-           
+
             $fileName = time() . '_' . $file->getClientOriginalName();
 
             $file->move(public_path('category'), $fileName);
@@ -143,7 +145,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 'category_name' =>  $request->category_name,
                 'parent_id' =>  $request->selected_category_id,
                 'category_image' =>  $fileName,
-                
+
             ]);
 
         } else {
@@ -179,9 +181,9 @@ class CategoryRepository implements CategoryRepositoryInterface
         $fileName = time() . '_' . $file->getClientOriginalName();
 
         $file->move(public_path('category'), $fileName);
-    
+
         $selectedCategoryId = $request->selected_category_id;
-        
+
         $addCategory = Category::create([
             'category_name' =>  $request->category_name,
             'category_image' =>  $fileName,
@@ -207,7 +209,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $fileName = time() . '_' . $file->getClientOriginalName();
 
       $file->move(public_path('category'), $fileName);
-        
+
         $addbanner = Banner::create([
             'banner_image' =>  $fileName,
         ]);
@@ -229,22 +231,22 @@ class CategoryRepository implements CategoryRepositoryInterface
         $banner = Banner::all();
         return $banner;
     }
-    
-    public function editbanner($request) 
+
+    public function editbanner($request)
 
     {
         $file = $request->file('category_image');
 
-        
+
         {
-           
+
             $fileName = time() . '_' . $file->getClientOriginalName();
 
             $file->move(public_path('category'), $fileName);
 
             $updateCategory = Banner::where('id', $request->category_id)->update([
                 'banner_image' =>  $fileName,
-                
+
             ]);
 
         }
