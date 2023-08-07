@@ -29,7 +29,7 @@
                 <select id="subcategory" name="selected_category_id">
                     <option value="" disabled selected>Select Category</option>
                     @foreach ($category as $cat)
-                    @if ($cat->parent_id === null)
+                    @if ($cat->parent_id == null)
                     <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
                     @endif
                     @endforeach
@@ -65,7 +65,7 @@
                     @foreach ($category as $cat)
                     @if (!empty($cat->parent_id))
                     <tr>
-                        <td>{{ $cat->parentCategory->category_name }}</td>
+                        <td>{{ $cat->parentCategory->category_name ?? '' }}</td>
                         <td>{{ $cat->category_name }}</td>
                         <td>
                             <img style="width: 145px;" src="{{ asset('public/category/'.($cat->category_image)) }}"
@@ -208,7 +208,7 @@ error: function(data) {
 });
 
 }
-  
+
 
 </script>
 <script>
