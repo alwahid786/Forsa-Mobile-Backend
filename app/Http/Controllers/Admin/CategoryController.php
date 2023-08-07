@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Http\Request;
+use App\Models\Size;
 
 class CategoryController extends Controller
 {
@@ -183,6 +184,34 @@ class CategoryController extends Controller
 
     }
 
+ public function size(Request $request)
+    {
+         
+        if($request->isMethod('post'))
+        {
+            $result = $this->category->savesize($request);
+            
+            if($result == true)
+            {
+                return redirect()->back()->with('success', 'Add Size Successfully.');
 
+            } else {
+                
+                return redirect()->back()->with('error', 'Add Size Failed.');
+            }
+        }
 
+        
+        $allCategory = $this->category->getcategory(); 
+        $allsize = $this->category->getsize(); 
+        return view('pages.admin.category.Size' ,['category' => $allCategory , 'size'=> $allsize] );
+}
+public function addsize(Request $request)
+    {
+        $size = new Size();
+        $size->size = $request->title;
+        $size->category_id = $request->category_id;
+        $success = $size->save();
+        return redirect()->back()->with('success', 'Add Size Successfully.');
+    }
 }

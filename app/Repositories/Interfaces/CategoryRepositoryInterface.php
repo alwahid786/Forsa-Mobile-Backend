@@ -28,5 +28,7 @@ interface CategoryRepositoryInterface
     public function savebanner($request);
 
     public function getbanner();
+    
+    public function getsize();
 
 }

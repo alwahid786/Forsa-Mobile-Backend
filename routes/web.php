@@ -45,7 +45,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('edit_subcategory', [CategoryController::class, 'editsubcategory'])->name('edit.subcategory');
     Route::post('edit_banner', [CategoryController::class, 'editbanner'])->name('edit.banner');
     Route::post('edit_banner_view', [CategoryController::class, 'editbannerData'])->name('edit.banner.view');
-
+    Route::any('size', [CategoryController::class, 'size'])->name('size.post'); 
+     Route::any('addsize', [CategoryController::class, 'addsize'])->name('addsize.post'); 
     Route::get('vendor_detail/{id}', [UserController::class, 'vendorDetail']);
     Route::get('user_detail/{id}', [UserController::class, 'userDetail']);
 

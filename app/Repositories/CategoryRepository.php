@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Models\Category;
 use App\Models\Banner;
+use App\Models\Size;
 use Carbon\Carbon;
 
 class CategoryRepository implements CategoryRepositoryInterface
@@ -229,7 +230,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         $banner = Banner::all();
         return $banner;
     }
-    
+     public function getsize()
+    {
+        $size = Size::all();
+        return $size;
+    }
     public function editbanner($request) 
 
     {
