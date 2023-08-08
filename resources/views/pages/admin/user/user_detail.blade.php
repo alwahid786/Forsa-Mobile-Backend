@@ -2,10 +2,24 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css">
 @section('content')
 @include('includes.admin.navbar')
+<style>
+    .backButton {
+        background: #6cc2b6;
+    width: 125px;
+    height: 40px;
+    margin-left: 16px;
+    margin-bottom: 20px;
+    border-style: none;
+    border-radius: 5px;
+    color: white;
+    }
+</style>
 <main class="content-wrapper">
 
 
-    <div class="plot-detail-avenue-section">
+    <div class="plot-detail-avenue-section m-5">
+        {{-- <a href="">Back to User</a> --}}
+        <a href="{{ url('user_list') }}"><button class="backButton">Back to Users</button></a>
         <div class="col-12 inner-heading">
            <img src="{{ $userDetail->profile_img }}" alt="">
         </div>

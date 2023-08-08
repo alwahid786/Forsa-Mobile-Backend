@@ -194,7 +194,7 @@
         "ordering": false,
         "info":     true,
         "searching": true,
-        "lengthChange": false,
+        "lengthChange": true,
         "pageLength": 10,
         language: {
     'paginate': {
