@@ -39,7 +39,7 @@
             <table id="detail-table" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Serial Number </th>
+                        <th>#</th>
                         <th>BannerImage</th>
                         <th>Action</th>
                     </tr>
@@ -175,17 +175,17 @@ error: function(data) {
 });
 
 }
-  
+
 
 </script>
 <script>
     $(document).ready(function () {
     $('#detail-table').DataTable({
         "ordering": false,
-        "info":     false,
-        "searching": false,
-        "lengthChange": false,
-        "pageLength": 12,
+        "info":     true,
+        "searching": true,
+        "lengthChange": true,
+        "pageLength": 10,
         language: {
     'paginate': {
       'previous': '<i class="fa fa-chevron-left p-left" aria-hidden="true"></i>',
