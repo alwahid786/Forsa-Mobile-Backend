@@ -20,7 +20,7 @@
             action="{{ route('addsize.post') }}" enctype="multipart/form-data">
             @csrf
 
-            <div class="form-group select_field">
+            <div class="form-group select_field mt-5">
                 <select id="category" name="category_id">
                     <option value="" disabled selected>Select Category</option>
                     @foreach ($category as $cat)
