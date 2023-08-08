@@ -59,7 +59,7 @@
                     @foreach ($size as $size)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $size->category->category_name }}</td>
+                        <td>{{ $size->category->category_name ?? '' }}</td>
                         <td>{{ $size->size }}</td>
                         <td>
                             <button type="button" class="btn btn-primary" onclick="editModal({{ $size->id }})">Edit</button>
