@@ -139,7 +139,7 @@
 
                     </div>
                     <div class="form-group select_field">
-                        <select id="subcategory" name="selected_category_id">
+                        <select id="subcategoryEdit" name="selected_category_id">
                             {{-- <option value="" disabled selected>Select Category</option> --}}
                             @foreach ($category as $cat)
                                 @if($cat->parent_id == NULL)
@@ -206,7 +206,7 @@ $.ajax({
     $('#modalImageSrc').attr('src', categoryImage)
     $('#category_id').val(id)
     $("#editmodal").modal('show');
-    $("#subcategory").val(parentCategory).attr('selected', true)
+    $("#subcategoryEdit").val(parentCategory).attr('selected', true)
 
     },
     error: function(data) {
