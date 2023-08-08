@@ -100,6 +100,8 @@ class CategoryController extends Controller
         ], 200);
 
     }
+
+
     public function editbannerData(Request $request)
     {
         $id = $request->id;
@@ -124,6 +126,8 @@ class CategoryController extends Controller
         }
 
     }
+
+
     public function editsubcategory(Request $request)
     {
         $result = $this->category->editsubcategory($request);
@@ -133,6 +137,8 @@ class CategoryController extends Controller
         }
 
     }
+
+
     public function subcategory(Request $request)
     {
 
@@ -155,7 +161,9 @@ class CategoryController extends Controller
         return view('pages.admin.category.SubCategory', ['category' => $allCategory]);
 
     }
-      public function banner(Request $request)
+
+
+    public function banner(Request $request)
     {
          if($request->isMethod('post'))
         {
@@ -175,7 +183,10 @@ class CategoryController extends Controller
         return view('pages.admin.category.Banner', ['banner' => $banner ]);
 
     }
-            public function editbanner(Request $request)
+
+
+
+    public function editbanner(Request $request)
     {
         $result = $this->category->editbanner($request);
 
@@ -185,29 +196,31 @@ class CategoryController extends Controller
 
     }
 
- public function size(Request $request)
+
+    public function size(Request $request)
     {
-         
+
         if($request->isMethod('post'))
         {
             $result = $this->category->savesize($request);
-            
+
             if($result == true)
             {
                 return redirect()->back()->with('success', 'Add Size Successfully.');
 
             } else {
-                
+
                 return redirect()->back()->with('error', 'Add Size Failed.');
             }
         }
 
-        
-        $allCategory = $this->category->getcategory(); 
-        $allsize = $this->category->getsize(); 
+
+        $allCategory = Category::where('parent_id', '=', NULL)->get();
+        $allsize = $this->category->getsize();
         return view('pages.admin.category.Size' ,['category' => $allCategory , 'size'=> $allsize] );
-}
-public function addsize(Request $request)
+    }
+
+    public function addsize(Request $request)
     {
         $size = new Size();
         $size->size = $request->title;
@@ -215,4 +228,38 @@ public function addsize(Request $request)
         $success = $size->save();
         return redirect()->back()->with('success', 'Add Size Successfully.');
     }
+
+    public function deleteSize(Request $request)
+    {
+
+        $sizeId =  $request->size_id;
+
+        $deleteSize = $this->category->deleteSize($sizeId);
+
+        return redirect()->back()->with('error', 'Delete Size Successfully.');
+    }
+
+    public function getSizeData(Request $request)
+    {
+        $id = $request->id;
+
+        $sizeData = $this->category->getSizeData($id);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $sizeData,
+            'message' => 'Size data!'
+        ], 200);
+    }
+
+    public function editSize(Request $request)
+    {
+        $result = $this->category->editSize($request);
+
+        if($result)
+        {
+            return redirect()->back()->with('success', 'Update Size Successfully.');
+        }
+    }
+
 }

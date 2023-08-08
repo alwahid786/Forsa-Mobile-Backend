@@ -16,7 +16,7 @@
         <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('error') }}</p>
         @endif
 
-        <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post"
+        <form class="categoryForm d-flex flex-column justify-content-center align-items-center " method="post"
             action="{{ route('addsize.post') }}" enctype="multipart/form-data">
             @csrf
 
@@ -50,15 +50,21 @@
                 <thead>
                     <tr>
                         <th>Serial Number</th>
+                        <th>Category Name</th>
                         <th>Size</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($size as $size)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
+                        <td>{{ $size->category->category_name }}</td>
                         <td>{{ $size->size }}</td>
-                      
+                        <td>
+                            <button type="button" class="btn btn-primary" onclick="editModal({{ $size->id }})">Edit</button>
+                            <button type="button" onclick="deleteModal({{ $size->id }})" class="btn btn-danger">Delete</button>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -68,72 +74,73 @@
 </main>
 
 <!-- Delete Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <h4 class="text-center">Are you sure you want to delete this category</h4>
-            </div>
-            <div class="modal-footer">
-
-                <form action="{{ route('delete.category') }}" method="post">
-                    @csrf
-                    <input type="hidden" class="categoryId" name="category_id">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
-
-                </form>
-
-
-            </div>
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4 class="text-center">Are you sure you want to delete this Size</h4>
         </div>
-    </div>
-</div>
-<!-- End Delete Modal -->
+        <div class="modal-footer">
 
-{{-- edit modal --}}
+          <form action="{{ route('delete.size') }}" method="post">
+            @csrf
+            <input type="hidden" class="sizeId" name="size_id">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
 
-<div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
+          </form>
 
-                <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post"
-                    action="{{ route('edit.category') }}" enctype="multipart/form-data">
-                    @csrf
-
-                    <div class="form-group">
-
-                        {{-- image --}}
-
-                        <label class="picture_d" for="picture__input_modal" tabIndex="0">
-                            <span class="picture__image_d"><img src="" alt="" id="modalImageSrc"></span>
-                        </label>
-
-                        <input type="file" name="category_image" id="picture__input_modal">
-
-                        <input type="hidden" name="category_id" id="category_id">
-
-                        {{-- end image --}}
-
-                    </div>
-                    <div class="form-group">
-                        <input type="text" name="category_name" class="form-control" style="width: 400px;height: 50px;"
-                            id="category_name" placeholder="Category Name" required>
-
-                    </div>
-                    <button type="submit" class="btn btn-success">Update Category</button>
-                </form>
-
-            </div>
 
         </div>
+      </div>
     </div>
-</div>
+  </div>
+  <!-- End Delete Modal -->
 
-{{-- edit modal end --}}
+  {{-- edit modal --}}
+
+<div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+
+        <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post" action="{{ route('edit.size') }}" enctype="multipart/form-data">
+          @csrf
+
+          <div class="form-group">
+
+            <div class="form-group select_field">
+                <select id="category" class="categoryName" name="category_id">
+                    <option value="" disabled selected>Select Category</option>
+                    @foreach ($category as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
+
+                    @endforeach
+                </select>
+
+            </div>
+
+            <input type="hidden" class="id" name="id">
+
+            <div class="form-group">
+                <input type="text" name="title" class="form-control title" style="width: 400px;height: 50px;"
+                    id="exampleInputName2" >
+
+            </div>
+
+          </div>
+
+          <button type="submit" class="btn btn-success">Update Category</button>
+        </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {{-- edit modal end --}}
+
 
 
 @endsection
@@ -145,12 +152,15 @@
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
 <script>
-    function deleteModal(id) {
-    $('.categoryId').val(id)
-    $("#deleteModal").modal('show');
-  }
 
-  function editModal(id) {
+function deleteModal(id) {
+    $('.sizeId').val(id)
+    $("#deleteModal").modal('show');
+}
+
+function editModal(id) {
+
+    // $("#editmodal").modal('show');
 
     $.ajaxSetup({
         headers: {
@@ -160,30 +170,33 @@
 
     $.ajax({
 
-      url: '{{ route("edit.category.view") }}',
-      type: "POST",
-      data: {id : id},
-      dataType: 'json',
+    url: '{{ route("size.data") }}',
+    type: "GET",
+    data: {id : id},
+    dataType: 'json',
 
-      success: function(data) {
+    success: function(data) {
 
-        var categoryName = data.data.category_name;
-        var categoryImage = '{{ asset('public/category') }}' + '/' + data.data.category_image;
+        var categoryName = data.data.category.id
 
-        $("#category_name").val(categoryName)
-        $('#modalImageSrc').attr('src', categoryImage)
-        $('#category_id').val(id)
+        var size = data.data.size
+        var id = data.data.id
+
+        $('.title').val(size)
+
+        $('.id').val(id)
+
+        $(".categoryName").val(categoryName).attr('selected', true)
         $("#editmodal").modal('show');
 
-      },
-      error: function(data) {
+    },
+    error: function(data) {
 
-      }
+    }
 
     });
 
-  }
-
+}
 
 </script>
 <script>
@@ -202,72 +215,6 @@
   }
     });
 
-
-    // form image script
-    const inputFile = document.querySelector("#picture__input");
-    const pictureImage = document.querySelector(".picture__image");
-    const pictureImageTxt = "Choose an image";
-    pictureImage.innerHTML = pictureImageTxt;
-
-    inputFile.addEventListener("change", function (e) {
-      const inputTarget = e.target;
-      const file = inputTarget.files[0];
-
-      if (file) {
-        const reader = new FileReader();
-
-        reader.addEventListener("load", function (e) {
-          const readerTarget = e.target;
-
-          const img = document.createElement("img");
-          img.src = readerTarget.result;
-          img.classList.add("picture__img");
-
-          pictureImage.innerHTML = "";
-          pictureImage.appendChild(img);
-        });
-
-        reader.readAsDataURL(file);
-      } else {
-        pictureImage.innerHTML = pictureImageTxt;
-      }
-    });
-
-    // form image script end
-
-    // form image modal script
-
-    const inputFileTest = document.querySelector("#picture__input_modal");
-    const pictureImage_d = document.querySelector(".picture__image_d");
-    const pictureImageTxt_d = "Choose an image";
-    pictureImage.innerHTML = pictureImageTxt_d;
-
-    inputFileTest.addEventListener("change", function (e) {
-      const inputTarget = e.target;
-      const file = inputTarget.files[0];
-
-      if (file) {
-        const reader = new FileReader();
-
-        reader.addEventListener("load", function (e) {
-          const readerTarget = e.target;
-
-          const img = document.createElement("img");
-          img.src = readerTarget.result;
-          img.classList.add("picture__image_d");
-
-          pictureImage_d.innerHTML = "";
-          pictureImage_d.appendChild(img);
-        });
-
-        reader.readAsDataURL(file);
-      } else {
-        pictureImage_d.innerHTML = pictureImageTxt_d;
-      }
-    });
-
-
-    // form image modal script end
 
 });
 </script>

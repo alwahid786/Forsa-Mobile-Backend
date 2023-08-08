@@ -39,7 +39,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function getcategory()
     {
-        $allCategory = Category::all();
+        $allCategory = Category::orderBy('created_at', 'desc')->get();
         return $allCategory;
     }
 
@@ -234,10 +234,11 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
      public function getsize()
     {
-        $size = Size::all();
+        $size = Size::orderBy('created_at', 'desc')->with('category')->get();
+
         return $size;
     }
-    public function editbanner($request) 
+    public function editbanner($request)
 
     {
         $file = $request->file('category_image');
@@ -264,7 +265,27 @@ class CategoryRepository implements CategoryRepositoryInterface
             return false;
         }
 
+    }
 
+    public function deleteSize($id)
+    {
+        $query = Size::where('id', $id)->delete();
+        return $query;
+    }
 
+    public function getSizeData($id)
+    {
+        $query = Size::with('category')->where('id', $id)->first();
+        return $query;
+    }
+
+    public function editSize($request)
+    {
+        $query = Size::where('id', $request->id)->update([
+            'category_id' => $request->category_id,
+            'size' => $request->title,
+        ]);
+
+        return $query;
     }
 }

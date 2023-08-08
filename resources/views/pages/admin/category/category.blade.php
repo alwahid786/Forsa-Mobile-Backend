@@ -192,10 +192,10 @@
     $(document).ready(function () {
     $('#detail-table').DataTable({
         "ordering": false,
-        "info":     false,
-        "searching": false,
+        "info":     true,
+        "searching": true,
         "lengthChange": false,
-        "pageLength": 12,
+        "pageLength": 10,
         language: {
     'paginate': {
       'previous': '<i class="fa fa-chevron-left p-left" aria-hidden="true"></i>',
