@@ -25,6 +25,30 @@
                     Categories</a>
             </li>
             <li class="nav-item ">
+                <a class="nav-link sidenav-item" href="{{ url('sub_category') }}"><img
+                        src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30"
+                        height="30">
+                    <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30"
+                        height="30">
+                    Sub Categories</a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link sidenav-item" href="{{ url('size') }}"><img
+                        src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30"
+                        height="30">
+                    <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30"
+                        height="30">
+                    Size</a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link sidenav-item" href="{{ url('banner') }}"><img
+                        src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30"
+                        height="30">
+                    <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30"
+                        height="30">
+                    Banners</a>
+            </li>
+            <li class="nav-item ">
                 <a class="nav-link sidenav-item" href="{{ url('vendor_list') }}"><img
                         src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30"
                         height="30">
@@ -41,30 +65,9 @@
                     All Users</a>
             </li>
 
-            <li class="nav-item ">
-                <a class="nav-link sidenav-item" href="{{ url('sub_category') }}"><img
-                        src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30"
-                        height="30">
-                    <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30"
-                        height="30">
-                    Sub Categories</a>
-            </li>
-            <li class="nav-item ">
-                <a class="nav-link sidenav-item" href="{{ url('banner') }}"><img
-                        src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30"
-                        height="30">
-                    <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30"
-                        height="30">
-                    Banners</a>
-            </li>
-            <li class="nav-item ">
-                <a class="nav-link sidenav-item" href="{{ url('size') }}"><img
-                        src="{{asset('public/assets/images/plots.svg')}}" class="icon-white pr-2" width="30"
-                        height="30">
-                    <img src="{{asset('public/assets/images/blue-plots.png')}}" class="icon-blue pr-2" width="30"
-                        height="30">
-                    Size</a>
-            </li>
+
+
+
         </ul>
         <form class="form-inline  mt-2 mt-md-0 ml-auto navbar-header-right-section pt-2 pt-lg-0">
 
