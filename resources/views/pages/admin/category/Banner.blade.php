@@ -264,7 +264,7 @@ error: function(data) {
 });
 </script>
 <script>
-    $('.sidenav  li:nth-of-type(6)').addClass('active');
+    $('.sidenav  li:nth-of-type(5)').addClass('active');
 </script>
 
 @endsection

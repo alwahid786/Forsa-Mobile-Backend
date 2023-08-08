@@ -219,6 +219,6 @@ function editModal(id) {
 });
 </script>
 <script>
-    $('.sidenav  li:nth-of-type(7)').addClass('active');
+    $('.sidenav  li:nth-of-type(4)').addClass('active');
 </script>
 @endsection
