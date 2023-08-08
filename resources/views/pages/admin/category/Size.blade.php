@@ -49,7 +49,7 @@
             <table id="detail-table" style="width: 100%">
                 <thead>
                     <tr>
-                        <th>Serial Number</th>
+                        <th>#</th>
                         <th>Category Name</th>
                         <th>Size</th>
                         <th>Action</th>
