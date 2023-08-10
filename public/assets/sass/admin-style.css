@@ -159,7 +159,10 @@ body, html {
   color: #797979;
   cursor: pointer;
 }
-
+.select_field select {
+  width: 400;
+  height: 50;
+}
 @media screen and (max-width: 1366px) {
   .login-button-outer {
     padding-top: 30px;
@@ -318,7 +321,7 @@ body, html {
 .logo-header img {
   margin-left: 40px!important;
   height: 50px !important;
- 
+
   /* position: fixed; */
   z-index: 999;
 }
@@ -1015,17 +1018,17 @@ body, html {
   .card-counter.danger{
     background-color: #ef5350;
     color: #FFF;
-  }  
+  }
 
   .card-counter.success{
     background-color: #66bb6a;
     color: #FFF;
-  }  
+  }
 
   .card-counter.info{
     background-color: #26c6da;
     color: #FFF;
-  }  
+  }
 
   .card-counter i{
     font-size: 5em;
@@ -1058,7 +1061,7 @@ body, html {
   padding: 0;
   margin: 0;
   margin-top: 20px;
-  
+
 }
 .detail-client-table{
   width: 100%;
@@ -1073,7 +1076,90 @@ body, html {
 }
 
 
+#picture__input {
+  display: none;
+}
+
+.picture {
+  width: 400px;
+  aspect-ratio: 16/9;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  border: 2px dashed currentcolor;
+  cursor: pointer;
+  font-family: sans-serif;
+  transition: color 300ms ease-in-out, background 300ms ease-in-out;
+  outline: none;
+  overflow: hidden;
+}
+
+.picture:hover {
+  color: #777;
+  background: #ccc;
+}
+
+.picture:active {
+  border-color: turquoise;
+  color: turquoise;
+  background: #eee;
+}
+
+.picture:focus {
+  color: #777;
+  background: #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.picture__img {
+  max-width: 100%;
+}
+
+
+
 /*# sourceMappingURL=admin-style.css.map */
 
+#picture__input_modal {
+  display: none;
+}
+
+.picture_d {
+  width: 400px;
+  aspect-ratio: 16/9;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  border: 2px dashed currentcolor;
+  cursor: pointer;
+  font-family: sans-serif;
+  transition: color 300ms ease-in-out, background 300ms ease-in-out;
+  outline: none;
+  overflow: hidden;
+}
+
+.picture_d:hover {
+  color: #777;
+  background: #ccc;
+}
+
+.picture_d:active {
+  border-color: turquoise;
+  color: turquoise;
+  background: #eee;
+}
+
+.picture_d:focus {
+  color: #777;
+  background: #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.picture_d__img {
+  max-width: 100%;
+}
 
 

@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,35 +26,31 @@ Route::get('/stripe/connect-success', function () {
 
 Route::any('login', [AuthController::class, 'login'])->name('login');
 
-// Route::get('/login', function () {
-//     return view('pages.admin.auth.login');
-// });
 Route::middleware(['auth'])->group(function () {
-    
-Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/plot', function () {
-    return view('pages.admin.plots.plot');
-});
+    Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/plot-detail', function () {
-    return view('pages.admin.plots.plot-detail');
-});
+    Route::any('category', [CategoryController::class, 'category'])->name('category.post');
+    Route::post('delete_category', [CategoryController::class, 'deleteCategory'])->name('delete.category');
+    Route::post('edit_category_view', [CategoryController::class, 'editCategoryData'])->name('edit.category.view');
+    Route::post('edit_category', [CategoryController::class, 'editCategory'])->name('edit.category');
 
-Route::get('/client', function () {
-    return view('pages.admin.clients.client');
-});
+    Route::any('vendor_list', [UserController::class, 'listOfAllVendor']);
+    Route::any('user_list', [UserController::class, 'listOfAllUsers']);
 
-Route::get('/client-detail', function () {
-    return view('pages.admin.clients.client-detail');
-});
+    Route::any('sub_category', [CategoryController::class, 'subcategory'])->name('subcategory.post');
+    Route::any('banner', [CategoryController::class, 'banner'])->name('banner.post');
+    Route::post('delete_banner', [CategoryController::class, 'deletebanner'])->name('delete.banner');
+    Route::post('edit_subcategory', [CategoryController::class, 'editsubcategory'])->name('edit.subcategory');
+    Route::post('edit_banner', [CategoryController::class, 'editbanner'])->name('edit.banner');
+    Route::post('edit_banner_view', [CategoryController::class, 'editbannerData'])->name('edit.banner.view');
+    Route::any('size', [CategoryController::class, 'size'])->name('size.post');
+    Route::any('addsize', [CategoryController::class, 'addsize'])->name('addsize.post');
+    Route::get('vendor_detail/{id}', [UserController::class, 'vendorDetail']);
+    Route::get('user_detail/{id}', [UserController::class, 'userDetail']);
 
-Route::get('/manager', function () {
-    return view('pages.admin.managers.manager');
-});
-
-Route::get('/manager-detail', function () {
-    return view('pages.admin.managers.manager-detail');
-});
+    Route::any('delete_size', [CategoryController::class, 'deleteSize'])->name('delete.size');
+    Route::get('get_size_data', [CategoryController::class, 'getSizeData'])->name('size.data');
+    Route::any('edit_size', [CategoryController::class, 'editSize'])->name('edit.size');
 });
