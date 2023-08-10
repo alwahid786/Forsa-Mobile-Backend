@@ -22,6 +22,7 @@ use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use Stripe;
 use App\Http\Controllers\SettingController;
+use App\Models\Location;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\NumberParseException;
@@ -123,9 +124,11 @@ class ChatController extends Controller
                     $chat['unreadCount'] = Message::where(['chat_id' => $chat->id, 'is_read' => 0])->count();
                 }
                 if ($chat['client_id'] != $loginUserId) {
-                    $chat['userData'] = User::find($chat['client_id'])->with('location');
+                    $chat['userData'] = User::find($chat['client_id']);
+                    $chat['userData']['location'] = Location::where('user_id', $chat['client_id'])->first();
                 } elseif ($chat['vendor_id'] != $loginUserId) {
-                    $chat['userData'] = User::find($chat['vendor_id'])->with('location');
+                    $chat['userData'] = User::find($chat['vendor_id']);
+                    $chat['userData']['location'] = Location::where('user_id', $chat['vendor_id'])->first();
                 }
             }
             return $this->sendResponse($chats, "List of All chats");
