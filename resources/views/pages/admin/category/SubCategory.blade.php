@@ -305,7 +305,7 @@ $.ajax({
 });
 </script>
 <script>
-    $('.sidenav  li:nth-of-type(3)').addClass('active');
+    $('.sidenav  li:nth-of-type(4)').addClass('active');
 </script>
 
 @endsection

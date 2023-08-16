@@ -40,4 +40,8 @@ class UserController extends Controller
         return view('pages.admin.user.user_detail', ['userDetail'=> $userDetail]);
     }
 
+    public function products(){
+        
+    }
+
 }
