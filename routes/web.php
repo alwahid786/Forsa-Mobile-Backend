@@ -55,5 +55,6 @@ Route::middleware(['auth'])->group(function () {
     Route::any('edit_size', [CategoryController::class, 'editSize'])->name('edit.size');
 
     Route::any('products', [UserController::class, 'products'])->name('products');
+    Route::get('/product-details/{id}', [UserController::class, 'productDetails']);
 
 });
