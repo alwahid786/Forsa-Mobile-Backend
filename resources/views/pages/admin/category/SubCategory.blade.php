@@ -77,8 +77,8 @@
                                     <td>{{ $cat->parentCategory->category_name ?? '' }}</td>
                                     <td>{{ $cat->category_name }}</td>
                                     <td>
-                                        <img style="width: 145px;" src="{{ $cat->category_image }}"
-                                            alt="{{ $cat->category_image }}">
+                                        <a target="_blank" href="{{ $cat->category_image }}"><img style="width: 100px;height: 100px;border-radius: 5px;" src="{{ $cat->category_image }}"
+                                            alt="{{ $cat->category_image }}"></a>
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-primary"

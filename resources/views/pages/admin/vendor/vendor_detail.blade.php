@@ -20,7 +20,7 @@
     <div class="plot-detail-avenue-section">
         <a href="{{ url('vendor_list') }}"><button class="backButton">Back to Vendors</button></a>
         <div class="col-12 inner-heading">
-           <img src="{{ $vendorDetail->profile_img }}" alt="">
+           <img style="width: 200px;height: 200px;border-radius: 5px;" src="{{ $vendorDetail->profile_img }}" alt="">
         </div>
         <div class="detail-cards">
             <div class="detail-card-item">

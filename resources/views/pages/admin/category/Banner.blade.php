@@ -51,8 +51,8 @@
                         @foreach ($banner as $ban)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td> <img style="width: 145px;" src="{{ $ban->banner_image }}"
-                                        alt="{{ $ban->banner_image }}"> </td>
+                                <td>
+                                    <a target="_blank" href="{{ $ban->banner_image }}"><img style="width: 100px;height: 100px;border-radius: 5px;" src="{{ $ban->banner_image }}" alt="{{ $ban->banner_image }}"></a> </td>
                                 <td>
                                     <button type="button" class="btn btn-primary"
                                         onclick="editModal({{ $ban->id }})">Edit</button>
