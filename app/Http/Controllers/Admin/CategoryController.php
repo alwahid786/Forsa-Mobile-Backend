@@ -62,7 +62,7 @@ class CategoryController extends Controller
 
         if($deletecategory == true)
         {
-            return redirect()->back()->with('error', 'Delete Category Successfully.');
+            return redirect()->back()->with('success', 'Delete Category Successfully.');
         }
 
     }
@@ -188,9 +188,13 @@ class CategoryController extends Controller
 
     public function editbanner(Request $request)
     {
-        $result = $this->category->editbanner($request);
-
-        if($result == true) {
+        if($request->category_image != null)
+        {
+            $result = $this->category->editbanner($request);
+            if($result == true) {
+                return redirect()->back()->with('success', 'Update banner Successfully.');
+            }
+        } else {
             return redirect()->back()->with('success', 'Update banner Successfully.');
         }
 
