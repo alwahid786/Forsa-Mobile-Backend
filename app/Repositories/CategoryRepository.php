@@ -21,7 +21,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         $addCategory = Category::create([
             'category_name' =>  $request->category_name,
-            'category_image' =>  $fileName,
+            'category_image' =>  url('public/category/') . '/' . $fileName,
             'parent_id' => NULL,
         ]);
 
@@ -106,7 +106,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
             $updateCategory = Category::where('id', $request->category_id)->update([
                 'category_name' =>  $request->category_name,
-                'category_image' =>  $fileName,
+                'category_image' =>  url('public/category/') . '/' . $fileName,
                 'parent_id' => NULL,
             ]);
 
@@ -145,7 +145,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             $updateCategory = Category::where('id', $request->category_id)->update([
                 'category_name' =>  $request->category_name,
                 'parent_id' =>  $request->selected_category_id,
-                'category_image' =>  $fileName,
+                'category_image' =>  url('public/category/') . '/' . $fileName,
 
             ]);
 
@@ -187,7 +187,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         $addCategory = Category::create([
             'category_name' =>  $request->category_name,
-            'category_image' =>  $fileName,
+            'category_image' =>  url('public/category/') . '/' . $fileName,
             'parent_id' =>  $selectedCategoryId,
         ]);
 
@@ -212,7 +212,7 @@ class CategoryRepository implements CategoryRepositoryInterface
       $file->move(public_path('category'), $fileName);
 
         $addbanner = Banner::create([
-            'banner_image' =>  $fileName,
+            'banner_image' =>  url('public/category/') . '/' . $fileName,
         ]);
 
         if ($addbanner)
@@ -251,7 +251,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             $file->move(public_path('category'), $fileName);
 
             $updateCategory = Banner::where('id', $request->category_id)->update([
-                'banner_image' =>  $fileName,
+                'banner_image' =>  url('public/category/') . '/' . $fileName,
 
             ]);
 

@@ -25,7 +25,7 @@
             <span class="picture__image"></span>
           </label>
 
-          <input type="file" name="category_image" id="picture__input" required>
+          <input type="file" name="category_image" id="picture__input"  accept="image/*" required>
 
         </div>
         <div class="form-group">
@@ -56,8 +56,8 @@
             @if ($cat->parent_id === null)
             <tr>
               <td>{{ $cat->category_name }}</td>
-              <td><img style="width: 145px;" src="{{ asset('public/category/'.($cat->category_image)) }}"
-                  alt="{{ $cat->category_image }}"></td>
+              <td><a target="_blank" href="{{ $cat->category_image }}"><img style="width: 100px;height: 100px;border-radius: 5px;" src="{{ $cat->category_image }}"
+                  alt="{{ $cat->category_image }}"></a></td>
               <td>
                 <button type="button" class="btn btn-primary" onclick="editModal({{ $cat->id }})">Edit</button>
                 <button type="button" class="btn btn-danger deleteButton" src-attr="{{ $cat->id }}"
@@ -114,7 +114,7 @@
             <span class="picture__image_d"><img src="" alt="" id="modalImageSrc"></span>
           </label>
 
-          <input type="file" name="category_image" id="picture__input_modal">
+          <input type="file" name="category_image" id="picture__input_modal" accept="image/*">
 
           <input type="hidden" name="category_id" id="category_id">
 
@@ -170,7 +170,7 @@
       success: function(data) {
 
         var categoryName = data.data.category_name;
-        var categoryImage = '{{ asset('public/category') }}' + '/' + data.data.category_image;
+        var categoryImage =  data.data.category_image;
 
         $("#category_name").val(categoryName)
         $('#modalImageSrc').attr('src', categoryImage)

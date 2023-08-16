@@ -68,7 +68,7 @@
                         <td>{{ $cat->parentCategory->category_name ?? '' }}</td>
                         <td>{{ $cat->category_name }}</td>
                         <td>
-                            <img style="width: 145px;" src="{{ asset('public/category/'.($cat->category_image)) }}"
+                            <img style="width: 145px;" src="{{ $cat->category_image }}"
                                 alt="{{ $cat->category_image }}">
                         </td>
                         <td>
@@ -199,7 +199,7 @@ $.ajax({
 
     // alert(parentCategory)
 
-    var categoryImage = '{{ asset('public/category') }}' + '/' + data.data.category_image;
+    var categoryImage = data.data.category_image;
 
 
     $("#category_name").val(categoryName)

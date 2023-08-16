@@ -22,7 +22,7 @@
                     <span class="picture__image"></span>
                 </label>
 
-                <input type="file" name="banner_image" id="picture__input" required>
+                <input type="file" name="banner_image" id="picture__input"  accept="image/*" required>
 
             </div>
             <button type="submit" class="btn btn-success">Add Banner</button>
@@ -49,7 +49,7 @@
                     @foreach ($banner as $ban)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td> <img style="width: 145px;" src="{{ asset('public/category/'.($ban->banner_image)) }}"
+                        <td> <img style="width: 145px;" src="{{ $ban->banner_image }}"
                                 alt="{{ $ban->banner_image }}"> </td>
                         <td>
                             <button type="button" class="btn btn-primary"
@@ -111,7 +111,7 @@
                             <span class="picture__image_d"><img src="" alt="" id="modalImageSrc"></span>
                         </label>
 
-                        <input type="file" name="category_image" id="picture__input_modal">
+                        <input type="file" name="category_image"  accept="image/*" id="picture__input_modal">
 
                         <input type="hidden" name="category_id" id="category_id">
 
@@ -161,7 +161,7 @@ dataType: 'json',
 success: function(data) {
 
 
-var categoryImage = '{{ asset('public/category') }}' + '/' + data.data.banner_image;
+var categoryImage = data.data.banner_image;
 
 $('#modalImageSrc').attr('src', categoryImage)
 $('#category_id').val(id)
