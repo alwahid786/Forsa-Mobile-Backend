@@ -62,7 +62,7 @@ class CategoryController extends Controller
 
         if($deletecategory == true)
         {
-            return redirect()->back()->with('error', 'Delete Category Successfully.');
+            return redirect()->back()->with('success', 'Delete Category Successfully.');
         }
 
     }
