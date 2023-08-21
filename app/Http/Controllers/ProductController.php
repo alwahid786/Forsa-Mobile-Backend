@@ -173,7 +173,6 @@ class ProductController extends Controller
     // Search Products 
     public function searchProducts(Request $request)
     {
-        DB::enableQueryLog();
         if ($request->has('name')) {
             $productsData = Product::where('title', 'LIKE', '%' . $request->name . '%');
         } else {
@@ -191,7 +190,6 @@ class ProductController extends Controller
             }
         }
         $products = $productsData->get();
-        dd(DB::getQueryLog());
         if (count($products) > 0) {
             foreach ($products as $product) {
                 $product['images'] = ProductImage::where('product_id', $product->id)->get();
