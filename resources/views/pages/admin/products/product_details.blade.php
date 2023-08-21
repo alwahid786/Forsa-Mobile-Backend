@@ -17,26 +17,26 @@
 <main class="content-wrapper">
 
 
-    <div class="plot-detail-avenue-section">
-        <a href="{{ url('vendor_list') }}"><button class="backButton">Back to Vendors</button></a>
+    <div class="plot-detail-avenue-section m-5">
+        <a href="{{ url('products') }}"><button class="backButton">Back to Products</button></a>
         <div class="col-12 inner-heading">
-           <img style="width: 200px;height: 200px;border-radius: 5px;" src="{{ $vendorDetail->profile_img }}" alt="">
+           <img src="{{ $product['profile_img'] ?? '-' }}" alt="">
         </div>
         <div class="detail-cards">
             <div class="detail-card-item">
                 <div class="detail-card-outer">
                    <div class="detail-card-content">
 
-                    <p>Name:</p>
-                    <p>{{ $vendorDetail->name . ' ' .$vendorDetail->last_name}}</p>
+                    <p>Product Name:</p>
+                    <p>{{ $product['title'] ?? '-'}}</p>
                    </div>
                    <div class="detail-card-content">
-                    <p>Email:</p>
-                    <p>{{ $vendorDetail->email}}</p>
+                    <p>Price:</p>
+                    <p>${{ $product['price'] ?? '-'}}</p>
                 </div>
                    <div class="detail-card-content">
-                    <p>Phone Number:</p>
-                    <p>{{ $vendorDetail->phone}}</p>
+                    <p>Brand:</p>
+                    <p>{{ $product['brand'] ?? '-'}}</p>
                    </div>
 
                 </div>
@@ -45,16 +45,16 @@
                 <div class="detail-card-outer">
 
                     <div class="detail-card-content">
-                        <p>User Name:</p>
-                        <p>{{ $vendorDetail->username}}</p>
+                        <p>Condition:</p>
+                        <p>{{ $product['condition'] ?? '-'}}</p>
                     </div>
                     <div class="detail-card-content">
-                        <p>Country:</p>
-                        <p>{{ $vendorDetail->country}}</p>
+                        <p>Discounted Price:</p>
+                        <p>{{ $product['discount_price'] ?? '-'}}</p>
                     </div>
                     <div class="detail-card-content">
-                    <p>City:</p>
-                    <p>{{ $vendorDetail->city}}</p>
+                    <p>Vendor Name:</p>
+                    <p>{{ $product['vendor']['name'] ?? '-'}}</p>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
 
                    <div class="detail-card-content">
                     <p>Location:</p>
-                    <p>{{ $vendorDetail->location}}</p>
+                    <p>{{ $product['location'] ?? '-'}}</p>
                    </div>
                 </div>
             </div>
@@ -93,6 +93,6 @@
 </script>
 
 <script>
-  $('.sidenav  li:nth-of-type(7)').addClass('active');
+  $('.sidenav  li:nth-of-type(2)').addClass('active');
 </script>
 @endsection

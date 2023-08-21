@@ -82,6 +82,6 @@
 });
 </script>
 <script>
-  $('.sidenav  li:nth-of-type(6)').addClass('active');
+  $('.sidenav  li:nth-of-type(7)').addClass('active');
 </script>
 @endsection

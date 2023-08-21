@@ -89,7 +89,7 @@
                 <table id="detail-table" class="detail-client-table" >
                     <thead>
                       <tr>
-                        <th class="table-heading" >Name Vendor</th>
+                        <th class="table-heading" >Vendor Name</th>
                         <th class="table-heading">Product Name</th>
                         <th class="table-heading">No of Solds</th>
                         <th class="table-heading">Product Price</th>

@@ -16,12 +16,12 @@
         <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('error') }}</p>
         @endif
 
-        <form class="categoryForm d-flex flex-column justify-content-center align-items-center " method="post"
+        <form class="categoryForm d-flex flex-column justify-content-center align-items-center " id="sizeForm" method="post"
             action="{{ route('addsize.post') }}" enctype="multipart/form-data">
             @csrf
 
             <div class="form-group select_field mt-5">
-                <select id="category" name="category_id">
+                <select class="categoryNameField" id="category" name="category_id">
                     <option value="" disabled selected>Select Category</option>
                     @foreach ($category as $cat)
                     <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
@@ -29,10 +29,14 @@
                     @endforeach
                 </select>
 
+                <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="categoryErrorMessage">Category field is required</p>
+
             </div>
             <div class="form-group">
                 <input type="text" name="title" class="form-control" style="width: 400px;height: 50px;"
-                    id="exampleInputName2" placeholder="Add Size" required>
+                    id="sizeField" placeholder="Add Size">
+
+                    <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="sizeErrorMessage">size field is required</p>
 
             </div>
             <button type="submit" class="btn btn-success">Add Size</button>
@@ -104,7 +108,7 @@
       <div class="modal-content">
         <div class="modal-body">
 
-        <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post" action="{{ route('edit.size') }}" enctype="multipart/form-data">
+        <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post" id="editSizeForm" action="{{ route('edit.size') }}" enctype="multipart/form-data">
           @csrf
 
           <div class="form-group">
@@ -124,7 +128,9 @@
 
             <div class="form-group">
                 <input type="text" name="title" class="form-control title" style="width: 400px;height: 50px;"
-                    id="exampleInputName2" >
+                    id="editSize" >
+
+                    <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="categoryEditErrorMessage">Size field is required</p>
 
             </div>
 
@@ -152,6 +158,47 @@
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
 <script>
+
+
+$("#editSizeForm").on('submit', function(){
+
+    var name = $("#editSize").val();
+    if(name == '')
+    {
+        $("#categoryEditErrorMessage").removeClass('d-none');
+        return false;
+    } else {
+        $("#categoryEditErrorMessage").addClass('d-none');
+    }
+
+});
+
+$("#sizeForm").on('submit', function(){
+      var name = $(".categoryNameField").val();
+      var size = $("#sizeField").val();
+      var hasError = false;
+
+      if(name == null)
+      {
+        $("#categoryErrorMessage").removeClass('d-none');
+        hasError = true;
+      } else {
+        $("#categoryErrorMessage").addClass('d-none');
+      }
+
+      if(size == '')
+      {
+        $("#sizeErrorMessage").removeClass('d-none');
+        hasError = true;
+      } else {
+        $("#sizeErrorMessage").addClass('d-none');
+      }
+
+      if(hasError) {
+        return false;
+      }
+  });
+
 
 function deleteModal(id) {
     $('.sizeId').val(id)
@@ -219,6 +266,6 @@ function editModal(id) {
 });
 </script>
 <script>
-    $('.sidenav  li:nth-of-type(4)').addClass('active');
+    $('.sidenav  li:nth-of-type(5)').addClass('active');
 </script>
 @endsection

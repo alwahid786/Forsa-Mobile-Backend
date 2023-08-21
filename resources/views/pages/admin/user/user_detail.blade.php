@@ -21,7 +21,7 @@
         {{-- <a href="">Back to User</a> --}}
         <a href="{{ url('user_list') }}"><button class="backButton">Back to Users</button></a>
         <div class="col-12 inner-heading">
-           <img src="{{ $userDetail->profile_img }}" alt="">
+           <img style="width: 200px;height: 200px;border-radius: 5px;" src="{{ $userDetail->profile_img }}" alt="">
         </div>
         <div class="detail-cards">
             <div class="detail-card-item">
@@ -94,6 +94,6 @@
 </script>
 
 <script>
-  $('.sidenav  li:nth-of-type(3)').addClass('active');
+  $('.sidenav  li:nth-of-type(8)').addClass('active');
 </script>
 @endsection
