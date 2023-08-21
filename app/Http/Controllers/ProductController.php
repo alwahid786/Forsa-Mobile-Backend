@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
+use DB;
 
 class ProductController extends Controller
 {
@@ -172,6 +173,7 @@ class ProductController extends Controller
     // Search Products 
     public function searchProducts(Request $request)
     {
+        DB::enableQueryLog();
         if ($request->has('name')) {
             $productsData = Product::where('title', 'LIKE', '%' . $request->name . '%');
         } else {
@@ -188,6 +190,7 @@ class ProductController extends Controller
                 }
             }
         }
+        dd(DB::getQueryLog());
         $products = $productsData->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
