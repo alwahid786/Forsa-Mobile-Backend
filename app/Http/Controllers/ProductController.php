@@ -179,10 +179,10 @@ class ProductController extends Controller
             if ($request->has('country')) {
                 $productsData->where('country', $request->country);
             }
-            if ($request->has('sub_category')) {
+            if ($request->has('sub_category') && $request->sub_category != 0) {
                 $productsData->where('category_id', $request->sub_category);
             }
-            if (!$request->has('sub_category')) {
+            if (!$request->has('sub_category') || $request->sub_category == 0) {
                 if ($request->has('category')) {
                     $productsData->where('category_id', $request->category);
                 }
