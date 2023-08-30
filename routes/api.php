@@ -81,6 +81,7 @@ Route::group(
         Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
         Route::post('/location', [VendorController::class, 'addUpdateLocation']);
         Route::get('/get-location', [VendorController::class, 'getLocation']);
+        Route::get('/check-stripe', [VendorController::class, 'checkStripe']);
     }
 );
 Route::get('vendor/stripe_redirect_url', [StripeController::class, 'stripeRedirectUrl']);
