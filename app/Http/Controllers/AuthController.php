@@ -50,7 +50,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            return $this->sendError(implode(",", $validator->errors()->all()));
         }
         $loginData = [
             'email' => $request->email,
@@ -211,8 +211,6 @@ class AuthController extends Controller
             // $success['user'] =  $createNewUser;
             $createNewUser['token'] =  $createNewUser->createToken('MyApp')->accessToken;
             return $this->sendResponse($createNewUser, 'Login Successfull!');
-
-           
         }
     }
 }
