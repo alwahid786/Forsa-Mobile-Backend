@@ -3,6 +3,7 @@
 @section('content')
     @include('includes.admin.navbar')
     <main class="content-wrapper">
+
         <div class="">
             @if (Session::has('success'))
                 <p class="alert {{ Session::get('alert-class', 'alert-success') }}">{{ Session::get('success') }}</p>
@@ -12,8 +13,8 @@
                 <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('error') }}</p>
             @endif
 
-            <form class="categoryForm d-flex flex-column justify-content-center align-items-center" id="bannerForm"
-                method="post" action="{{ route('banner.post') }}" enctype="multipart/form-data">
+            <form class="brandForm d-flex flex-column justify-content-center align-items-center" id="brandForm" method="post"
+                action="{{ route('brands.post') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">
@@ -22,12 +23,17 @@
                         <span class="picture__image"></span>
                     </label>
 
-                    <input type="file" name="banner_image" id="picture__input" accept="image/*">
-
-                    <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="imageErrorField">Banner image field is required</p>
-
+                    <input type="file" name="brand_image" id="picture__input" accept="image/*">
+                    <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="imageErrorMessage">Brand
+                        image field is required</p>
                 </div>
-                <button type="submit" class="btn btn-success">Add Banner</button>
+                <div class="form-group">
+                    <input type="text" name="brand_name" class="form-control" style="width: 400px;height: 50px;"
+                        id="brandNameField" placeholder="Brand Name">
+                    <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="nameErrorMessage">Brand
+                        name field is required</p>
+                </div>
+                <button type="submit" class="btn btn-success">Add Brand</button>
             </form>
 
         </div>
@@ -38,31 +44,30 @@
                 {{-- <h1>All Clients</h1> --}}
             </div>
             <div class="client-table pt-2">
-                <table id="detail-table" style="width:100%">
+                <table id="detail-table" style="width: 100%">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>BannerImage</th>
+                            <th>Brand Name</th>
+                            <th>Brand Image</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-
-                        @foreach ($banner as $ban)
+                        @foreach ($brands as $brand)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>
-                                    <a target="_blank" href="{{ $ban->banner_image }}"><img style="width: 100px;height: 100px;border-radius: 5px;" src="{{ $ban->banner_image }}" alt="{{ $ban->banner_image }}"></a> </td>
+                                <td>{{ $brand->brand_name }}</td>
+                                <td><a target="_blank" href="{{ $brand->brand_image }}"><img
+                                            style="width: 100px;height: 100px;border-radius: 5px;"
+                                            src="{{ $brand->brand_image }}" alt="{{ $brand->brand_image }}"></a></td>
                                 <td>
                                     <button type="button" class="btn btn-primary"
-                                        onclick="editModal({{ $ban->id }})">Edit</button>
+                                        onclick="editModal({{ $brand->id }})">Edit</button>
                                     <button type="button" class="btn btn-danger deleteButton"
-                                        src-attr="{{ $ban->id }}"
-                                        onclick="deleteModal({{ $ban->id }})">Delete</button>
+                                        src-attr="{{ $brand->id }}"
+                                        onclick="deleteModal({{ $brand->id }})">Delete</button>
                                 </td>
                             </tr>
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
@@ -75,13 +80,13 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <h4 class="text-center">Are you sure you want to delete this category</h4>
+                    <h4 class="text-center">Are you sure you want to delete this brand</h4>
                 </div>
                 <div class="modal-footer">
 
-                    <form action="{{ route('delete.banner') }}" method="post">
+                    <form action="{{ route('delete.brand') }}" method="post">
                         @csrf
-                        <input type="hidden" class="categoryId" name="category_id">
+                        <input type="hidden" class="brandId" name="brand_id">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-danger">Delete</button>
 
@@ -98,12 +103,12 @@
 
     <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-body">
 
                     <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post"
-                        action="{{ route('edit.banner') }}" enctype="multipart/form-data">
+                        id="editCategoryForm" action="{{ route('edit.category') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group">
@@ -114,16 +119,24 @@
                                 <span class="picture__image_d"><img src="" alt="" id="modalImageSrc"></span>
                             </label>
 
-                            <input type="file" name="category_image" accept="image/*" id="picture__input_modal">
+                            <input type="file" name="category_image" id="picture__input_modal" accept="image/*">
 
                             <input type="hidden" name="category_id" id="category_id">
 
                             {{-- end image --}}
 
                         </div>
+                        <div class="form-group">
+                            <input type="text" name="category_name" class="form-control"
+                                style="width: 400px;height: 50px;" id="category_name" placeholder="Category Name">
 
+                            <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none"
+                                id="nameEditErrorMessage">Category name field is required</p>
+
+                        </div>
                         <button type="submit" class="btn btn-success">Update Category</button>
                     </form>
+
                 </div>
 
             </div>
@@ -139,26 +152,39 @@
     {{-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> --}}
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+
     <script>
+        $("#brandForm").on('submit', function() {
+            var name = $("#brandNameField").val();
+            var image = $("#picture__input").val();
+            var hasError = false;
 
-    $("#bannerForm").on('submit', function(){
-        var image = $("#picture__input").val();
+            if (name == '') {
+                $("#nameErrorMessage").removeClass('d-none');
+                hasError = true;
+            } else {
+                $("#nameErrorMessage").addClass('d-none');
+            }
 
-        if(image == '')
-        {
-            $("#imageErrorField").removeClass('d-none');
-            return false;
-        } else {
-            $("#imageErrorField").addClass('d-none');
-        }
+            if (image == '') {
+                $("#imageErrorMessage").removeClass('d-none');
+                hasError = true;
+            } else {
+                $("#imageErrorMessage").addClass('d-none');
+            }
 
-    });
+            if (hasError) {
+                return false;
+            }
+        });
+
 
         function deleteModal(id) {
-            $('.categoryId').val(id)
+            $('.brandId').val(id)
             $("#deleteModal").modal('show');
         }
 
+        // edit
         function editModal(id) {
 
             $.ajaxSetup({
@@ -169,7 +195,7 @@
 
             $.ajax({
 
-                url: '{{ route('edit.banner.view') }}',
+                url: '{{ route('edit.brand.view') }}',
                 type: "POST",
                 data: {
                     id: id
@@ -178,12 +204,13 @@
 
                 success: function(data) {
 
+                    // var categoryName = data.data.category_name;
+                    // var categoryImage = data.data.category_image;
 
-                    var categoryImage = data.data.banner_image;
-
-                    $('#modalImageSrc').attr('src', categoryImage)
-                    $('#category_id').val(id)
-                    $("#editmodal").modal('show');
+                    // $("#category_name").val(categoryName)
+                    // $('#modalImageSrc').attr('src', categoryImage)
+                    // $('#category_id').val(id)
+                    // $("#editmodal").modal('show');
 
                 },
                 error: function(data) {
@@ -194,6 +221,7 @@
 
         }
     </script>
+
     <script>
         $(document).ready(function() {
             $('#detail-table').DataTable({
@@ -280,6 +308,6 @@
         });
     </script>
     <script>
-        $('.sidenav  li:nth-of-type(7)').addClass('active');
+        $('.sidenav  li:nth-of-type(5)').addClass('active');
     </script>
 @endsection

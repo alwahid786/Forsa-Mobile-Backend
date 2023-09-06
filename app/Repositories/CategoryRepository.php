@@ -3,12 +3,60 @@
 namespace App\Repositories;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Models\Category;
+use App\Models\Brand;
 use App\Models\Banner;
 use App\Models\Size;
 use Carbon\Carbon;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
+
+    public function saveBrand($request)
+    {
+        $file = $request->file('brand_image');
+
+        $fileName = time() . '_' . $file->getClientOriginalName();
+
+        $file->move(public_path('brand'), $fileName);
+
+        $addBrand = Brand::create([
+            'brand_name' =>  $request->brand_name,
+            'brand_image' =>  url('public/brand/') . '/' . $fileName,
+        ]);
+
+        if ($addBrand)
+        {
+
+            return true;
+
+        } else {
+
+            return false;
+
+        }
+    }
+
+    public function getBrand()
+    {
+        $allBrand = Brand::orderBy('created_at', 'desc')->get();
+        return $allBrand;
+    }
+
+    public function deleteBrand($id)
+    {
+        $deleteBrand = Brand::where('id', $id)->delete();
+
+        if ($deleteBrand)
+        {
+
+            return true;
+
+        } else {
+
+            return false;
+
+        }
+    }
 
     public function saveCategory($request)
     {
