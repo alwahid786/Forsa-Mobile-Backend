@@ -108,7 +108,7 @@
                 <div class="modal-body">
 
                     <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post"
-                        id="editCategoryForm" action="{{ route('edit.category') }}" enctype="multipart/form-data">
+                        id="editCategoryForm" action="{{ route('edit.brand') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group">
@@ -119,22 +119,22 @@
                                 <span class="picture__image_d"><img src="" alt="" id="modalImageSrc"></span>
                             </label>
 
-                            <input type="file" name="category_image" id="picture__input_modal" accept="image/*">
+                            <input type="file" name="brand_image" id="picture__input_modal" accept="image/*">
 
-                            <input type="hidden" name="category_id" id="category_id">
+                            <input type="hidden" name="brand_id" id="brand_id">
 
                             {{-- end image --}}
 
                         </div>
                         <div class="form-group">
-                            <input type="text" name="category_name" class="form-control"
-                                style="width: 400px;height: 50px;" id="category_name" placeholder="Category Name">
+                            <input type="text" name="brand_name" class="form-control"
+                                style="width: 400px;height: 50px;" id="brand_name" placeholder="Brand Name">
 
                             <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none"
-                                id="nameEditErrorMessage">Category name field is required</p>
+                                id="nameEditErrorMessage">Brand name field is required</p>
 
                         </div>
-                        <button type="submit" class="btn btn-success">Update Category</button>
+                        <button type="submit" class="btn btn-success">Update Brand</button>
                     </form>
 
                 </div>
@@ -195,7 +195,7 @@
 
             $.ajax({
 
-                url: '{{ route('edit.brand.view') }}',
+                url: '{{ route("edit.brand.view") }}',
                 type: "POST",
                 data: {
                     id: id
@@ -203,14 +203,14 @@
                 dataType: 'json',
 
                 success: function(data) {
+                    console.log("Uytwhgas as323", data)
+                    var brandName = data.data.brand_name;
+                    var brandImage = data.data.brand_image;
 
-                    // var categoryName = data.data.category_name;
-                    // var categoryImage = data.data.category_image;
-
-                    // $("#category_name").val(categoryName)
-                    // $('#modalImageSrc').attr('src', categoryImage)
-                    // $('#category_id').val(id)
-                    // $("#editmodal").modal('show');
+                    $("#brand_name").val(brandName)
+                    $('#modalImageSrc').attr('src', brandImage)
+                    $('#brand_id').val(id)
+                    $("#editmodal").modal('show');
 
                 },
                 error: function(data) {
@@ -220,6 +220,8 @@
             });
 
         }
+
+
     </script>
 
     <script>

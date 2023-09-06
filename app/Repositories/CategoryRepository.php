@@ -58,6 +58,46 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
     }
 
+    public function editBrandData($id)
+    {
+        $query = Brand::where('id', $id)->first();
+
+        return $query;
+    }
+
+    public function editBrand($request)
+    {
+        $file = $request->file('brand_image');
+
+        if($file && !empty($file))
+        {
+
+            $fileName = time() . '_' . $file->getClientOriginalName();
+
+            $file->move(public_path('brand'), $fileName);
+
+            $updatebrand = Brand::where('id', $request->brand_id)->update([
+                'brand_name' =>  $request->brand_name,
+                'brand_image' =>  url('public/brand/') . '/' . $fileName
+            ]);
+
+        } else {
+
+            $updatebrand = Brand::where('id', $request->brand_id)->update([
+                'brand_name' => $request->brand_name
+            ]);
+
+        }
+
+
+        if($updatebrand)
+        {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function saveCategory($request)
     {
 

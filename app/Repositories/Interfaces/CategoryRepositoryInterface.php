@@ -11,6 +11,10 @@ interface CategoryRepositoryInterface
 
     public function deleteBrand($id);
 
+    public function editBrandData($id);
+
+    public function editBrand($request);
+
     public function saveCategory($request);
 
     public function getcategory();

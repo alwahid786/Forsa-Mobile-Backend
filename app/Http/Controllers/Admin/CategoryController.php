@@ -65,9 +65,18 @@ class CategoryController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => $editbanner,
+            'data' => $editbrand,
             'message' => 'category data!'
         ], 200);
+    }
+
+    public function editBrand(Request $request)
+    {
+        $result = $this->category->editBrand($request);
+
+        if($result == true) {
+            return redirect()->back()->with('success', 'Update Brand Successfully.');
+        }
     }
 
     /**
