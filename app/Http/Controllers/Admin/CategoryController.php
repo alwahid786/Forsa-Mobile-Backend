@@ -19,6 +19,67 @@ class CategoryController extends Controller
     }
 
     /**
+     * add brands
+     *
+     * @return \Illuminate\Http\Response
+    */
+
+    public function brands(Request $request)
+    {
+        if($request->isMethod('post'))
+        {
+            $result = $this->category->saveBrand($request);
+
+            if($result == true)
+            {
+                return redirect()->back()->with('success', 'Add Brand Successfully.');
+
+            } else {
+
+                return redirect()->back()->with('error', 'Add Brand Failed.');
+            }
+        }
+
+        $allBrands = $this->category->getBrand();
+
+        return view('pages.admin.brand.brand', ['brands' => $allBrands]);
+    }
+
+    public function deleteBrand(Request $request)
+    {
+        $id = $request->brand_id;
+
+        $deleteBrand = $this->category->deleteBrand($id);
+
+        if($deleteBrand == true)
+        {
+            return redirect()->back()->with('error', 'Delete brand Successfully.');
+        }
+    }
+
+    public function editBrandView(Request $request)
+    {
+        $id = $request->id;
+
+        $editbrand = $this->category->editBrandData($id);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $editbrand,
+            'message' => 'category data!'
+        ], 200);
+    }
+
+    public function editBrand(Request $request)
+    {
+        $result = $this->category->editBrand($request);
+
+        if($result == true) {
+            return redirect()->back()->with('success', 'Update Brand Successfully.');
+        }
+    }
+
+    /**
      * add category
      *
      * @return \Illuminate\Http\Response

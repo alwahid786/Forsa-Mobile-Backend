@@ -57,4 +57,9 @@ Route::middleware(['auth'])->group(function () {
     Route::any('products', [UserController::class, 'products'])->name('products');
     Route::get('/product-details/{id}', [UserController::class, 'productDetails']);
 
+    Route::any('brands', [CategoryController::class, 'brands'])->name('brands.post');
+    Route::post('delete_brands', [CategoryController::class, 'deleteBrand'])->name('delete.brand');
+    Route::any('edit_brands_view', [CategoryController::class, 'editBrandView'])->name('edit.brand.view');
+    Route::any('edit_brand', [CategoryController::class, 'editBrand'])->name('edit.brand');
+
 });

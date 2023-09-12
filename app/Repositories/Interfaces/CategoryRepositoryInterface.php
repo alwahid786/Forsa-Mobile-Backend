@@ -5,6 +5,16 @@ namespace App\Repositories\Interfaces;
 interface CategoryRepositoryInterface
 {
 
+    public function saveBrand($request);
+
+    public function getBrand();
+
+    public function deleteBrand($id);
+
+    public function editBrandData($id);
+
+    public function editBrand($request);
+
     public function saveCategory($request);
 
     public function getcategory();
