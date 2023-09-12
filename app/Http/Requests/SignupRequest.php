@@ -40,12 +40,12 @@ class SignupRequest extends FormRequest
             'phone' => 'required|string|min:7|max:15',
             'is_business' => 'required|boolean',
         ];
-        if ($this->is_business == 1) {
-            $rules['business_name'] = 'required|string';
-            $rules['business_tagline'] = 'required|string';
-            $rules['business_description'] = 'required|string';
-            $rules['business_image'] = 'required|string';
-        }
+        // if ($this->is_business == 1) {
+        //     $rules['business_name'] = 'required|string';
+        //     $rules['business_tagline'] = 'required|string';
+        //     $rules['business_description'] = 'required|string';
+        //     $rules['business_image'] = 'required|string';
+        // }
         return $rules;
     }
 
