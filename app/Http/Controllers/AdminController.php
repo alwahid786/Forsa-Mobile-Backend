@@ -11,6 +11,7 @@ use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Banner;
 use App\Models\Size;
+use App\Models\Brand;
 use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
@@ -70,5 +71,19 @@ class AdminController extends Controller
     {
         $banners = Banner::all();
         return $this->sendResponse($banners, 'Banners List');
+    }
+
+    // get list of brands 
+    public function brands()
+    {
+        $brands = Brand::withCount('products')
+            ->orderByDesc('products_count')
+            ->get();
+
+        $topBrands = $brands->take(5); // Get the top 5 most used brands
+        $remainingBrands = $brands->slice(5); // Get the rest of the brands
+
+        $sortedBrands = $topBrands->concat($remainingBrands);
+        return $this->sendResponse($sortedBrands, 'List of all Brands');
     }
 }

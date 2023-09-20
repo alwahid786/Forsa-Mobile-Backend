@@ -38,7 +38,7 @@ class ProductController extends Controller
             'category_id' => 'required',
             'sub_category_id' => 'required',
             'description' => 'required',
-            'brand' => 'required',
+            'brand_id' => 'required|exists:brands,id',
             'price' => 'required',
             'quantity' => 'required',
             'pick_profile_location' => 'required|boolean',
@@ -69,7 +69,7 @@ class ProductController extends Controller
         }
         $product->size = $request->size;
         $product->condition = $request->condition;
-        $product->brand = $request->brand;
+        $product->brand_id = $request->brand_id;
         $product->price = $request->price;
         if ($request->has('discount')) {
             $discount = ($request->price * $request->discount) / 100;
