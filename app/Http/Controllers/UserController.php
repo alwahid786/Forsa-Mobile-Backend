@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Banner;
+use App\Models\Brand;
 use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
@@ -44,13 +45,20 @@ class UserController extends Controller
         }
         $banners = Banner::all();
         $categories = Category::all();
-        $brands = Product::groupBy('brand')->with('vendor')->pluck('brand');
+        $brands = Brand::withCount('products')
+            ->orderByDesc('products_count')
+            ->get();
+
+        $topBrands = $brands->take(5); // Get the top 5 most used brands
+        $remainingBrands = $brands->slice(5); // Get the rest of the brands
+
+        $sortedBrands = $topBrands->concat($remainingBrands);
         $success = [];
         $success['banners'] = $banners;
         $success['categories'] = $categories;
         $success['saleProducts'] = $saleProducts;
         $success['popularProducts'] = $favouriteProducts;
-        $success['brands'] = $brands;
+        $success['brands'] = $sortedBrands;
         return $this->sendResponse($success, 'User Dashboard data.');
     }
 
@@ -65,7 +73,7 @@ class UserController extends Controller
             $profile = User::where('id', auth()->user()->id)->update($data);
         }
         if ($profile) {
-            $user = User::where('id',auth()->user()->id)->with('businessProfile')->get();
+            $user = User::where('id', auth()->user()->id)->with('businessProfile')->get();
             return $this->sendResponse($user, 'User Profile updated Successfully!.');
         }
         return $this->sendError('Your Profile cannot be updated at the moment. Please Try again later.');
