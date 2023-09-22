@@ -26,6 +26,9 @@ class UserController extends Controller
     // Get dashboard data for User 
     public function dashboardData(Request $request)
     {
+        $lowestPrice = Product::min('price');
+        $highestPrice = Product::max('price');
+        $allProducts = Product::with('productImages')->get();
         $saleProducts = Product::where('discount', '!=', null)->with('productImages')->get();
         $favouriteProducts = Product::select('products.*', DB::raw('COUNT(*) as count'))
             ->join('favourites', 'favourites.product_id', '=', 'products.id')
@@ -54,8 +57,11 @@ class UserController extends Controller
 
         $sortedBrands = $topBrands->concat($remainingBrands);
         $success = [];
+        $success['lowestPrice'] = $lowestPrice;
+        $success['highestPrice'] = $highestPrice;
         $success['banners'] = $banners;
         $success['categories'] = $categories;
+        $success['allProducts'] = $allProducts;
         $success['saleProducts'] = $saleProducts;
         $success['popularProducts'] = $favouriteProducts;
         $success['brands'] = $sortedBrands;
