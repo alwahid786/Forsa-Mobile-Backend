@@ -46,7 +46,7 @@ class AdminController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
+            'category' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
@@ -57,7 +57,7 @@ class AdminController extends Controller
             $size = new Size();
         }
         $size->size = $request->title;
-        $size->category_id = $request->category_id;
+        $size->category = $request->category;
         $success = $size->save();
         if ($success) {
             return $this->sendResponse($size, 'Size added successfully');
@@ -65,6 +65,17 @@ class AdminController extends Controller
             return $this->sendError('Something went wrong, Try again later!');
         }
     }
+
+    // Get Sizes 
+    public function getSizes(Request $request)
+    {
+        $sizes = Size::get();
+        if ($request->has('category') && $request->category != '') {
+            $sizes = Size::where('category', $request->category)->get();
+        }
+        return $this->sendResponse($sizes, 'List of all Sizes');
+    }
+
 
     // get list of banners 
     public function allBanners()

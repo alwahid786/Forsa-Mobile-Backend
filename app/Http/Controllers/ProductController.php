@@ -33,7 +33,7 @@ class ProductController extends Controller
         // $businessProfile = Auth::user()->buisnessProfile;
         $rules = [
             'title' => 'required',
-            'size' => 'required',
+            'size_id' => 'required',
             'condition' => 'required',
             'category_id' => 'required',
             'sub_category_id' => 'required',
@@ -67,7 +67,7 @@ class ProductController extends Controller
         if ($request->sub_category_id != "" || $request->sub_category_id !=  null) {
             $product->sub_categoryId = $request->sub_category_id;
         }
-        $product->size = $request->size;
+        $product->size_id = $request->size_id;
         $product->condition = $request->condition;
         $product->brand_id = $request->brand_id;
         $product->price = $request->price;
@@ -179,14 +179,20 @@ class ProductController extends Controller
             $productsData = (new Product())->newQuery();
             if ($request->has('country')) {
                 $productsData->where('country', $request->country);
-            }
-            if ($request->has('sub_category') && $request->sub_category != 0) {
+            } elseif ($request->has('sub_category') && $request->sub_category != 0) {
                 $productsData->where('sub_categoryId', $request->sub_category);
-            }
-            if (!$request->has('sub_category') || $request->sub_category == 0) {
+            } elseif (!$request->has('sub_category') || $request->sub_category == 0) {
                 if ($request->has('category_id')) {
                     $productsData->where('category_id', $request->category_id);
                 }
+            } elseif ($request->has('brand_id')) {
+                $productsData->where('brand_id', $request->brand_id);
+            } elseif ($request->has('size_id')) {
+                $productsData->where('size_id', $request->size_id);
+            } elseif ($request->has('condition')) {
+                $productsData->where('condition', $request->condition);
+            } elseif ($request->has('price')) {
+                $productsData->where('price', $request->price)->orwhere('discount_price', $request->price);
             }
         }
         $products = $productsData->get();

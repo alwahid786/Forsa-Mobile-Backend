@@ -56,7 +56,8 @@ Route::group(
 Route::middleware('auth:api')->group(function () {
     Route::post('/add/banner', [AdminController::class, 'addBanner']);
     Route::get('/banners/list', [AdminController::class, 'allBanners']);
-    Route::get('/add/size', [AdminController::class, 'addSize']);
+    Route::post('/add/size', [AdminController::class, 'addSize']);
+    Route::post('/sizes', [AdminController::class, 'getSizes']);
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('/brands', [AdminController::class, 'brands']);
 });
