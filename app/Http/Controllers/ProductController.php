@@ -174,11 +174,11 @@ class ProductController extends Controller
     public function searchProducts(Request $request)
     {
         // DB::enableQueryLog();
-        if ($request->has('name')) {
+        if ($request->has('name') && $request->name != '-1') {
             $productsData = Product::where('title', 'LIKE', '%' . $request->name . '%');
         } else {
             $productsData = (new Product())->newQuery();
-            if ($request->has('country')) {
+            if ($request->has('country') && $request->country != '-1') {
                 $productsData->where('country', $request->country);
             }
             if ($request->has('sub_category') && $request->sub_category != 0) {
@@ -189,16 +189,16 @@ class ProductController extends Controller
                     $productsData->where('category_id', $request->category_id);
                 }
             }
-            if ($request->has('brand_id')) {
+            if ($request->has('brand_id') && $request->brand_id != '-1') {
                 $productsData->where('brand_id', $request->brand_id);
             }
-            if ($request->has('size_id')) {
+            if ($request->has('size_id') && $request->size_id != '-1') {
                 $productsData->where('size_id', $request->size_id);
             }
-            if ($request->has('condition')) {
+            if ($request->has('condition') && $request->condition != '-1') {
                 $productsData->where('condition', $request->condition);
             }
-            if ($request->has('min_price') || $request->has('max_price')) {
+            if ($request->max_price != '-1' && $request->min_price != '-1') {
                 $minPrice = $request->input('min_price');
                 $maxPrice = $request->input('max_price');
 
