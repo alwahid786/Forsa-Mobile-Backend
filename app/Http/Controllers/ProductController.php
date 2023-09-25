@@ -198,7 +198,7 @@ class ProductController extends Controller
             if ($request->has('condition')) {
                 $productsData->where('condition', $request->condition);
             }
-            if ($request->has(['min_price', 'max_price'])) {
+            if ($request->has('min_price') || $request->has('max_price')) {
                 $minPrice = $request->input('min_price');
                 $maxPrice = $request->input('max_price');
 
