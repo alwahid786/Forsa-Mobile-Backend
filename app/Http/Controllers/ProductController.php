@@ -210,8 +210,8 @@ class ProductController extends Controller
                 });
             }
         }
-        dd(DB::getQueryLog());
         $products = $productsData->get();
+        dd(DB::getQueryLog());
         if (count($products) > 0) {
             foreach ($products as $product) {
                 $product['images'] = ProductImage::where('product_id', $product->id)->get();
