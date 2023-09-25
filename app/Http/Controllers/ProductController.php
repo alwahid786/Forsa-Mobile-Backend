@@ -180,19 +180,25 @@ class ProductController extends Controller
             $productsData = (new Product())->newQuery();
             if ($request->has('country')) {
                 $productsData->where('country', $request->country);
-            } elseif ($request->has('sub_category') && $request->sub_category != 0) {
+            }
+            if ($request->has('sub_category') && $request->sub_category != 0) {
                 $productsData->where('sub_categoryId', $request->sub_category);
-            } elseif (!$request->has('sub_category') || $request->sub_category == 0) {
+            }
+            if (!$request->has('sub_category') || $request->sub_category == 0) {
                 if ($request->has('category_id')) {
                     $productsData->where('category_id', $request->category_id);
                 }
-            } elseif ($request->has('brand_id')) {
+            }
+            if ($request->has('brand_id')) {
                 $productsData->where('brand_id', $request->brand_id);
-            } elseif ($request->has('size_id')) {
+            }
+            if ($request->has('size_id')) {
                 $productsData->where('size_id', $request->size_id);
-            } elseif ($request->has('condition')) {
+            }
+            if ($request->has('condition')) {
                 $productsData->where('condition', $request->condition);
-            } elseif ($request->has(['min_price', 'max_price'])) {
+            }
+            if ($request->has(['min_price', 'max_price'])) {
                 $minPrice = $request->input('min_price');
                 $maxPrice = $request->input('max_price');
 
