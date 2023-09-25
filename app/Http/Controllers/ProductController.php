@@ -173,7 +173,7 @@ class ProductController extends Controller
     // Search Products 
     public function searchProducts(Request $request)
     {
-        DB::enableQueryLog();
+        // DB::enableQueryLog();
         if ($request->has('name')) {
             $productsData = Product::where('title', 'LIKE', '%' . $request->name . '%');
         } else {
