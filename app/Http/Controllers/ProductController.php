@@ -191,8 +191,22 @@ class ProductController extends Controller
                 $productsData->where('size_id', $request->size_id);
             } elseif ($request->has('condition')) {
                 $productsData->where('condition', $request->condition);
-            } elseif ($request->has('price')) {
-                $productsData->where('price', $request->price)->orwhere('discount_price', $request->price);
+            } elseif ($request->has(['min_price', 'max_price'])) {
+                $minPrice = $request->input('min_price');
+                $maxPrice = $request->input('max_price');
+
+                $productsData->where(function ($query) use ($minPrice, $maxPrice) {
+                    if (!is_null($minPrice) && !is_null($maxPrice)) {
+                        $query->whereBetween('price', [$minPrice, $maxPrice])
+                            ->orWhereBetween('discount_price', [$minPrice, $maxPrice]);
+                    } elseif (!is_null($minPrice)) {
+                        $query->where('price', '>=', $minPrice)
+                            ->orWhere('discount_price', '>=', $minPrice);
+                    } elseif (!is_null($maxPrice)) {
+                        $query->where('price', '<=', $maxPrice)
+                            ->orWhere('discount_price', '<=', $maxPrice);
+                    }
+                });
             }
         }
         $products = $productsData->get();
