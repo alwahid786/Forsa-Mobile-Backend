@@ -198,20 +198,17 @@ class ProductController extends Controller
             if ($request->has('condition') && $request->condition != '-1') {
                 $productsData->where('condition', $request->condition);
             }
-            if ($request->max_price != '-1' && $request->min_price != '-1') {
+            if ($request->max_price != '-1' || $request->min_price != '-1') {
                 $minPrice = $request->input('min_price');
                 $maxPrice = $request->input('max_price');
 
                 $productsData->where(function ($query) use ($minPrice, $maxPrice) {
-                    if (!is_null($minPrice) && !is_null($maxPrice)) {
-                        $query->whereBetween('price', [$minPrice, $maxPrice])
-                            ->orWhereBetween('discount_price', [$minPrice, $maxPrice]);
-                    } elseif (!is_null($minPrice)) {
-                        $query->where('price', '>=', $minPrice)
-                            ->orWhere('discount_price', '>=', $minPrice);
-                    } elseif (!is_null($maxPrice)) {
-                        $query->where('price', '<=', $maxPrice)
-                            ->orWhere('discount_price', '<=', $maxPrice);
+                    if ($minPrice != '-1' && $maxPrice != '-1') {
+                        $query->orWhereBetween('discount_price', [$minPrice, $maxPrice]);
+                    } elseif ($minPrice != '-1') {
+                        $query->orWhere('discount_price', '>=', $minPrice);
+                    } elseif ($maxPrice != '-1') {
+                        $query->orWhere('discount_price', '<=', $maxPrice);
                     }
                 });
             }
