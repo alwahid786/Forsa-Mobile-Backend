@@ -28,13 +28,13 @@ class UserController extends Controller
     {
         $lowestPrice = Product::min('price');
         $highestPrice = Product::max('price');
-        $allProducts = Product::with('productImages')->get();
-        $saleProducts = Product::where('discount', '!=', null)->with('productImages')->get();
+        $allProducts = Product::with('productImages')->with('brand')->get();
+        $saleProducts = Product::where('discount', '!=', null)->with('productImages', 'brand')->get();
         $favouriteProducts = Product::select('products.*', DB::raw('COUNT(*) as count'))
             ->join('favourites', 'favourites.product_id', '=', 'products.id')
             ->groupBy('products.id')
             ->orderByDesc('count')
-            ->with('productImages')
+            ->with('productImages', 'brand')
             ->get();
         if ($request->has('category_id')) {
             $saleProducts = Product::where('discount', '!=', null)->where('category_id', $request->category_id)->with('productImages')->get();
