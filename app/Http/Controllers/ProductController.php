@@ -216,7 +216,7 @@ class ProductController extends Controller
                 });
             }
         }
-        $products = $productsData->get();
+        $products = $productsData->with('brands')->get();
         // dd(DB::getQueryLog());
         if (count($products) > 0) {
             foreach ($products as $product) {
