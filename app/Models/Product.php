@@ -49,7 +49,7 @@ class Product extends Model
     {
         return $this->hasMany(Order::class, 'product_id');
     }
-    public function brands()
+    public function brand()
     {
         return $this->hasOne(Brand::class, 'id', 'brand_id');
     }
