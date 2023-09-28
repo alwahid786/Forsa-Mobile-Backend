@@ -37,13 +37,13 @@ class CategoryController extends Controller
         return $this->sendResponse($category, 'Category added successfully');
     }
 
-    // Get categories List 
+    // Get categories List
     public function categoryList(Request $request)
     {
         if ($request->has('category_id')) {
-            $categories = Category::where('id', $request->category_id)->with('parentCategory', 'subCategories', 'size')->get();
+            $categories = Category::where('id', $request->category_id)->with('parentCategory', 'subCategories')->get();
         } else {
-            $categories = Category::where('parent_id', null)->with('parentCategory', 'subCategories', 'size')->get();
+            $categories = Category::where('parent_id', null)->with('parentCategory', 'subCategories')->get();
         }
         return $this->sendResponse($categories, 'All Categories list');
     }
