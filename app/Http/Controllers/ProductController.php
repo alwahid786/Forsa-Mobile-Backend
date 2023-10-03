@@ -25,7 +25,7 @@ class ProductController extends Controller
 {
     use ResponseTrait;
 
-    // Add Product 
+    // Add Product
     public function addProduct(Request $request)
     {
         $id = $request->id;
@@ -125,7 +125,7 @@ class ProductController extends Controller
         }
     }
 
-    // Product details 
+    // Product details
     public function productDetail(Request $request)
     {
         $productId = $request->product_id;
@@ -164,13 +164,14 @@ class ProductController extends Controller
         $success['views'] = $views;
         $success['favourites'] = $favourites;
         $success['buyerProtectionFees'] = $protectionfees + 0.70;
+        $success['shippingCharges'] = 4;
         $success['total'] = $protectionfees + 0.70 + $product->price;
         $success['uploaded'] = $formatted_date;
         $success['products'] = $allProducts;
         return $this->sendResponse($success, 'Product Details');
     }
 
-    // Search Products 
+    // Search Products
     public function searchProducts(Request $request)
     {
         // DB::enableQueryLog();
@@ -228,7 +229,7 @@ class ProductController extends Controller
         }
     }
 
-    // Add to Favourite 
+    // Add to Favourite
     public function addToFavourite(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -263,7 +264,7 @@ class ProductController extends Controller
         }
     }
 
-    // Fvaourite products List 
+    // Fvaourite products List
     public function favouritesList(Request $request)
     {
         $loginUserId = auth()->user()->id;
@@ -283,7 +284,7 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
-        // Get Product 
+        // Get Product
         $product = new Product;
         $productData = $product->getProductById($request->product_id);
 
@@ -299,7 +300,7 @@ class ProductController extends Controller
         return $this->sendError('Something went wrong! Try later.');
     }
 
-    // Delete Product Function 
+    // Delete Product Function
     public function deleteProduct(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -308,7 +309,7 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
-        // Get Product 
+        // Get Product
         $product = Product::find($request->product_id);
         $loginUserId = auth()->user()->id;
 
@@ -316,7 +317,7 @@ class ProductController extends Controller
             return $this->sendError('Warning! You are not owner of this product, You cannot delete it.');
         }
 
-        // Delete Status 
+        // Delete Status
         $deleteStatus = $product->delete();
         if ($deleteStatus) {
             return $this->sendResponse([], 'Your product has been deleted Successfully!');
