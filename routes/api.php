@@ -98,6 +98,8 @@ Route::group(
         Route::post('/product/detail', [ProductController::class, 'productDetail']);
         Route::post('/search/product', [ProductController::class, 'searchProducts']);
         Route::post('/update-profile', [UserController::class, 'updateProfile']);
+        Route::post('/add-tocart', [UserController::class, 'addToCart']);
+        Route::post('/remove-cart', [UserController::class, 'removeCart']);
     }
 );
 

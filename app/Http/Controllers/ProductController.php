@@ -11,6 +11,7 @@ use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Views;
 use App\Models\Favourite;
+use App\Models\Cart;
 use App\Models\Chat;
 use App\Models\Location;
 use App\Http\Requests\SignupRequest;
@@ -323,5 +324,43 @@ class ProductController extends Controller
             return $this->sendResponse([], 'Your product has been deleted Successfully!');
         }
         return $this->sendError('Something went wrong! Try later.');
+    }
+
+    public function addToCart(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->messages()->all()));
+        }
+
+        $query = Cart::create([
+            'product_id' => $request->product_id,
+            'user_id' => auth()->user()->id
+        ]);
+
+        if ($query) {
+            return $this->sendResponse($query, 'Your product add to cart successfully!');
+        }
+    }
+
+    public function removeCart(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->messages()->all()));
+        }
+
+        $query = Cart::where([
+            'product_id' => $request->product_id,
+            'user_id' => auth()->user()->id
+        ])->delete();
+
+        if ($query) {
+            return $this->sendResponse($query, 'Your product remove from cart successfully!');
+        }
     }
 }
