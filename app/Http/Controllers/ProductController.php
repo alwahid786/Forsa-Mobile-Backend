@@ -348,7 +348,7 @@ class ProductController extends Controller
     public function removeCart(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'product_id' => 'required|exists:products,id'
+            'product_id' => 'required|exists:carts,product_id'
         ]);
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
