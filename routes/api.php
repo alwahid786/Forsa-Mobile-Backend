@@ -34,7 +34,7 @@ Route::post('/forgot-password', [AuthController::class, 'forgotEmail']);
 Route::post('/verify/otp', [AuthController::class, 'verifyOtp']);
 Route::post('/reset/password', [AuthController::class, 'resetPassword']);
 
-// Social Logins 
+// Social Logins
 Route::post('/social-login', [AuthController::class, 'handleSocialiteCallback']);
 
 // Setting Routes (without Authentication)
@@ -98,8 +98,8 @@ Route::group(
         Route::post('/product/detail', [ProductController::class, 'productDetail']);
         Route::post('/search/product', [ProductController::class, 'searchProducts']);
         Route::post('/update-profile', [UserController::class, 'updateProfile']);
-        Route::post('/add-tocart', [UserController::class, 'addToCart']);
-        Route::post('/remove-cart', [UserController::class, 'removeCart']);
+        Route::post('/add-tocart', [ProductController::class, 'addToCart']);
+        Route::post('/remove-cart', [ProductController::class, 'removeCart']);
     }
 );
 
