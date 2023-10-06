@@ -360,7 +360,7 @@ class ProductController extends Controller
         ])->delete();
 
         if ($query) {
-            return $this->sendResponse($query, 'Your product remove from cart successfully!');
+            return $this->sendResponse([], 'Your product remove from cart successfully!');
         }
     }
 }
