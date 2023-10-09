@@ -363,4 +363,13 @@ class ProductController extends Controller
             return $this->sendResponse([], 'Your product remove from cart successfully!');
         }
     }
+
+    public function getUserCart(Request $request)
+    {
+        $query = Cart::where('id', auth()->user()->id())->with('product')->get();
+
+        if ($query) {
+            return $this->sendResponse($query, 'cart products');
+        }
+    }
 }
