@@ -100,7 +100,7 @@ Route::group(
         Route::post('/update-profile', [UserController::class, 'updateProfile']);
         Route::post('/add-tocart', [ProductController::class, 'addToCart']);
         Route::post('/remove-cart', [ProductController::class, 'removeCart']);
-        Route::post('/get-cart', [ProductController::class, 'getUserCart']);
+        Route::get('/get-cart', [ProductController::class, 'getUserCart']);
     }
 );
 
