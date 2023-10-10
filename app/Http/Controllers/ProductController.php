@@ -373,11 +373,20 @@ class ProductController extends Controller
             ->join('products', 'products.id', '=', 'carts.product_id')
             ->select('products.*')
             ->get();
-        // $cart = Cart::where('user_id', $user->id)->with('product')->get();
+
+        $sum = DB::table('carts')->where('user_id', $user->id)
+            ->join('products', 'products.id', '=', 'carts.product_id')
+            ->select(DB::raw('SUM(products.price) as total_price'))
+            ->value('total_price');
+
+        $arr = [
+            'products' => $query,
+            'total_price' => $sum,
+        ]
 
 
-        if ($query) {
-            return $this->sendResponse($query, 'cart products');
+        if ($arr) {
+            return $this->sendResponse($arr, 'cart products');
         }
     }
 }
