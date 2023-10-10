@@ -364,9 +364,9 @@ class ProductController extends Controller
         }
     }
 
-    public function getUserCart(Request $request)
+    public function getUserCarts(Request $request)
     {
-        dd(auth()->user()->id());
+        dd($request->all());
         // $query = Cart::where('user_id', auth()->user()->id())->get();
 
         // if ($query) {
