@@ -382,7 +382,7 @@ class ProductController extends Controller
         $arr = [
             'products' => $query,
             'total_price' => $sum,
-        ]
+        ];
 
 
         if ($arr) {
