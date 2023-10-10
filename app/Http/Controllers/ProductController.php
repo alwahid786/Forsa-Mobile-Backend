@@ -372,7 +372,7 @@ class ProductController extends Controller
 
 
         if ($cart) {
-            return $this->sendResponse($query, 'cart products');
+            return $this->sendResponse($cart, 'cart products');
         }
     }
 }
