@@ -371,6 +371,7 @@ class ProductController extends Controller
 
         $query = DB::table('carts')->where('user_id', $user->id)
             ->join('products', 'products.id', '=', 'carts.product_id')
+            ->select('products.*')
             ->get();
         // $cart = Cart::where('user_id', $user->id)->with('product')->get();
 
