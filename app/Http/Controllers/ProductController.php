@@ -366,11 +366,11 @@ class ProductController extends Controller
 
     public function getUserCarts(Request $request)
     {
-        dd($request->all());
-        // $query = Cart::where('user_id', auth()->user()->id())->get();
+        // dd($request->all());
+        $query = Cart::where('user_id', auth()->user()->id)->get();
 
-        // if ($query) {
-        //     return $this->sendResponse($query, 'cart products');
-        // }
+        if ($query) {
+            return $this->sendResponse($query, 'cart products');
+        }
     }
 }
