@@ -53,4 +53,6 @@ class Product extends Model
     {
         return $this->hasOne(Brand::class, 'id', 'brand_id');
     }
+
+
 }

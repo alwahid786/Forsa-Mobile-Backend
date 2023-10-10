@@ -367,7 +367,11 @@ class ProductController extends Controller
     public function getUserCarts(Request $request)
     {
         // dd($request->all());
+
+        DB::enableQueryLog();
         $query = Cart::where('user_id', auth()->user()->id)->with('products')->get();
+
+        dd(DB::getQueryLog());
 
         if ($query) {
             return $this->sendResponse($query, 'cart products');
