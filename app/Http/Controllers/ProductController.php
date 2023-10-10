@@ -369,7 +369,7 @@ class ProductController extends Controller
         // dd($request->all());
 
         // $query = Cart::where('user_id', auth()->user()->id)->with('products')->get();
-        $query = Cart::with('products')->get();
+        $query = Cart::get();
 
 
         if ($query) {
