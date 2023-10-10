@@ -369,7 +369,8 @@ class ProductController extends Controller
         // dd($request->all());
 
         DB::enableQueryLog();
-        $query = Cart::where('user_id', auth()->user()->id)->with('products')->get();
+        // $query = Cart::where('user_id', auth()->user()->id)->with('products')->get();
+        $query = Cart::with('products')->get();
 
         dd(DB::getQueryLog());
 
