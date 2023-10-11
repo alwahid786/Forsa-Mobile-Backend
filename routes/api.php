@@ -110,6 +110,7 @@ Route::group(
     function () {
         Route::post('/payment-intent', [OrderController::class, 'paymentIntent']);
         Route::post('/place-order', [OrderController::class, 'placeOrder']);
+        Route::post('/new-place-order', [OrderController::class, 'newPlaceOrder']);
         Route::get('/order-history', [OrderController::class, 'orderHistory']);
         Route::post('/add-favourite', [ProductController::class, 'addToFavourite']);
         Route::post('/add-review', [OrderController::class, 'addReview']);
