@@ -369,9 +369,11 @@ class ProductController extends Controller
 
         $user = auth()->user();
 
-        $query = Cart::where('user_id', $user->id)
-            ->with('product', 'product.product_brand')
-            ->first();
+        $query = Product::whereHas('cart', function($query){
+            $query->where('user_id', auth()->user()->id);
+        })
+            ->with('product_brand')
+            ->get();
 
         $sum = DB::table('carts')->where('user_id', $user->id)
             ->join('products', 'products.id', '=', 'carts.product_id')
