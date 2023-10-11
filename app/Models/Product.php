@@ -53,7 +53,10 @@ class Product extends Model
     {
         return $this->hasOne(Brand::class, 'id', 'brand_id');
     }
-
+    public function product_brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
     public function cart(){
         return $this->hasOne(Cart::class, 'product_id');
     }
