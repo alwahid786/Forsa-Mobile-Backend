@@ -55,7 +55,7 @@ class Product extends Model
     }
 
     public function cart(){
-        return $this->hasOne(Cart::class, 'producct_id');
+        return $this->hasOne(Cart::class, 'product_id');
     }
 
 
