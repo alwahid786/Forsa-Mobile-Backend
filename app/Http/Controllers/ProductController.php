@@ -371,15 +371,16 @@ class ProductController extends Controller
 
         $query = Cart::where('user_id', $user->id)
             ->with('product', 'product.product_brand')
-            ->get();
+            ->first();
 
         $sum = DB::table('carts')->where('user_id', $user->id)
             ->join('products', 'products.id', '=', 'carts.product_id')
+            ->where('products.deletet_at','=', Null)
             ->select(DB::raw('SUM(products.price) as total_price'))
             ->value('total_price');
 
         $arr = [
-            'products' => $query,
+            'cart_info' => $query,
             'total_price' => $sum,
             'tax' => 5,
         ];
