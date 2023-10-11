@@ -375,7 +375,7 @@ class ProductController extends Controller
 
         $sum = DB::table('carts')->where('user_id', $user->id)
             ->join('products', 'products.id', '=', 'carts.product_id')
-            ->where('products.deletet_at','=', Null)
+            ->where('products.deleted_at','=', Null)
             ->select(DB::raw('SUM(products.price) as total_price'))
             ->value('total_price');
 
