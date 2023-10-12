@@ -34,7 +34,7 @@ Route::post('/forgot-password', [AuthController::class, 'forgotEmail']);
 Route::post('/verify/otp', [AuthController::class, 'verifyOtp']);
 Route::post('/reset/password', [AuthController::class, 'resetPassword']);
 
-// Social Logins 
+// Social Logins
 Route::post('/social-login', [AuthController::class, 'handleSocialiteCallback']);
 
 // Setting Routes (without Authentication)
@@ -56,8 +56,10 @@ Route::group(
 Route::middleware('auth:api')->group(function () {
     Route::post('/add/banner', [AdminController::class, 'addBanner']);
     Route::get('/banners/list', [AdminController::class, 'allBanners']);
-    Route::get('/add/size', [AdminController::class, 'addSize']);
+    Route::post('/add/size', [AdminController::class, 'addSize']);
+    Route::post('/sizes', [AdminController::class, 'getSizes']);
     Route::get('/logout', [AuthController::class, 'logout']);
+    Route::get('/brands', [AdminController::class, 'brands']);
 });
 
 // -------------------------------------Vendor Routes-------------------------------------
@@ -81,6 +83,7 @@ Route::group(
         Route::post('/product/delete', [ProductController::class, 'deleteProduct']);
         Route::post('/location', [VendorController::class, 'addUpdateLocation']);
         Route::get('/get-location', [VendorController::class, 'getLocation']);
+        Route::get('/check-stripe', [VendorController::class, 'checkStripe']);
     }
 );
 Route::get('vendor/stripe_redirect_url', [StripeController::class, 'stripeRedirectUrl']);
@@ -95,6 +98,9 @@ Route::group(
         Route::post('/product/detail', [ProductController::class, 'productDetail']);
         Route::post('/search/product', [ProductController::class, 'searchProducts']);
         Route::post('/update-profile', [UserController::class, 'updateProfile']);
+        Route::post('/add-tocart', [ProductController::class, 'addToCart']);
+        Route::post('/remove-cart', [ProductController::class, 'removeCart']);
+        Route::get('/get-user-cart', [ProductController::class, 'getUserCarts']);
     }
 );
 
@@ -104,6 +110,7 @@ Route::group(
     function () {
         Route::post('/payment-intent', [OrderController::class, 'paymentIntent']);
         Route::post('/place-order', [OrderController::class, 'placeOrder']);
+        Route::post('/new-place-order', [OrderController::class, 'newPlaceOrder']);
         Route::get('/order-history', [OrderController::class, 'orderHistory']);
         Route::post('/add-favourite', [ProductController::class, 'addToFavourite']);
         Route::post('/add-review', [OrderController::class, 'addReview']);

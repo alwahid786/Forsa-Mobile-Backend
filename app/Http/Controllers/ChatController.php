@@ -22,6 +22,7 @@ use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use Stripe;
 use App\Http\Controllers\SettingController;
+use App\Models\Location;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\NumberParseException;
@@ -124,8 +125,10 @@ class ChatController extends Controller
                 }
                 if ($chat['client_id'] != $loginUserId) {
                     $chat['userData'] = User::find($chat['client_id']);
+                    $chat['userData']['location'] = Location::where('user_id', $chat['client_id'])->first();
                 } elseif ($chat['vendor_id'] != $loginUserId) {
                     $chat['userData'] = User::find($chat['vendor_id']);
+                    $chat['userData']['location'] = Location::where('user_id', $chat['vendor_id'])->first();
                 }
             }
             return $this->sendResponse($chats, "List of All chats");
@@ -147,10 +150,10 @@ class ChatController extends Controller
                 DB::enableQueryLog();
                 $existingChat = Chat::where(function ($query) use ($loginUserId, $request) {
                     $query->where(['client_id' => $loginUserId, 'vendor_id' => $request->otherUserId])
-                    ->orWhere(function ($query) use ($loginUserId, $request) {
-                        $query->where(['client_id' => $request->otherUserId])
-                        ->where(['vendor_id' => $loginUserId]);
-                    });
+                        ->orWhere(function ($query) use ($loginUserId, $request) {
+                            $query->where(['client_id' => $request->otherUserId])
+                                ->where(['vendor_id' => $loginUserId]);
+                        });
                 })->first();
                 if (!empty($existingChat)) {
                     unset($request->chat_id);

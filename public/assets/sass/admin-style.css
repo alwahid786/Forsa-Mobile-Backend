@@ -159,9 +159,9 @@ body, html {
   color: #797979;
   cursor: pointer;
 }
-.select_field select{
-  width: 400px;
-  height: 50px;
+.select_field select {
+  width: 400;
+  height: 50;
 }
 @media screen and (max-width: 1366px) {
   .login-button-outer {

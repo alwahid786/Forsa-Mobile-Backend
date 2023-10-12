@@ -9,5 +9,7 @@ interface UserRepositoryInterface
 
     public function allUser();
 
+    public function viewDetail($id);
+
 }
 

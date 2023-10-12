@@ -4,9 +4,6 @@
 @include('includes.admin.navbar')
 <main class="content-wrapper">
 
-
-
-
     <div class="">
       @if(Session::has('success'))
         <p class="alert {{ Session::get('alert-class', 'alert-success') }}">{{ Session::get('success') }}</p>
@@ -16,7 +13,7 @@
         <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('error') }}</p>
       @endif
 
-      <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post" action="{{ route('category.post') }}" enctype="multipart/form-data">
+      <form class="categoryForm d-flex flex-column justify-content-center align-items-center" id="categoryForm" method="post" action="{{ route('category.post') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group">
@@ -25,12 +22,12 @@
             <span class="picture__image"></span>
           </label>
 
-          <input type="file" name="category_image" id="picture__input" required>
-
+          <input type="file" name="category_image" id="picture__input"  accept="image/*" >
+          <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="imageErrorMessage">Category image field is required</p>
         </div>
         <div class="form-group">
-          <input type="text" name="category_name" class="form-control" style="width: 400px;height: 50px;" id="exampleInputName2" placeholder="Category Name" required>
-
+          <input type="text" name="category_name" class="form-control" style="width: 400px;height: 50px;" id="categoryNameField" placeholder="Category Name" >
+          <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="nameErrorMessage">Category name field is required</p>
         </div>
         <button type="submit" class="btn btn-success">Add Category</button>
       </form>
@@ -43,29 +40,31 @@
           {{-- <h1>All Clients</h1> --}}
        </div>
        <div class="client-table pt-2">
-        <table id="detail-table"  style="width:100%">
-            <thead>
+        <table id="detail-table" style="width: 100%">
+          <thead>
+            <tr>
+              <th>Category Name</th>
+              <th>Category Image</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($category as $cat)
+              @if ($cat->parent_id === null)
               <tr>
-                <th >Category Name</th>
-                <th>Category Image</th>
-                <th>Action</th>
+                <td>{{ $cat->category_name }}</td>
+                <td><a target="_blank" href="{{ $cat->category_image }}"><img style="width: 100px;height: 100px;border-radius: 5px;" src="{{ $cat->category_image }}"
+                    alt="{{ $cat->category_image }}"></a></td>
+                <td>
+                  <button type="button" class="btn btn-primary" onclick="editModal({{ $cat->id }})">Edit</button>
+                  <button type="button" class="btn btn-danger deleteButton" src-attr="{{ $cat->id }}"
+                    onclick="deleteModal({{ $cat->id }})">Delete</button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-
-              @foreach ($category as $cat)
-                <tr>
-                  <td>{{ $cat->category_name }}</td>
-                  <td > <img style="width: 145px;" src="{{ asset('public/category/'.($cat->category_image)) }}" alt="{{ $cat->category_image }}"> </td>
-                  <td >
-                    <button type="button" class="btn btn-primary" onclick="editModal({{ $cat->id }})">Edit</button>
-                    <button type="button" class="btn btn-danger deleteButton" src-attr="{{ $cat->id }}" onclick="deleteModal({{ $cat->id }})">Delete</button>
-                  </td>
-                </tr>
-              @endforeach
-
-            </tbody>
-          </table>
+              @endif
+            @endforeach
+          </tbody>
+        </table>
        </div>
     </div>
 </main>
@@ -101,7 +100,7 @@
     <div class="modal-content">
       <div class="modal-body">
 
-      <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post" action="{{ route('edit.category') }}" enctype="multipart/form-data">
+      <form class="categoryForm d-flex flex-column justify-content-center align-items-center" method="post" id="editCategoryForm" action="{{ route('edit.category') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group">
@@ -112,7 +111,7 @@
             <span class="picture__image_d"><img src="" alt="" id="modalImageSrc"></span>
           </label>
 
-          <input type="file" name="category_image" id="picture__input_modal">
+          <input type="file" name="category_image" id="picture__input_modal" accept="image/*">
 
           <input type="hidden" name="category_id" id="category_id">
 
@@ -120,7 +119,9 @@
 
         </div>
         <div class="form-group">
-          <input type="text" name="category_name" class="form-control" style="width: 400px;height: 50px;" id="category_name" placeholder="Category Name" required>
+          <input type="text" name="category_name" class="form-control" style="width: 400px;height: 50px;" id="category_name" placeholder="Category Name" >
+
+          <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="nameEditErrorMessage">Category name field is required</p>
 
         </div>
         <button type="submit" class="btn btn-success">Update Category</button>
@@ -145,6 +146,46 @@
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
 <script>
 
+  $("#editCategoryForm").on('submit', function(){
+
+    var name = $("#category_name").val();
+    if(name == '')
+    {
+      $("#nameEditErrorMessage").removeClass('d-none');
+      return false;
+    } else {
+      $("#nameEditErrorMessage").addClass('d-none');
+    }
+
+  });
+
+  $("#categoryForm").on('submit', function(){
+      var name = $("#categoryNameField").val();
+      var image = $("#picture__input").val();
+      var hasError = false;
+
+      if(name == '')
+      {
+        $("#nameErrorMessage").removeClass('d-none');
+        hasError = true;
+      } else {
+        $("#nameErrorMessage").addClass('d-none');
+      }
+
+      if(image == '')
+      {
+        $("#imageErrorMessage").removeClass('d-none');
+        hasError = true;
+      } else {
+        $("#imageErrorMessage").addClass('d-none');
+      }
+
+      if(hasError) {
+        return false;
+      }
+  });
+
+
   function deleteModal(id) {
     $('.categoryId').val(id)
     $("#deleteModal").modal('show');
@@ -168,7 +209,7 @@
       success: function(data) {
 
         var categoryName = data.data.category_name;
-        var categoryImage = '{{ asset('public/category') }}' + '/' + data.data.category_image;
+        var categoryImage =  data.data.category_image;
 
         $("#category_name").val(categoryName)
         $('#modalImageSrc').attr('src', categoryImage)
@@ -190,10 +231,10 @@
     $(document).ready(function () {
     $('#detail-table').DataTable({
         "ordering": false,
-        "info":     false,
-        "searching": false,
-        "lengthChange": false,
-        "pageLength": 12,
+        "info":     true,
+        "searching": true,
+        "lengthChange": true,
+        "pageLength": 10,
         language: {
     'paginate': {
       'previous': '<i class="fa fa-chevron-left p-left" aria-hidden="true"></i>',
@@ -272,6 +313,6 @@
 });
 </script>
 <script>
-  $('.sidenav  li:nth-of-type(2)').addClass('active');
+  $('.sidenav  li:nth-of-type(3)').addClass('active');
 </script>
 @endsection

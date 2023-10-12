@@ -39,8 +39,27 @@ Route::middleware(['auth'])->group(function () {
     Route::any('vendor_list', [UserController::class, 'listOfAllVendor']);
     Route::any('user_list', [UserController::class, 'listOfAllUsers']);
 
-    // haider_dev
-    
-    Route::any('sub_category', [CategoryController::class, 'sub_category'])->name('subcategory.post');
+    Route::any('sub_category', [CategoryController::class, 'subcategory'])->name('subcategory.post');
+    Route::any('banner', [CategoryController::class, 'banner'])->name('banner.post');
+    Route::post('delete_banner', [CategoryController::class, 'deletebanner'])->name('delete.banner');
+    Route::post('edit_subcategory', [CategoryController::class, 'editsubcategory'])->name('edit.subcategory');
+    Route::post('edit_banner', [CategoryController::class, 'editbanner'])->name('edit.banner');
+    Route::post('edit_banner_view', [CategoryController::class, 'editbannerData'])->name('edit.banner.view');
+    Route::any('size', [CategoryController::class, 'size'])->name('size.post');
+    Route::any('addsize', [CategoryController::class, 'addsize'])->name('addsize.post');
+    Route::get('vendor_detail/{id}', [UserController::class, 'vendorDetail']);
+    Route::get('user_detail/{id}', [UserController::class, 'userDetail']);
+
+    Route::any('delete_size', [CategoryController::class, 'deleteSize'])->name('delete.size');
+    Route::get('get_size_data', [CategoryController::class, 'getSizeData'])->name('size.data');
+    Route::any('edit_size', [CategoryController::class, 'editSize'])->name('edit.size');
+
+    Route::any('products', [UserController::class, 'products'])->name('products');
+    Route::get('/product-details/{id}', [UserController::class, 'productDetails']);
+
+    Route::any('brands', [CategoryController::class, 'brands'])->name('brands.post');
+    Route::post('delete_brands', [CategoryController::class, 'deleteBrand'])->name('delete.brand');
+    Route::any('edit_brands_view', [CategoryController::class, 'editBrandView'])->name('edit.brand.view');
+    Route::any('edit_brand', [CategoryController::class, 'editBrand'])->name('edit.brand');
 
 });

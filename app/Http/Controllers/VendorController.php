@@ -169,4 +169,23 @@ class VendorController extends Controller
         }
         return $this->sendResponse($location, 'Location fetched successfully!');
     }
+
+    // Check If stripe connected or not Function
+    public function checkStripe()
+    {
+        $loginUserId = auth()->user()->id;
+        $user = BusinessProfile::where('user_id', $loginUserId)->first();
+        if ($user->stripe_client_id == '' || $user->stripe_client_id == null) {
+            $response = [
+                'is_stripe_connected' => false,
+                'stripe_client_id' => null
+            ];
+        } else {
+            $response = [
+                'is_stripe_connected' => true,
+                'stripe_client_id' => $user->stripe_client_id
+            ];
+        }
+        return $this->sendResponse($response, 'Stripe Connection Status');
+    }
 }

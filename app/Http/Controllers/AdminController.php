@@ -11,6 +11,7 @@ use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Banner;
 use App\Models\Size;
+use App\Models\Brand;
 use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Auth;
@@ -45,7 +46,7 @@ class AdminController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
+            'category' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
@@ -56,7 +57,7 @@ class AdminController extends Controller
             $size = new Size();
         }
         $size->size = $request->title;
-        $size->category_id = $request->category_id;
+        $size->category = $request->category;
         $success = $size->save();
         if ($success) {
             return $this->sendResponse($size, 'Size added successfully');
@@ -65,10 +66,35 @@ class AdminController extends Controller
         }
     }
 
+    // Get Sizes 
+    public function getSizes(Request $request)
+    {
+        $sizes = Size::get();
+        if ($request->has('category') && $request->category != '') {
+            $sizes = Size::where('category', $request->category)->get();
+        }
+        return $this->sendResponse($sizes, 'List of all Sizes');
+    }
+
+
     // get list of banners 
     public function allBanners()
     {
         $banners = Banner::all();
         return $this->sendResponse($banners, 'Banners List');
+    }
+
+    // get list of brands 
+    public function brands()
+    {
+        $brands = Brand::withCount('products')
+            ->orderByDesc('products_count')
+            ->get();
+
+        $topBrands = $brands->take(5); // Get the top 5 most used brands
+        $remainingBrands = $brands->slice(5); // Get the rest of the brands
+
+        $sortedBrands = $topBrands->concat($remainingBrands);
+        return $this->sendResponse($sortedBrands, 'List of all Brands');
     }
 }

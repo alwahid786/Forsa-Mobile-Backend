@@ -11,6 +11,7 @@ use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Views;
 use App\Models\Favourite;
+use App\Models\Cart;
 use App\Models\Chat;
 use App\Models\Location;
 use App\Http\Requests\SignupRequest;
@@ -19,12 +20,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
+use DB;
 
 class ProductController extends Controller
 {
     use ResponseTrait;
 
-    // Add Product 
+    // Add Product
     public function addProduct(Request $request)
     {
         $id = $request->id;
@@ -32,12 +34,12 @@ class ProductController extends Controller
         // $businessProfile = Auth::user()->buisnessProfile;
         $rules = [
             'title' => 'required',
-            'size' => 'required',
+            'size_id' => 'required',
             'condition' => 'required',
             'category_id' => 'required',
             'sub_category_id' => 'required',
             'description' => 'required',
-            'brand' => 'required',
+            'brand_id' => 'required|exists:brands,id',
             'price' => 'required',
             'quantity' => 'required',
             'pick_profile_location' => 'required|boolean',
@@ -66,9 +68,9 @@ class ProductController extends Controller
         if ($request->sub_category_id != "" || $request->sub_category_id !=  null) {
             $product->sub_categoryId = $request->sub_category_id;
         }
-        $product->size = $request->size;
+        $product->size_id = $request->size_id;
         $product->condition = $request->condition;
-        $product->brand = $request->brand;
+        $product->brand_id = $request->brand_id;
         $product->price = $request->price;
         if ($request->has('discount')) {
             $discount = ($request->price * $request->discount) / 100;
@@ -124,11 +126,11 @@ class ProductController extends Controller
         }
     }
 
-    // Product details 
+    // Product details
     public function productDetail(Request $request)
     {
         $productId = $request->product_id;
-        $product = Product::where('id', $productId)->with('productImages', 'vendor', 'vendor.businessProfile')->first();
+        $product = Product::where('id', $productId)->with('productImages', 'vendor', 'vendor.businessProfile', 'brand')->first();
         $product = json_decode($product);
 
         $category = Category::find($product->category_id);
@@ -139,7 +141,7 @@ class ProductController extends Controller
 
         $protectionfees = ($product->price * 5) / 100;
 
-        $allProducts = Product::where('vendor_id', $product->vendor_id)->limit(5)->get();
+        $allProducts = Product::where('vendor_id', $product->vendor_id)->with('brand')->limit(5)->get();
         if (!empty($allProducts)) {
             foreach ($allProducts as $productNew) {
                 $productNew['images'] = ProductImage::where('product_id', $productNew->id)->get();
@@ -163,32 +165,58 @@ class ProductController extends Controller
         $success['views'] = $views;
         $success['favourites'] = $favourites;
         $success['buyerProtectionFees'] = $protectionfees + 0.70;
+        $success['shippingCharges'] = 4;
         $success['total'] = $protectionfees + 0.70 + $product->price;
         $success['uploaded'] = $formatted_date;
         $success['products'] = $allProducts;
         return $this->sendResponse($success, 'Product Details');
     }
 
-    // Search Products 
+    // Search Products
     public function searchProducts(Request $request)
     {
-        if ($request->has('name')) {
+        // DB::enableQueryLog();
+        if ($request->has('name') && $request->name != '-1') {
             $productsData = Product::where('title', 'LIKE', '%' . $request->name . '%');
         } else {
             $productsData = (new Product())->newQuery();
-            if ($request->has('country')) {
+            if ($request->has('country') && $request->country != '-1') {
                 $productsData->where('country', $request->country);
             }
-            if ($request->has('sub_category')) {
-                $productsData->where('category_id', $request->sub_category);
+            if ($request->has('sub_category') && $request->sub_category != 0) {
+                $productsData->where('sub_categoryId', $request->sub_category);
             }
-            if (!$request->has('sub_category')) {
-                if ($request->has('category')) {
-                    $productsData->where('category_id', $request->category);
+            if (!$request->has('sub_category') || $request->sub_category == 0) {
+                if ($request->has('category_id') && $request->category_id != 0) {
+                    $productsData->where('category_id', $request->category_id);
                 }
             }
+            if ($request->has('brand_id') && $request->brand_id != '-1') {
+                $productsData->where('brand_id', $request->brand_id);
+            }
+            if ($request->has('size_id') && $request->size_id != '-1') {
+                $productsData->where('size_id', $request->size_id);
+            }
+            if ($request->has('condition') && $request->condition != '-1') {
+                $productsData->where('condition', $request->condition);
+            }
+            if ($request->max_price != '-1' || $request->min_price != '-1') {
+                $minPrice = $request->input('min_price');
+                $maxPrice = $request->input('max_price');
+
+                $productsData->where(function ($query) use ($minPrice, $maxPrice) {
+                    if ($minPrice != '-1' && $maxPrice != '-1') {
+                        $query->orWhereBetween('discount_price', [$minPrice, $maxPrice]);
+                    } elseif ($minPrice != '-1') {
+                        $query->orWhere('discount_price', '>=', $minPrice);
+                    } elseif ($maxPrice != '-1') {
+                        $query->orWhere('discount_price', '<=', $maxPrice);
+                    }
+                });
+            }
         }
-        $products = $productsData->get();
+        $products = $productsData->with('brand')->get();
+        // dd(DB::getQueryLog());
         if (count($products) > 0) {
             foreach ($products as $product) {
                 $product['images'] = ProductImage::where('product_id', $product->id)->get();
@@ -202,7 +230,7 @@ class ProductController extends Controller
         }
     }
 
-    // Add to Favourite 
+    // Add to Favourite
     public function addToFavourite(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -237,7 +265,7 @@ class ProductController extends Controller
         }
     }
 
-    // Fvaourite products List 
+    // Fvaourite products List
     public function favouritesList(Request $request)
     {
         $loginUserId = auth()->user()->id;
@@ -257,7 +285,7 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
-        // Get Product 
+        // Get Product
         $product = new Product;
         $productData = $product->getProductById($request->product_id);
 
@@ -273,7 +301,7 @@ class ProductController extends Controller
         return $this->sendError('Something went wrong! Try later.');
     }
 
-    // Delete Product Function 
+    // Delete Product Function
     public function deleteProduct(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -282,7 +310,7 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
-        // Get Product 
+        // Get Product
         $product = Product::find($request->product_id);
         $loginUserId = auth()->user()->id;
 
@@ -290,11 +318,78 @@ class ProductController extends Controller
             return $this->sendError('Warning! You are not owner of this product, You cannot delete it.');
         }
 
-        // Delete Status 
+        // Delete Status
         $deleteStatus = $product->delete();
         if ($deleteStatus) {
             return $this->sendResponse([], 'Your product has been deleted Successfully!');
         }
         return $this->sendError('Something went wrong! Try later.');
+    }
+
+    public function addToCart(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->messages()->all()));
+        }
+
+        $query = Cart::create([
+            'product_id' => $request->product_id,
+            'user_id' => auth()->user()->id
+        ]);
+
+        if ($query) {
+            return $this->sendResponse($query, 'Your product add to cart successfully!');
+        }
+    }
+
+    public function removeCart(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:carts,product_id'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->messages()->all()));
+        }
+
+        $query = Cart::where([
+            'product_id' => $request->product_id,
+            'user_id' => auth()->user()->id
+        ])->delete();
+
+        if ($query) {
+            return $this->sendResponse([], 'Your product remove from cart successfully!');
+        }
+    }
+
+    public function getUserCarts(Request $request)
+    {
+
+        $user = auth()->user();
+
+        $query = Product::whereHas('cart', function($query){
+            $query->where('user_id', auth()->user()->id);
+        })
+            ->with('product_brand')
+            ->get();
+
+        $sum = DB::table('carts')->where('user_id', $user->id)
+            ->join('products', 'products.id', '=', 'carts.product_id')
+            ->where('products.deleted_at','=', Null)
+            ->select(DB::raw('SUM(products.price) as total_price'))
+            ->value('total_price');
+
+        $arr = [
+            'cart_info' => $query,
+            'total_price' => $sum,
+            'tax' => 5,
+        ];
+
+
+        if ($arr) {
+            return $this->sendResponse($arr, 'cart products');
+        }
     }
 }

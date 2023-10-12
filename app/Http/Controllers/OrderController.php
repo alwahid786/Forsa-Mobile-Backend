@@ -84,6 +84,61 @@ class OrderController extends Controller
         // Return response 
         return $this->sendResponse($order, 'Order created successfully.');
     }
+        // Place Order Function 
+        public function newPlaceOrder(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'product_id' => 'required|exists:products,id',
+                // 'vendor_id' => '|exists:users,id',
+                'address' => 'required',
+                'latitude' => 'required',
+                'longitude' => 'required',
+                'payment_intent' => 'required',
+                'intent_id' => 'required',
+                'total' => 'required'
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError(implode(",", $validator->messages()->all()));
+            }
+    
+            // Create Order 
+            $order = new Order;
+            $order->product_id = $request->product_id;
+            $order->vendor_id = $request->vendor_id;
+            $order->address = $request->address;
+            $order->latitude = $request->latitude;
+            $order->longitude = $request->longitude;
+            $order->payment_intent = $request->payment_intent;
+            $order->intent_id = $request->intent_id;
+            $order->user_id = auth()->user()->id;
+            $order->total = $request->total;
+            $order->save();
+    
+            // Get Product 
+            $product = new Product;
+            $productData = $product->getProductById($request->product_id);
+            // Save Order History 
+            $orderHistory = new OrderHistory;
+            $status = $orderHistory->insertData($productData->toArray(), $request->product_id, $order->id);
+            $order['productDetails'] = $status;
+    
+            // Send Notification to Vendor 
+            $userName = auth()->user()->name;
+            $message = $userName . ' placed an order on your product ' . $productData['title'];
+            $image = ProductImage::where('product_id', $request->product_id)->first('image');
+            $data = [
+                'action' => 'ORDER_PLACED',
+                'orderId' => $order->id,
+                'image' => $image->image
+            ];
+            $this->createNotification($request->vendor_id, $message, $data, 'Order Placed');
+    
+            // Update Product Quantity 
+            Product::where('id', $request->product_id)->decrement('remaining_items', 1);
+    
+            // Return response 
+            return $this->sendResponse($order, 'Order created successfully.');
+        }
 
     // Payment Intent 
     public function paymentIntent(Request $request)
