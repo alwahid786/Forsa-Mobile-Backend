@@ -11,9 +11,15 @@ class Order extends Model
 
     protected $hidden = [
         'payment_intent',
-        'intent_id'
+        'intent_id',
+        'type',
+        'multiple_product_ids'
     ];
 
+public function products()
+{
+    return $this->belongsToMany(Product::class, 'order_product');
+}
     public function orderHistory()
     {
         return $this->hasOne(OrderHistory::class);
