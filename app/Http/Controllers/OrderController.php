@@ -207,7 +207,8 @@ $order['productDetails'] = $products;
         $userType = auth()->user()->is_business;
         $orders = Order::where('user_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')->get();
         if ($userType == 1) {
-            $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile')->get();
+            // $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile')->get();
+            $orders = Order::where(function ($query) use ($loginUserId) {$query->where('vendor_id', $loginUserId)->orWhereRaw("FIND_IN_SET($loginUserId, multiple_vendor_id)");})->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile')->get();
         }
         if (!empty($orders)) {
             foreach ($orders as $order) {
