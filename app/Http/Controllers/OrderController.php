@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Views;
 use App\Models\Favourite;
 use App\Models\Order;
+use App\Models\Cart;
 use App\Models\Chat;
 use App\Models\OrderHistory;
 use App\Models\Review;
@@ -158,6 +159,8 @@ $order['productDetails'] = $products;
     // Decrement the remaining_items for each product in the order by 1
     Product::where('id', $product->id)->decrement('remaining_items', 1);
 }
+                $userId = Auth::user()->id;
+                 Cart::where('user_id', $userId)->delete();
             //  Return response 
                 return $this->sendResponse($order, 'Order created successfully.');
             }
