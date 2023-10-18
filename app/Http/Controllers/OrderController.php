@@ -201,33 +201,54 @@ $order['productDetails'] = $products;
     }
 
     // Order history 
-    public function orderHistory(Request $request)
-    {
-        $loginUserId = auth()->user()->id;
-        $userType = auth()->user()->is_business;
-        $orders = Order::where('user_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')->get();
-        if ($userType == 1) {
-            // $orders = Order::where('vendor_id', $loginUserId)->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile')->get();
-            $orders = Order::where(function ($query) use ($loginUserId) {$query->where('vendor_id', $loginUserId)->orWhereRaw("FIND_IN_SET($loginUserId, multiple_vendor_id)");})->with('orderHistory', 'orderHistory.productImages', 'userProfile', 'vendorProfile')->get();
-        }
-        if (!empty($orders)) {
-            foreach ($orders as $order) {
-                if (isset($order['orderHistory']) && $order['orderHistory'] !== null) {
-                    $chat = Chat::where(['client_id' => $order->user_id, 'vendor_id' => $order->vendor_id])->orwhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])->first();
-                    $order->chat_id = null;
-                    if (!empty($chat)) {
-                        $order->chat_id = $chat->id;
-                    }
-                    $order->statusText = $order->status_text;
-                    $order->orderDate = date('M d, Y', strtotime($order->created_at));
+public function orderHistory(Request $request)
+{
+    $loginUserId = auth()->user()->id;
+    $userType = auth()->user()->is_business;
+    $orders = Order::where('user_id', $loginUserId)
+        ->with('newOrderHistory', 'newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
+        ->get();
 
-                    $order->buyerProtectionFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70;
-                    $order->totalFees = ($order['orderHistory']['price'] * 5) / 100 + 0.70 + $order['orderHistory']['price'];
+    if ($userType == 1) {
+        $orders = Order::whereHas('newOrderHistory', function ($query) use ($loginUserId) {
+            $query->where('vendor_id', auth()->user()->id);
+        })
+        ->with('newOrderHistory', 'newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
+        ->get();
+    }
+
+    if (!empty($orders)) {
+        foreach ($orders as $order) {
+            if ($order->newOrderHistory->isNotEmpty()) {
+                $chat = Chat::where(['client_id' => $order->user_id, 'vendor_id' => $order->vendor_id])
+                    ->orWhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])
+                    ->first();
+                $order->chat_id = null;
+                if (!empty($chat)) {
+                    $order->chat_id = $chat->id;
                 }
+                $order->statusText = $order->status_text;
+                $order->orderDate = date('M d, Y', strtotime($order->created_at));
+
+                // Calculate the total value of products
+                $totalValue = 0;
+                foreach ($order->newOrderHistory as $orderHistory) {
+                    $totalValue += $orderHistory->price;
+                }
+                $order->total = $totalValue;
+
+                $order->buyerProtectionFees = $totalValue * 5 / 100 + 0.70;
+                $order->totalFees = $order->buyerProtectionFees + $totalValue;
             }
         }
-        return $this->sendResponse($orders, "Order details found successfully.");
     }
+
+    return $this->sendResponse($orders, "Order detail found successfully.");
+}
+
+
+
+
 
     // Change Order Status 
     public function changeOrderStatus(Request $request)

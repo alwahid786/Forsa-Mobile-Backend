@@ -26,6 +26,11 @@ public function products()
         return $this->hasOne(OrderHistory::class);
     }
 
+        public function newOrderHistory()
+    {
+        return $this->hasMany(OrderHistory::class);
+    }
+
     public function userProfile()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
