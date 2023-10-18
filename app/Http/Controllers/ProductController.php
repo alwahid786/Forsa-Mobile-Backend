@@ -364,32 +364,62 @@ class ProductController extends Controller
         }
     }
 
+    // public function getUserCarts(Request $request)
+    // {
+
+    //     $user = auth()->user();
+
+    //     $query = Product::whereHas('cart', function($query){
+    //         $query->where('user_id', auth()->user()->id);
+    //     })
+    //         ->with('product_brand')
+    //         ->get();
+
+    //     $sum = DB::table('carts')->where('user_id', $user->id)
+    //         ->join('products', 'products.id', '=', 'carts.product_id')
+    //         ->where('products.deleted_at','=', Null)
+    //         ->select(DB::raw('SUM(products.price) as total_price'))
+    //         ->value('total_price');
+
+    //     $arr = [
+    //         'cart_info' => $query,
+    //         'total_price' => $sum,
+    //         'tax' => 5,
+    //     ];
+
+
+    //     if ($arr) {
+    //         return $this->sendResponse($arr, 'cart products');
+    //     }
+    // }
     public function getUserCarts(Request $request)
-    {
+{
+    $user = auth()->user();
 
-        $user = auth()->user();
+    // Load products with their associated product images
+    $query = Product::whereHas('cart', function($query) use ($user) {
+        $query->where('user_id', $user->id);
+    })
+    ->with(['product_brand', 'productImages']) 
+    ->get();
 
-        $query = Product::whereHas('cart', function($query){
-            $query->where('user_id', auth()->user()->id);
-        })
-            ->with('product_brand')
-            ->get();
+    // Calculate the total price
+    $sum = DB::table('carts')
+        ->where('user_id', $user->id)
+        ->join('products', 'products.id', '=', 'carts.product_id')
+        ->where('products.deleted_at', null)
+        ->select(DB::raw('SUM(products.price) as total_price'))
+        ->value('total_price');
 
-        $sum = DB::table('carts')->where('user_id', $user->id)
-            ->join('products', 'products.id', '=', 'carts.product_id')
-            ->where('products.deleted_at','=', Null)
-            ->select(DB::raw('SUM(products.price) as total_price'))
-            ->value('total_price');
+    $arr = [
+        'cart_info' => $query,
+        'total_price' => $sum,
+        'tax' => 5,
+    ];
 
-        $arr = [
-            'cart_info' => $query,
-            'total_price' => $sum,
-            'tax' => 5,
-        ];
-
-
-        if ($arr) {
-            return $this->sendResponse($arr, 'cart products');
-        }
+    if ($arr) {
+        return $this->sendResponse($arr, 'cart products');
     }
+}
+
 }
