@@ -13,7 +13,8 @@ class Order extends Model
         'payment_intent',
         'intent_id',
         'type',
-        'multiple_product_ids'
+        'multiple_product_ids',
+        'multiple_vendor_id'
     ];
 
 public function products()

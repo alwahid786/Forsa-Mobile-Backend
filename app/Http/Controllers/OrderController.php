@@ -89,16 +89,18 @@ class OrderController extends Controller
 public function newPlaceOrder(Request $request)
 {
     $validator = Validator::make($request->all(), [
-        'multiple_product_ids' => 'required|array', 
-        'multiple_product_ids.*' => 'exists:products,id', 
-        'address' => 'required',
-        'latitude' => 'required',
-        'longitude' => 'required',
-        'payment_intent' => 'required',
-        'intent_id' => 'required',
-        'total' => 'required',
-        'type' => 'required|in:single,multiple',
-    ]);
+    'multiple_product_ids' => 'required|array',
+    'multiple_product_ids.*' => 'exists:products,id',
+    'multiple_vendor_id' => 'required|array',
+    'multiple_vendor_id.*' => 'exists:users,id',
+    'address' => 'required',
+    'latitude' => 'required',
+    'longitude' => 'required',
+    'payment_intent' => 'required',
+    'intent_id' => 'required',
+    'total' => 'required',
+    'type' => 'required|in:single,multiple',
+]);
 
     if ($validator->fails()) {
         return $this->sendError(implode(",", $validator->messages()->all()));
@@ -108,6 +110,8 @@ public function newPlaceOrder(Request $request)
     $order = new Order;
     $multipleProductIds = implode(',', $request->multiple_product_ids);
     $order->multiple_product_ids = $multipleProductIds;
+    $multipleVendorIds = implode(',', $request->multiple_vendor_id);
+    $order->multiple_vendor_id = $multipleVendorIds;
     // $order->vendor_id = $request->vendor_id;
     $order->address = $request->address;
     $order->latitude = $request->latitude;
@@ -144,7 +148,7 @@ $order['productDetails'] = $products;
         'orderId' => $order->id,
         'image' => $image->image
     ];
-
+    
     foreach ($vendorIds as $vendorId) {
         $this->createNotification($vendorId, $message, $data, 'Order Placed');
     }
