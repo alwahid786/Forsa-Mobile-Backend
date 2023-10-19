@@ -206,14 +206,14 @@ public function orderHistory(Request $request)
     $loginUserId = auth()->user()->id;
     $userType = auth()->user()->is_business;
     $orders = Order::where('user_id', $loginUserId)
-        ->with('newOrderHistory', 'newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
+        ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
         ->get();
 
     if ($userType == 1) {
         $orders = Order::whereHas('newOrderHistory', function ($query) use ($loginUserId) {
             $query->where('vendor_id', auth()->user()->id);
         })
-        ->with('newOrderHistory', 'newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
+        ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
         ->get();
     }
 
@@ -228,6 +228,13 @@ public function orderHistory(Request $request)
         foreach ($orders as $order) {
             if ($order->newOrderHistory->isNotEmpty()) {
                 $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values(); // Convert the result to a re-indexed array
+
+                // Fetch and associate product images with each product
+                foreach ($order->products as $product) {
+                    $product->product_images = $product->productImages;
+                    
+                }
+
                 $chat = Chat::where(['client_id' => $order->user_id, 'vendor_id' => $order->vendor_id])
                     ->orWhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])
                     ->first();
