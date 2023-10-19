@@ -246,11 +246,15 @@ public function orderHistory(Request $request)
                 $order->orderDate = date('M d, Y', strtotime($order->created_at));
 
                 // Calculate the total value of products
-                $totalValue = 0;
-                foreach ($order->newOrderHistory as $orderHistory) {
-                    $totalValue += $orderHistory->price;
-                }
-                $order->total = $totalValue;
+$totalValue = 0;
+foreach ($order->newOrderHistory as $orderHistory) {
+    // Retrieve the product's discount_price
+    $product = $products->where('id', $orderHistory->product_id)->first();
+    if ($product) {
+        $totalValue += $product->discount_price;
+    }
+}
+$order->total = $totalValue;
 
                 $order->buyerProtectionFees = $totalValue * 5 / 100 + 0.70;
                 $order->totalFees = $order->buyerProtectionFees + $totalValue;
