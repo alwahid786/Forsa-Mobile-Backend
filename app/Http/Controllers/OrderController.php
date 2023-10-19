@@ -216,10 +216,16 @@ public function orderHistory(Request $request)
         ->with('newOrderHistory', 'newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
         ->get();
     }
-
+        $productIds = [];
+    foreach ($orders as $order) {
+        $productIds = array_merge($productIds, $order->newOrderHistory->pluck('product_id')->toArray());
+    }
+      
+      $products = Product::whereIn('id', $productIds)->with('product_brand')->get();
     if (!empty($orders)) {
         foreach ($orders as $order) {
             if ($order->newOrderHistory->isNotEmpty()) {
+                 $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'));
                 $chat = Chat::where(['client_id' => $order->user_id, 'vendor_id' => $order->vendor_id])
                     ->orWhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])
                     ->first();
