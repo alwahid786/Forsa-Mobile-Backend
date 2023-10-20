@@ -226,7 +226,10 @@ public function orderHistory(Request $request)
         $productIds = array_merge($productIds, $order->newOrderHistory->pluck('product_id')->toArray());
     }
 
-    $products = Product::whereIn('id', $productIds)->with('product_brand')->get();
+   $products = Product::whereIn('id', $productIds)
+    ->where('vendor_id', $loginUserId) 
+    ->with('product_brand')
+    ->get();
 
     if (!empty($orders)) {
         foreach ($orders as $order) {
