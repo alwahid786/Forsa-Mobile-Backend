@@ -207,38 +207,29 @@ public function orderHistory(Request $request)
     $userType = auth()->user()->is_business;
 
     if ($userType == 1) {
-        $orders = Order::whereHas('newOrderHistory', function ($query) use ($loginUserId) {
+        $orders = Order::with('newOrderHistory', 'userProfile', 'vendorProfile', 'vendorUserProfile')
+            ->whereHas('newOrderHistory', function ($query) use ($loginUserId) {
                 $query->where('vendor_id', $loginUserId);
             })
-            ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
             ->get();
     } else {
-        $orders = Order::where('user_id', $loginUserId)
-            ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
+        $orders = Order::with('newOrderHistory', 'userProfile', 'vendorProfile', 'vendorUserProfile')
+            ->where('user_id', $loginUserId)
             ->get();
     }
 
-    $productIds = [];
-    foreach ($orders as $order) {
-        $productIds = array_merge($productIds, $order->newOrderHistory->pluck('product_id')->toArray());
-    }
+    $products = Product::whereIn('id', $orders->flatMap(function ($order) {
+        return $order->newOrderHistory->pluck('product_id');
+    }))->where('vendor_id', $loginUserId)
+        ->with('product_brand')
+        ->get();
 
-   $products = Product::whereIn('id', $productIds)
-    ->where('vendor_id', $loginUserId) 
-    ->with('product_brand')
-    ->get();
-
-if (!empty($orders)) {
-    foreach ($orders as $order) {
-        if ($order->newOrderHistory->isNotEmpty()) {
-            $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values();
-            $order->new_order_history = $order->newOrderHistory->filter(function ($orderHistory) use ($loginUserId) {
-                return $orderHistory->vendor_id == $loginUserId;
-            });
-
-            foreach ($order->products as $product) {
-                $product->product_images = $product->productImages;
-            }
+    if (!empty($orders)) {
+        foreach ($orders as $order) {
+            if ($order->newOrderHistory->isNotEmpty()) {
+                // Filter newOrderHistory to include only entries where vendor_id matches the authenticated user's id
+                $order->newOrderHistory = $order->newOrderHistory->where('vendor_id', $loginUserId);
+                $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values();
 
                 $chat = Chat::where(['client_id' => $order->user_id, 'vendor_id' => $order->vendor_id])
                     ->orWhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])
