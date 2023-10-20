@@ -124,7 +124,7 @@ public function profiledetail(Request $request)
    
     return $this->sendResponse([
         'user_profile' => $profile,
-        'is_following' => $isFollowing ? 'yes' : 'no',
+        'is_following' => $isFollowing ? 'true' : 'false',
         'followers' => $followers,
         'following' => $following,
         'products' => $products,
