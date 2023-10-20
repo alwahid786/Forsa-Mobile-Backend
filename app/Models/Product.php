@@ -27,7 +27,10 @@ class Product extends Model
     {
         return $this->hasMany(Favourite::class, 'product_id');
     }
-
+public function newOrderHistory()
+    {
+        return $this->hasMany(OrderHistory::class);
+    }
     public function vendor()
     {
         return $this->belongsTo(User::class);

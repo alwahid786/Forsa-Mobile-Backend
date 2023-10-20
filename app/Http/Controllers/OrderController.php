@@ -207,27 +207,32 @@ public function orderHistory(Request $request)
     $userType = auth()->user()->is_business;
 
     if ($userType == 1) {
+        $orders = Product::where('vendor_id', $loginUserId)
+            ->whereHas('newOrderHistory', function ($query) {
+                $query->where('status', 0);
+            })
+            ->with('productImages', 'brand') // Eager load the productImages and brand relationships
+            ->get();
+    } else {
         $orders = Order::with('newOrderHistory', 'userProfile', 'vendorProfile', 'vendorUserProfile')
             ->whereHas('newOrderHistory', function ($query) use ($loginUserId) {
                 $query->where('vendor_id', $loginUserId);
             })
             ->get();
-    } else {
-        $orders = Order::with('newOrderHistory', 'userProfile', 'vendorProfile', 'vendorUserProfile')
-            ->where('user_id', $loginUserId)
-            ->get();
     }
 
-    $products = Product::whereIn('id', $orders->flatMap(function ($order) {
+    $productIds = $orders->flatMap(function ($order) {
         return $order->newOrderHistory->pluck('product_id');
-    }))->where('vendor_id', $loginUserId)
-        ->with('product_brand')
+    });
+
+    $products = Product::whereIn('id', $productIds)
+        ->where('vendor_id', $loginUserId)
+        ->with('productImages', 'brand') // Eager load the productImages and brand relationships
         ->get();
 
     if (!empty($orders)) {
         foreach ($orders as $order) {
             if ($order->newOrderHistory->isNotEmpty()) {
-                // Filter newOrderHistory to include only entries where vendor_id matches the authenticated user's id
                 $order->newOrderHistory = $order->newOrderHistory->where('vendor_id', $loginUserId);
                 $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values();
 
@@ -259,8 +264,6 @@ public function orderHistory(Request $request)
 
     return $this->sendResponse($orders, "Order detail found successfully.");
 }
-
-
 
 
 
