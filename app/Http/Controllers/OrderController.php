@@ -231,15 +231,20 @@ public function orderHistory(Request $request)
     ->with('product_brand')
     ->get();
 
-    if (!empty($orders)) {
-        foreach ($orders as $order) {
-            if ($order->newOrderHistory->isNotEmpty()) {
-                $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values();
+if (!empty($orders)) {
+    foreach ($orders as $order) {
+        if ($order->newOrderHistory->isNotEmpty()) {
+            $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values();
 
-                // Fetch and associate product images with each product
-                foreach ($order->products as $product) {
-                    $product->product_images = $product->productImages;
-                }
+            // Filter new_order_history to include only products with vendor_id equal to the authenticated user's ID
+            $order->new_order_history = $order->newOrderHistory->filter(function ($orderHistory) use ($loginUserId) {
+                return $orderHistory->vendor_id == $loginUserId;
+            });
+
+            // Fetch and associate product images with each product
+            foreach ($order->products as $product) {
+                $product->product_images = $product->productImages;
+            }
 
                 $chat = Chat::where(['client_id' => $order->user_id, 'vendor_id' => $order->vendor_id])
                     ->orWhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])
