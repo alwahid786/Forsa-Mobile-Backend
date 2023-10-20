@@ -206,16 +206,19 @@ public function orderHistory(Request $request)
     $loginUserId = auth()->user()->id;
     $userType = auth()->user()->is_business;
 
-    $orders = Order::where('user_id', $loginUserId)
-        ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
-        ->get();
-
     if ($userType == 1) {
-        $orders = Order::whereHas('newOrderHistory', function ($query) use ($loginUserId) {
-            $query->where('vendor_id', $loginUserId); 
-        })
-        ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
-        ->get();
+        // If the authenticated user is a vendor, retrieve only their orders and products
+        $orders = Order::where('user_id', $loginUserId)
+            ->whereHas('newOrderHistory', function ($query) use ($loginUserId) {
+                $query->where('vendor_id', $loginUserId);
+            })
+            ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
+            ->get();
+    } else {
+        // If the authenticated user is not a vendor, retrieve orders based on their user_id
+        $orders = Order::where('user_id', $loginUserId)
+            ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
+            ->get();
     }
 
     $productIds = [];
@@ -263,7 +266,6 @@ public function orderHistory(Request $request)
 
     return $this->sendResponse($orders, "Order detail found successfully.");
 }
-
 
 
 
