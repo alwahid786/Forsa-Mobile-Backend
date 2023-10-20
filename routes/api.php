@@ -115,6 +115,7 @@ Route::group(
         Route::post('/add-favourite', [ProductController::class, 'addToFavourite']);
         Route::post('/add-review', [OrderController::class, 'addReview']);
         Route::get('/favourites-list', [ProductController::class, 'favouritesList']);
+         Route::post('/follow', [ProductController::class, 'follow']);
     }
 );
 

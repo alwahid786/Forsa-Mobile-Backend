@@ -11,6 +11,7 @@ use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Views;
 use App\Models\Favourite;
+use App\Models\Follower;
 use App\Models\Cart;
 use App\Models\Chat;
 use App\Models\Location;
@@ -421,5 +422,40 @@ class ProductController extends Controller
         return $this->sendResponse($arr, 'cart products');
     }
 }
+ public function follow(Request $request)
+{
+    try {
+        $validator = Validator::make($request->all(), [
+            'follow_from' => 'required|exists:users,id',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(implode(",", $validator->errors()->all()));
+        }
+        $user = auth()->user();
 
+        $isExists = Follower::firstWhere([
+            'follow_by' => $user->id,
+            'follow_from' => $request->follow_from,
+        ]);
+
+        if (!$isExists) {
+            $Follower = Follower::create([
+                'follow_by' => $user->id,
+                'follow_from' => $request->follow_from,
+            ]);
+            if (!$Follower) {
+                return $this->sendError('Data not updated');
+            }
+
+            return $this->sendResponse(null,'Follow successfully');
+        } else {
+            if (!Follower::where('id', $isExists->id)->delete()) {
+                return $this->sendError('Data not updated');
+            }
+            return $this->sendResponse(null,'Unfollow successfully');
+        }
+    } catch (Exception $ex) {
+        return $this->sendError($ex->getMessage());
+    }
+}
 }
