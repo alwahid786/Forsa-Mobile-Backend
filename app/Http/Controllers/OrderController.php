@@ -207,15 +207,12 @@ public function orderHistory(Request $request)
     $userType = auth()->user()->is_business;
 
     if ($userType == 1) {
-        // If the authenticated user is a vendor, retrieve only their orders and products
-        $orders = Order::where('user_id', $loginUserId)
-            ->whereHas('newOrderHistory', function ($query) use ($loginUserId) {
+        $orders = Order::whereHas('newOrderHistory', function ($query) use ($loginUserId) {
                 $query->where('vendor_id', $loginUserId);
             })
             ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
             ->get();
     } else {
-        // If the authenticated user is not a vendor, retrieve orders based on their user_id
         $orders = Order::where('user_id', $loginUserId)
             ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
             ->get();
@@ -235,13 +232,10 @@ if (!empty($orders)) {
     foreach ($orders as $order) {
         if ($order->newOrderHistory->isNotEmpty()) {
             $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values();
-
-            // Filter new_order_history to include only products with vendor_id equal to the authenticated user's ID
             $order->new_order_history = $order->newOrderHistory->filter(function ($orderHistory) use ($loginUserId) {
                 return $orderHistory->vendor_id == $loginUserId;
             });
 
-            // Fetch and associate product images with each product
             foreach ($order->products as $product) {
                 $product->product_images = $product->productImages;
             }
