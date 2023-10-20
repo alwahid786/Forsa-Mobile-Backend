@@ -205,13 +205,14 @@ public function orderHistory(Request $request)
 {
     $loginUserId = auth()->user()->id;
     $userType = auth()->user()->is_business;
+
     $orders = Order::where('user_id', $loginUserId)
         ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
         ->get();
 
     if ($userType == 1) {
         $orders = Order::whereHas('newOrderHistory', function ($query) use ($loginUserId) {
-            $query->where('vendor_id', auth()->user()->id);
+            $query->where('vendor_id', $loginUserId); 
         })
         ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile')
         ->get();
@@ -221,18 +222,17 @@ public function orderHistory(Request $request)
     foreach ($orders as $order) {
         $productIds = array_merge($productIds, $order->newOrderHistory->pluck('product_id')->toArray());
     }
-      
+
     $products = Product::whereIn('id', $productIds)->with('product_brand')->get();
-    
+
     if (!empty($orders)) {
         foreach ($orders as $order) {
             if ($order->newOrderHistory->isNotEmpty()) {
-                $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values(); // Convert the result to a re-indexed array
+                $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values();
 
                 // Fetch and associate product images with each product
                 foreach ($order->products as $product) {
                     $product->product_images = $product->productImages;
-                    
                 }
 
                 $chat = Chat::where(['client_id' => $order->user_id, 'vendor_id' => $order->vendor_id])
@@ -245,16 +245,15 @@ public function orderHistory(Request $request)
                 $order->statusText = $order->status_text;
                 $order->orderDate = date('M d, Y', strtotime($order->created_at));
 
-                // Calculate the total value of products
-$totalValue = 0;
-foreach ($order->newOrderHistory as $orderHistory) {
-    // Retrieve the product's discount_price
-    $product = $products->where('id', $orderHistory->product_id)->first();
-    if ($product) {
-        $totalValue += $product->discount_price;
-    }
-}
-$order->total = $totalValue;
+                $totalValue = 0;
+                foreach ($order->newOrderHistory as $orderHistory) {
+                    // Retrieve the product's discount_price
+                    $product = $products->where('id', $orderHistory->product_id)->first();
+                    if ($product) {
+                        $totalValue += $product->discount_price;
+                    }
+                }
+                $order->total = $totalValue;
 
                 $order->buyerProtectionFees = $totalValue * 5 / 100 + 0.70;
                 $order->totalFees = $order->buyerProtectionFees + $totalValue;
@@ -264,6 +263,7 @@ $order->total = $totalValue;
 
     return $this->sendResponse($orders, "Order detail found successfully.");
 }
+
 
 
 
