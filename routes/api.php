@@ -101,6 +101,7 @@ Route::group(
         Route::post('/add-tocart', [ProductController::class, 'addToCart']);
         Route::post('/remove-cart', [ProductController::class, 'removeCart']);
         Route::get('/get-user-cart', [ProductController::class, 'getUserCarts']);
+         Route::post('/profile-detail', [UserController::class, 'profiledetail']);
     }
 );
 

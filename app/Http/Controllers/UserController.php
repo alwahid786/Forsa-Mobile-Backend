@@ -10,6 +10,8 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Banner;
+use App\Models\Follower;
+use App\Models\OrderHistory;
 use App\Models\Brand;
 use App\Http\Requests\SignupRequest;
 use App\Http\Traits\ResponseTrait;
@@ -84,4 +86,51 @@ class UserController extends Controller
         }
         return $this->sendError('Your Profile cannot be updated at the moment. Please Try again later.');
     }
+public function profiledetail(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'profile_id' => 'required|exists:users,id',
+    ]);
+
+    if ($validator->fails()) {
+        return $this->sendError(implode(",", $validator->errors()->all()));
+    }
+
+    $user = auth()->user();
+    $profile = User::where('id', $request->profile_id)->first();
+
+    if (!$profile) {
+        return $this->sendError('User not found');
+    }
+
+   
+    $isFollowing = Follower::where('follow_by', $user->id)
+        ->where('follow_from', $request->profile_id)
+        ->exists();
+
+    
+    $followers = Follower::where('follow_from', $request->profile_id)
+        ->get();
+
+  
+    $following = Follower::where('follow_by', $request->profile_id)
+         ->get();
+
+    $products = Product::where('vendor_id', $request->profile_id)
+        ->get();
+
+    $orderHistory = OrderHistory::whereIn('product_id', $products->pluck('id'))->get();
+
+   
+    return $this->sendResponse([
+        'user_profile' => $profile,
+        'is_following' => $isFollowing ? 'yes' : 'no',
+        'followers' => $followers,
+        'following' => $following,
+        'products' => $products,
+        'order_history' => $orderHistory,
+    ], 'User Profile information');
+}
+
+
 }
