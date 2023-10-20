@@ -207,7 +207,8 @@ public function orderHistory(Request $request)
     $userType = auth()->user()->is_business;
 
     // Retrieve orders based on user type
-    $orders = Order::where('user_id', $loginUserId)->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile');
+    $orders = Order::where('user_id', $loginUserId)
+        ->with('newOrderHistory.productImages', 'userProfile', 'vendorProfile', 'vendorUserProfile');
 
     if ($userType == 1) {
         // If the user is a vendor, filter by vendor_id
@@ -217,6 +218,7 @@ public function orderHistory(Request $request)
     }
 
     $orders = $orders->get();
+
 
     if (!empty($orders)) {
         foreach ($orders as $order) {
