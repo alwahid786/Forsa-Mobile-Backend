@@ -103,10 +103,10 @@ public function profiledetail(Request $request)
         return $this->sendError('User not found');
     }
 
-   
-    $isFollowing = Follower::where('follow_by', $user->id)
-        ->where('follow_from', $request->profile_id)
-        ->exists();
+
+        $isFollowing = Follower::where('follow_by', $user->id)
+    ->where('follow_from', $request->profile_id)
+    ->exists();
 
     
     $followers = Follower::where('follow_from', $request->profile_id)
@@ -124,7 +124,7 @@ public function profiledetail(Request $request)
    
     return $this->sendResponse([
         'user_profile' => $profile,
-        'is_following' => $isFollowing ? 'true' : 'false',
+        'is_following' => $isFollowing,
         'followers' => $followers,
         'following' => $following,
         'products' => $products,
