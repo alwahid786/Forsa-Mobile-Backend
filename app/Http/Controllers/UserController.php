@@ -116,8 +116,9 @@ public function profiledetail(Request $request)
     $following = Follower::where('follow_by', $request->profile_id)
          ->get();
 
-    $products = Product::where('vendor_id', $request->profile_id)
-        ->get();
+    $products = Product::with('product_brand', 'productImages')
+    ->where('vendor_id', $request->profile_id)
+    ->get();
 
     $orderHistory = OrderHistory::whereIn('product_id', $products->pluck('id'))->get();
 
