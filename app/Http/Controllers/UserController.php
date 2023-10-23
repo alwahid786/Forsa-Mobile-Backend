@@ -119,8 +119,7 @@ public function profiledetail(Request $request)
 
     $orderHistory = OrderHistory::whereIn('product_id', $products->pluck('id'))->get();
 
- 
-    $followingUserIds = $following->pluck('follow_by');
+    $followingUserIds = $following->pluck('follow_from');
     $followingProducts = Product::with('product_brand', 'productImages')
         ->whereIn('vendor_id', $followingUserIds)
         ->get();
@@ -135,6 +134,7 @@ public function profiledetail(Request $request)
         'order_history' => $orderHistory,
     ], 'User Profile information');
 }
+
 
 
 }
