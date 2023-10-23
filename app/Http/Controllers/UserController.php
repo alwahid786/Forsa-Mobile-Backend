@@ -103,32 +103,35 @@ public function profiledetail(Request $request)
         return $this->sendError('User not found');
     }
 
+    $isFollowing = Follower::where('follow_by', $user->id)
+        ->where('follow_from', $request->profile_id)
+        ->exists();
 
-        $isFollowing = Follower::where('follow_by', $user->id)
-    ->where('follow_from', $request->profile_id)
-    ->exists();
-
-    
     $followers = Follower::where('follow_from', $request->profile_id)
         ->get();
 
-  
     $following = Follower::where('follow_by', $request->profile_id)
-         ->get();
+        ->get();
 
     $products = Product::with('product_brand', 'productImages')
-    ->where('vendor_id', $request->profile_id)
-    ->get();
+        ->where('vendor_id', $request->profile_id)
+        ->get();
 
     $orderHistory = OrderHistory::whereIn('product_id', $products->pluck('id'))->get();
 
-   
+ 
+    $followingUserIds = $following->pluck('follow_by');
+    $followingProducts = Product::with('product_brand', 'productImages')
+        ->whereIn('vendor_id', $followingUserIds)
+        ->get();
+
     return $this->sendResponse([
         'user_profile' => $profile,
         'is_following' => $isFollowing,
         'followers' => $followers,
         'following' => $following,
         'products' => $products,
+        'following_products' => $followingProducts,
         'order_history' => $orderHistory,
     ], 'User Profile information');
 }
