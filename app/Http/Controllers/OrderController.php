@@ -211,7 +211,7 @@ public function orderHistory(Request $request)
             ->whereHas('newOrderHistory', function ($query) {
                 $query->where('status', 0);
             })
-            ->with('productImages', 'brand') // Eager load the productImages and brand relationships
+            ->with('productImages', 'brand') 
             ->get();
     } else {
         $orders = Order::with('newOrderHistory', 'userProfile', 'vendorProfile', 'vendorUserProfile')
@@ -227,7 +227,7 @@ public function orderHistory(Request $request)
 
     $products = Product::whereIn('id', $productIds)
         ->where('vendor_id', $loginUserId)
-        ->with('productImages', 'brand') // Eager load the productImages and brand relationships
+        ->with('productImages', 'brand') 
         ->get();
 
     if (!empty($orders)) {
@@ -243,7 +243,7 @@ public function orderHistory(Request $request)
                 if (!empty($chat)) {
                     $order->chat_id = $chat->id;
                 }
-                $order->statusText = $order->status_text;
+                $statusText = $order->statusText;
                 $order->orderDate = date('M d, Y', strtotime($order->created_at));
 
                 $totalValue = 0;
