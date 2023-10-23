@@ -113,16 +113,16 @@ public function profiledetail(Request $request)
     $following = Follower::where('follow_by', $request->profile_id)
         ->get();
 
+    $followingUserIds = $following->pluck('follow_from');
+    $followingProducts = Product::with('product_brand', 'productImages')
+        ->whereIn('vendor_id', $followingUserIds)
+        ->get();
+
     $products = Product::with('product_brand', 'productImages')
         ->where('vendor_id', $request->profile_id)
         ->get();
 
     $orderHistory = OrderHistory::whereIn('product_id', $products->pluck('id'))->get();
-
-    $followingUserIds = $following->pluck('follow_from');
-    $followingProducts = Product::with('product_brand', 'productImages')
-        ->whereIn('vendor_id', $followingUserIds)
-        ->get();
 
     return $this->sendResponse([
         'user_profile' => $profile,
@@ -134,7 +134,6 @@ public function profiledetail(Request $request)
         'order_history' => $orderHistory,
     ], 'User Profile information');
 }
-
 
 
 }
