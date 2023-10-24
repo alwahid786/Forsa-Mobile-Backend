@@ -16,6 +16,10 @@ class OrderHistory extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+     public function product_brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
 
     protected $fillable = [
         'vendor_id',

@@ -269,51 +269,24 @@ public function orderHistory(Request $request)
 {
     $loginUserId = auth()->user()->id;
     $userType = auth()->user()->is_business;
-    $orders = [];
-
-//     if ($userType == 1) {
-//     $orders = Product::where('vendor_id', $loginUserId)
-//     ->with(['newOrderHistory' => function ($query) use ($loginUserId) {
-//         $query->where('vendor_id', $loginUserId);
-//     }, 'newOrderHistory.product.productImages', 'newOrderHistory.product.product_brand'])
-//     ->get();
-// }
-
-//      else {
-    // return $userType;
-        $userOrders = (new Order)->newQuery();
-        if($userType == 1){
-            $userOrders->whereRaw('FIND_IN_SET("'.$loginUserId.'", multiple_vendor_id)');
-        }else{
-        $userOrders->where('user_id', $loginUserId);
-        }
-        $userOrders = $userOrders->get();
-        // return $userOrders;
-        foreach ($userOrders as $order) {
-            $orderProductIds = explode(',', $order->multiple_product_ids);
-            
-            $p = (new Product)->newQuery();
-            $p->whereIn('id', $orderProductIds)
-                ->with('productImages', 'brand');
-                // return $userType;
-                if($userType == 1){
-                $p->where('vendor_id', $loginUserId);
-                }
-                $order->products = $p->get();
-                // return $order;
-        }
-
-        $userOrders->each(function ($order) {
-            $order->status_text = $order->statusText;
+       $orderHistory = (new Order)->newQuery();
+       
+    if ($userType == 1) {
+        $orderHistory->whereHas('newOrderHistory', function($query) use($loginUserId){
+            $query->where('vendor_id', $loginUserId);
         });
-
-        $orders = $userOrders;
-    // }
-
-    return $this->sendResponse(['orders' => $orders], "Order detail found successfully.");
+    }else{
+        $orderHistory->where('user_id', $loginUserId);
+    }
+    $orderHistory = $orderHistory->with(['newOrderHistory.product.productImages.product_brand','newOrderHistory' => function($query) use($loginUserId, $userType){
+if ($userType == 1) {
+    $query->where('vendor_id', $loginUserId);
 }
-
-
+    }])
+    ->get();
+    
+    return $this->sendResponse($orderHistory, "Order history found successfully.");
+}
 
 
 
