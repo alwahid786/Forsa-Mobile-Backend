@@ -201,69 +201,113 @@ $order['productDetails'] = $products;
     }
 
     // Order history 
+// public function orderHistory(Request $request)
+// {
+//     $loginUserId = auth()->user()->id;
+//     $userType = auth()->user()->is_business;
+
+//     if ($userType == 1) {
+//         $orders = Product::where('vendor_id', $loginUserId)
+//             ->whereHas('newOrderHistory', function ($query) {
+//                 $query->where('status', 0);
+//             })
+//             ->with('productImages', 'brand') 
+//             ->get();
+//     } else {
+//         $orders = Order::with('newOrderHistory', 'userProfile', 'vendorProfile', 'vendorUserProfile')
+//             ->whereHas('newOrderHistory', function ($query) use ($loginUserId) {
+//                 $query->where('vendor_id', $loginUserId);
+//             })
+//             ->get();
+//     }
+
+//     $productIds = $orders->flatMap(function ($order) {
+//         return $order->newOrderHistory->pluck('product_id');
+//     });
+
+//     $products = Product::whereIn('id', $productIds)
+//         ->where('vendor_id', $loginUserId)
+//         ->with('productImages', 'brand') 
+//         ->get();
+
+//     if (!empty($orders)) {
+//         foreach ($orders as $order) {
+//             if ($order->newOrderHistory->isNotEmpty()) {
+//                 $order->newOrderHistory = $order->newOrderHistory->where('vendor_id', $loginUserId);
+//                 $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values();
+
+//                 $chat = Chat::where(['client_id' => $order->user_id, 'vendor_id' => $order->vendor_id])
+//                     ->orWhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])
+//                     ->first();
+//                 $order->chat_id = null;
+//                 if (!empty($chat)) {
+//                     $order->chat_id = $chat->id;
+//                 }
+//                 $statusText = $order->statusText;
+//                 $order->orderDate = date('M d, Y', strtotime($order->created_at));
+
+//                 $totalValue = 0;
+//                 foreach ($order->newOrderHistory as $orderHistory) {
+//                     // Retrieve the product's discount_price
+//                     $product = $products->where('id', $orderHistory->product_id)->first();
+//                     if ($product) {
+//                         $totalValue += $product->discount_price;
+//                     }
+//                 }
+//                 $order->total = $totalValue;
+
+//                 $order->buyerProtectionFees = $totalValue * 5 / 100 + 0.70;
+//                 $order->totalFees = $order->buyerProtectionFees + $totalValue;
+//             }
+//         }
+//     }
+
+//     return $this->sendResponse($orders, "Order detail found successfully.");
+// }
+     
 public function orderHistory(Request $request)
 {
     $loginUserId = auth()->user()->id;
     $userType = auth()->user()->is_business;
+    $orders = [];
 
     if ($userType == 1) {
-        $orders = Product::where('vendor_id', $loginUserId)
-            ->whereHas('newOrderHistory', function ($query) {
-                $query->where('status', 0);
-            })
-            ->with('productImages', 'brand') 
-            ->get();
-    } else {
-        $orders = Order::with('newOrderHistory', 'userProfile', 'vendorProfile', 'vendorUserProfile')
-            ->whereHas('newOrderHistory', function ($query) use ($loginUserId) {
-                $query->where('vendor_id', $loginUserId);
-            })
-            ->get();
+      $orders = Product::where('vendor_id', $loginUserId)
+    ->with('productImages', 'brand')
+    ->with(['newOrderHistory' => function ($query) use ($loginUserId) {
+        $query->where('vendor_id', $loginUserId);
+    }, 'newOrderHistory.product.productImages', 'newOrderHistory.product.product_brand'])
+    ->get();
+foreach ($orders as $order) {
+    foreach ($order->newOrderHistory as $history) {
+        $productId = $history->product->id;
+        $productImages = $history->product->productImages;
+        $productBrand = $history->product->product_brand;
+        
+        // You can access other product properties as well.
     }
-
-    $productIds = $orders->flatMap(function ($order) {
-        return $order->newOrderHistory->pluck('product_id');
-    });
-
-    $products = Product::whereIn('id', $productIds)
-        ->where('vendor_id', $loginUserId)
-        ->with('productImages', 'brand') 
-        ->get();
-
-    if (!empty($orders)) {
-        foreach ($orders as $order) {
-            if ($order->newOrderHistory->isNotEmpty()) {
-                $order->newOrderHistory = $order->newOrderHistory->where('vendor_id', $loginUserId);
-                $order->products = $products->whereIn('id', $order->newOrderHistory->pluck('product_id'))->values();
-
-                $chat = Chat::where(['client_id' => $order->user_id, 'vendor_id' => $order->vendor_id])
-                    ->orWhere(['client_id' => $order->vendor_id, 'vendor_id' => $order->user_id])
-                    ->first();
-                $order->chat_id = null;
-                if (!empty($chat)) {
-                    $order->chat_id = $chat->id;
-                }
-                $statusText = $order->statusText;
-                $order->orderDate = date('M d, Y', strtotime($order->created_at));
-
-                $totalValue = 0;
-                foreach ($order->newOrderHistory as $orderHistory) {
-                    // Retrieve the product's discount_price
-                    $product = $products->where('id', $orderHistory->product_id)->first();
-                    if ($product) {
-                        $totalValue += $product->discount_price;
-                    }
-                }
-                $order->total = $totalValue;
-
-                $order->buyerProtectionFees = $totalValue * 5 / 100 + 0.70;
-                $order->totalFees = $order->buyerProtectionFees + $totalValue;
-            }
-        }
-    }
-
-    return $this->sendResponse($orders, "Order detail found successfully.");
 }
+    } else {
+        $userOrders = Order::where('user_id', $loginUserId)->get();
+
+        foreach ($userOrders as $order) {
+            $orderProductIds = explode(',', $order->multiple_product_ids);
+            $order->products = Product::whereIn('id', $orderProductIds)
+                ->with('productImages', 'brand')
+                ->get();
+        }
+
+        $userOrders->each(function ($order) {
+            $order->status_text = $order->statusText;
+        });
+
+        $orders = $userOrders;
+    }
+
+    return $this->sendResponse(['orders' => $orders], "Orders and products data found successfully.");
+}
+
+
 
 
 

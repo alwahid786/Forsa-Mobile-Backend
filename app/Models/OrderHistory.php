@@ -12,6 +12,10 @@ class OrderHistory extends Model
     {
         return $this->hasMany(ProductImage::class, 'product_id', 'product_id');
     }
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 
     protected $fillable = [
         'vendor_id',

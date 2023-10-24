@@ -16,7 +16,10 @@ class Order extends Model
         'multiple_product_ids',
         'multiple_vendor_id'
     ];
-
+public function orderHistories()
+{
+    return $this->hasMany(OrderHistory::class, 'product_id');
+}
 public function products()
 {
     return $this->belongsToMany(Product::class, 'order_product');
