@@ -278,7 +278,7 @@ public function orderHistory(Request $request)
     }else{
         $orderHistory->where('user_id', $loginUserId);
     }
-    $orderHistory = $orderHistory->with(['newOrderHistory.product.productImages.product_brand','newOrderHistory' => function($query) use($loginUserId, $userType){
+    $orderHistory = $orderHistory->with(['newOrderHistory.product.productImages','newOrderHistory' => function($query) use($loginUserId, $userType){
 if ($userType == 1) {
     $query->where('vendor_id', $loginUserId);
 }
