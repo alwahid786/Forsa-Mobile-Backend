@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Category;
 use App\Models\Banner;
+use App\Models\Review;
 use App\Models\Follower;
 use App\Models\OrderHistory;
 use App\Models\Brand;
@@ -134,6 +135,20 @@ public function profiledetail(Request $request)
         'order_history' => $orderHistory,
     ], 'User Profile information');
 }
+public function getreview(Request $request){
 
+     $validator = Validator::make($request->all(), [
+        'profile_id' => 'required|exists:users,id',
+    ]);
 
+    if ($validator->fails()) {
+        return $this->sendError(implode(",", $validator->errors()->all()));
+    }
+    $vendorId = $request->input('profile_id');
+    $reviews = Review::where(function ($query) use ($vendorId) {
+        $query->where('vendor_id', $vendorId) 
+              ->orWhere('user_id', $vendorId);  
+    })->get();
+    return $this->sendResponse($reviews, 'Reviews information');
+}
 }
