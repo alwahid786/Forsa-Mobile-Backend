@@ -33,9 +33,28 @@ class OrderHistory extends Model
         'location',
         'lat',
         'long',
-        'sub_categoryId'
+        'sub_categoryId',
+        'status'
     ];
-
+ public function getStatusTextAttribute()
+    {
+        switch ($this->status) {
+            case 0:
+                return 'Pending';
+            case 1:
+                return 'Accepted';
+            case 2:
+                return 'Ready To Deliver';
+            case 3:
+                return 'On The Way';
+            case 4:
+                return 'Delivered';
+            case 5:
+                return 'Completed';
+            case 6:
+                return 'Cancelled';
+        }
+    }
     public function insertData($data, $productId, $orderId)
     {
         $data['product_id'] = $productId;

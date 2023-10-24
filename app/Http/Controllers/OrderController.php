@@ -271,30 +271,36 @@ public function orderHistory(Request $request)
     $userType = auth()->user()->is_business;
     $orders = [];
 
-    if ($userType == 1) {
-      $orders = Product::where('vendor_id', $loginUserId)
-    ->with('productImages', 'brand')
-    ->with(['newOrderHistory' => function ($query) use ($loginUserId) {
-        $query->where('vendor_id', $loginUserId);
-    }, 'newOrderHistory.product.productImages', 'newOrderHistory.product.product_brand'])
-    ->get();
-foreach ($orders as $order) {
-    foreach ($order->newOrderHistory as $history) {
-        $productId = $history->product->id;
-        $productImages = $history->product->productImages;
-        $productBrand = $history->product->product_brand;
-        
-        // You can access other product properties as well.
-    }
-}
-    } else {
-        $userOrders = Order::where('user_id', $loginUserId)->get();
+//     if ($userType == 1) {
+//     $orders = Product::where('vendor_id', $loginUserId)
+//     ->with(['newOrderHistory' => function ($query) use ($loginUserId) {
+//         $query->where('vendor_id', $loginUserId);
+//     }, 'newOrderHistory.product.productImages', 'newOrderHistory.product.product_brand'])
+//     ->get();
+// }
 
+//      else {
+    // return $userType;
+        $userOrders = (new Order)->newQuery();
+        if($userType == 1){
+            $userOrders->whereRaw('FIND_IN_SET("'.$loginUserId.'", multiple_vendor_id)');
+        }else{
+        $userOrders->where('user_id', $loginUserId);
+        }
+        $userOrders = $userOrders->get();
+        // return $userOrders;
         foreach ($userOrders as $order) {
             $orderProductIds = explode(',', $order->multiple_product_ids);
-            $order->products = Product::whereIn('id', $orderProductIds)
-                ->with('productImages', 'brand')
-                ->get();
+            
+            $p = (new Product)->newQuery();
+            $p->whereIn('id', $orderProductIds)
+                ->with('productImages', 'brand');
+                // return $userType;
+                if($userType == 1){
+                $p->where('vendor_id', $loginUserId);
+                }
+                $order->products = $p->get();
+                // return $order;
         }
 
         $userOrders->each(function ($order) {
@@ -302,9 +308,9 @@ foreach ($orders as $order) {
         });
 
         $orders = $userOrders;
-    }
+    // }
 
-    return $this->sendResponse(['orders' => $orders], "Orders and products data found successfully.");
+    return $this->sendResponse(['orders' => $orders], "Order detail found successfully.");
 }
 
 

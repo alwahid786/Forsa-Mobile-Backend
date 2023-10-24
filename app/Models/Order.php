@@ -10,11 +10,6 @@ class Order extends Model
     use HasFactory;
 
     protected $hidden = [
-        'payment_intent',
-        'intent_id',
-        'type',
-        'multiple_product_ids',
-        'multiple_vendor_id'
     ];
 public function orderHistories()
 {
