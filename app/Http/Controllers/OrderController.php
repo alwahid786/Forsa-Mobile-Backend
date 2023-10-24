@@ -269,24 +269,30 @@ public function orderHistory(Request $request)
 {
     $loginUserId = auth()->user()->id;
     $userType = auth()->user()->is_business;
-       $orderHistory = (new Order)->newQuery();
-       
+    $orderHistory = (new Order)->newQuery();
+
     if ($userType == 1) {
-        $orderHistory->whereHas('newOrderHistory', function($query) use($loginUserId){
+        $orderHistory->whereHas('newOrderHistory', function($query) use($loginUserId) {
             $query->where('vendor_id', $loginUserId);
         });
-    }else{
+    } else {
         $orderHistory->where('user_id', $loginUserId);
     }
-    $orderHistory = $orderHistory->with(['newOrderHistory.product.productImages','newOrderHistory.product.product_brand','newOrderHistory' => function($query) use($loginUserId, $userType){
-if ($userType == 1) {
-    $query->where('vendor_id', $loginUserId);
-}
-    }])
-    ->get();
-    
+
+    $orderHistory = $orderHistory->with(['newOrderHistory.product.productImages', 'newOrderHistory.product.product_brand', 'newOrderHistory' => function($query) use($loginUserId, $userType) {
+        if ($userType == 1) {
+            $query->where('vendor_id', $loginUserId);
+        }
+    }])->get();
+
+    // Add the status text to the order history
+    $orderHistory->each(function($order) {
+        $order->status_text = $order->getStatusTextAttribute();
+    });
+
     return $this->sendResponse($orderHistory, "Order history found successfully.");
 }
+
 
 
 
