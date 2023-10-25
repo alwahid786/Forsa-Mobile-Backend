@@ -165,13 +165,16 @@ $order['productDetails'] = $products;
                 return $this->sendResponse($order, 'Order created successfully.');
             }
 
-
+// STRIPE_KEY=pk_test_51NBGieLDMSf6CWoWgCg3uJENGFp56aF5FTNiC2ytwsrDCGKWxNEcz5hhFs0Uu3SG5k8HOWaXBZtNmruuMj6jvsWq00SdtisKzv
+// STRIPE_SECRET=sk_test_51NBGieLDMSf6CWoWs6cEJMPDgaUjaWw2KEBGJh77B5IWijUje0EKtO55CnTe1JSCjpyN1dC7CDT0YW8ZLUIKEpmP00q73QvVfl
+// stripe_client_id=ca_NxB5joILWuRc4wo6rWOlbYEpTtWxJA1a
+// stripe_redirected_url=http://kodextech.net/forsa/api/vendor/stripe_redirect_url
     // Payment Intent 
     public function paymentIntent(Request $request)
     {
-        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+        $stripe = new \Stripe\StripeClient('sk_test_51NBGieLDMSf6CWoWs6cEJMPDgaUjaWw2KEBGJh77B5IWijUje0EKtO55CnTe1JSCjpyN1dC7CDT0YW8ZLUIKEpmP00q73QvVfl');
 
-        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::setApiKey('sk_test_51NBGieLDMSf6CWoWs6cEJMPDgaUjaWw2KEBGJh77B5IWijUje0EKtO55CnTe1JSCjpyN1dC7CDT0YW8ZLUIKEpmP00q73QvVfl');
 
         $customer = $stripe->customers->create([
             'description' => 'Forsa Product Customer',
@@ -193,8 +196,8 @@ $order['productDetails'] = $products;
             'payment_intent' => $paymentIntent->client_secret,
             'ephemeral_key' => $ephemeralKey->secret,
             'customer_id' => $customer->id,
-            'publishablekey' => env('STRIPE_KEY'),
-            'secret' => env('STRIPE_SECRET'),
+            'publishablekey' => 'pk_test_51NBGieLDMSf6CWoWgCg3uJENGFp56aF5FTNiC2ytwsrDCGKWxNEcz5hhFs0Uu3SG5k8HOWaXBZtNmruuMj6jvsWq00SdtisKzv',
+            'secret' => 'sk_test_51NBGieLDMSf6CWoWs6cEJMPDgaUjaWw2KEBGJh77B5IWijUje0EKtO55CnTe1JSCjpyN1dC7CDT0YW8ZLUIKEpmP00q73QvVfl',
             'id' => $paymentIntent->id
         ];
         return $this->sendResponse($pay_int_res, 'Payment Intent');
