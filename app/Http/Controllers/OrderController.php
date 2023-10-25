@@ -285,11 +285,11 @@ public function orderHistory(Request $request)
         }
     }])->get();
 
-    // Add the status text to the order history
-    $orderHistory->each(function($order) {
-        $order->status_text = $order->getStatusTextAttribute();
+     $orderHistory->each(function ($order) {
+        $order->newOrderHistory->each(function ($item) {
+            $item->status_text = $item->getStatusTextAttribute(); // Assuming you have a getStatusTextAttribute method in your model
+        });
     });
-
     return $this->sendResponse($orderHistory, "Order history found successfully.");
 }
 
