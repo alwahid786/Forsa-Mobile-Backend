@@ -287,7 +287,7 @@ public function orderHistory(Request $request)
 
      $orderHistory->each(function ($order) {
         $order->newOrderHistory->each(function ($item) {
-            $item->status_text = $item->getStatusTextAttribute(); // Assuming you have a getStatusTextAttribute method in your model
+            $item->status_text = $item->getStatusTextAttribute(); 
         });
     });
     return $this->sendResponse($orderHistory, "Order history found successfully.");

@@ -401,7 +401,7 @@ class ProductController extends Controller
     $query = Product::whereHas('cart', function($query) use ($user) {
         $query->where('user_id', $user->id);
     })
-    ->with(['product_brand', 'productImages']) 
+    ->with(['brand', 'productImages']) 
     ->get();
 
     // Calculate the total price
