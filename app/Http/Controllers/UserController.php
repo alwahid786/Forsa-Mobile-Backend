@@ -115,11 +115,11 @@ public function profiledetail(Request $request)
         ->get();
 
     $followingUserIds = $following->pluck('follow_from');
-    $followingProducts = Product::with('product_brand', 'productImages')
+    $followingProducts = Product::with('brand', 'productImages')
         ->whereIn('vendor_id', $followingUserIds)
         ->get();
 
-    $products = Product::with('product_brand', 'productImages')
+    $products = Product::with('brand', 'productImages')
         ->where('vendor_id', $request->profile_id)
         ->get();
 
