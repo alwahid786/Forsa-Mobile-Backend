@@ -327,7 +327,7 @@ public function orderHistory(Request $request)
             $receiverId = $orderStatus->vendor_id;
         } else {
             $message = 'Your order #' . $request->order_id . ' status has been changed';
-            $receiverId = $orderStatus->user_id;
+           $receiverId = $orderStatus->order->user_id;
         }
         $image = ProductImage::where('product_id', $orderStatus->product_id)->first('image');
         $data = [
