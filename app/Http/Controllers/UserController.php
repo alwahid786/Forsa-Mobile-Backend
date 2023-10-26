@@ -98,7 +98,7 @@ public function profiledetail(Request $request)
     }
 
     $user = auth()->user();
-    $profile = User::where('id', $request->profile_id)->first();
+   $profile = User::with('location')->where('id', $request->profile_id)->first();
 
     if (!$profile) {
         return $this->sendError('User not found');
