@@ -303,13 +303,13 @@ public function orderHistory(Request $request)
     public function changeOrderStatus(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'order_id' => 'required|exists:orders,id',
+            'order_id' => 'required|exists:order_histories,id',
             'status' => 'required'
         ]);
         if ($validator->fails()) {
             return $this->sendError(implode(",", $validator->messages()->all()));
         }
-        $orderStatus = Order::where('id', $request->order_id)->first();
+        $orderStatus = OrderHistory::where('id', $request->order_id)->first();
         if ($request->status == 5) {
             if ($orderStatus->status != 4) {
                 return $this->sendError('This order is not delivered yet! You cannot complete it before it is delivered.');
@@ -319,7 +319,7 @@ public function orderHistory(Request $request)
         if ($request->status == 6) {
             Product::where('id', $orderStatus->product_id)->increment('remaining_items', 1);
         }
-        $order = Order::where('id', $request->order_id)->update(['status' => $request->status]);
+        $order = OrderHistory::where('id', $request->order_id)->update(['status' => $request->status]);
 
         // Send Notification 
         if ($request->status == 5) {
