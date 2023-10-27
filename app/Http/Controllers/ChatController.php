@@ -115,8 +115,9 @@ class ChatController extends Controller
     // Get All chats 
     public function allChats(Request $request)
     {
+        if ($request->has('is_vendor') && $request->input('is_vendor') == 1) {
         $loginUserId = auth()->user()->id;
-        $chats = Chat::where('client_id', $loginUserId)->orWhere('vendor_id', $loginUserId)->with('lastMessage')->get();
+        $chats = Chat::where('vendor_id', $loginUserId)->with('lastMessage')->get();
         if (!empty($chats)) {
             foreach ($chats as $chat) {
                 $chat['unreadCount'] = 0;
@@ -135,6 +136,30 @@ class ChatController extends Controller
         } else {
             return $this->sendError('No chats for now');
         }
+    }
+    else
+    {
+         $loginUserId = auth()->user()->id;
+        $chats = Chat::where('client_id', $loginUserId)->with('lastMessage')->get();
+        if (!empty($chats)) {
+            foreach ($chats as $chat) {
+                $chat['unreadCount'] = 0;
+                if (!empty($chat['lastMessage']) && $chat['lastMessage']['sender_id'] !== auth()->user()->id) {
+                    $chat['unreadCount'] = Message::where(['chat_id' => $chat->id, 'is_read' => 0])->count();
+                }
+                if ($chat['client_id'] != $loginUserId) {
+                    $chat['userData'] = User::find($chat['client_id']);
+                    $chat['userData']['location'] = Location::where('user_id', $chat['client_id'])->first();
+                } elseif ($chat['vendor_id'] != $loginUserId) {
+                    $chat['userData'] = User::find($chat['vendor_id']);
+                    $chat['userData']['location'] = Location::where('user_id', $chat['vendor_id'])->first();
+                }
+            }
+            return $this->sendResponse($chats, "List of All chats");
+        } else {
+            return $this->sendError('No chats for now');
+        }
+    }
     }
 
     // Show Chat details 
