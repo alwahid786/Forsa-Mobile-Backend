@@ -127,7 +127,7 @@ Route::group(
     ['prefix' => 'chat', 'middleware' => ['api', 'auth:api']],
     function () {
         Route::post('/send-message', [ChatController::class, 'sendMessage']);
-        Route::get('/all-chats', [ChatController::class, 'allChats']);
+        Route::post('/all-chats', [ChatController::class, 'allChats']);
         Route::post('/chat-details', [ChatController::class, 'chatDetail']);
     }
 );
