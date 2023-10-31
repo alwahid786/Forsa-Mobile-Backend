@@ -67,14 +67,22 @@ class AdminController extends Controller
     }
 
     // Get Sizes 
-    public function getSizes(Request $request)
-    {
-        $sizes = Size::get();
-        if ($request->has('category') && $request->category != '') {
-            $sizes = Size::where('category', $request->category)->get();
-        }
-        return $this->sendResponse($sizes, 'List of all Sizes');
+public function getSizes(Request $request)
+{
+    $sizes = Size::get();
+
+    if ($request->has('category') && $request->category != '') {
+        $sizes = Size::where('category', $request->category)->get();
     }
+
+    
+    foreach ($sizes as $size) {
+        
+        $size->type = (preg_match('/^[A-Z]+$/', $size->size)) ? 0 : 1;
+    }
+
+    return $this->sendResponse($sizes, 'List of all Sizes');
+}
 
 
     // get list of banners 
