@@ -115,7 +115,7 @@ class ChatController extends Controller
     // Get All chats 
     public function allChats(Request $request)
     {
-        if ($request->has('is_vendor') && $request->input('is_vendor') == 1) {
+        if ($request->has('is_vendor') && $request->input('is_vendor') === 1) {
         $loginUserId = auth()->user()->id;
         $chats = Chat::where('vendor_id', $loginUserId)->with('lastMessage')->get();
         if (!empty($chats)) {
