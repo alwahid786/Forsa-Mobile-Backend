@@ -125,34 +125,34 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
     }
     //haider dev
-        public function saveSubcategory( $request)
-    {
+    //     public function saveSubcategory( $request)
+    // {
 
-        $file = $request->file('category_image');
+    //     $file = $request->file('category_image');
 
-        $fileName = time() . '_' . $file->getClientOriginalName();
+    //     $fileName = time() . '_' . $file->getClientOriginalName();
 
-        $file->move(public_path('category'), $fileName);
+    //     $file->move(public_path('category'), $fileName);
     
-        $selectedCategoryId = $request->selected_category_id;
+    //     $selectedCategoryId = $request->selected_category_id;
         
-        $addCategory = Category::create([
-            'category_name' =>  $request->category_name,
-            'category_image' =>  $fileName,
-            'parent_id' =>  $selectedCategoryId,
-        ]);
+    //     $addCategory = Category::create([
+    //         'category_name' =>  $request->category_name,
+    //         'category_image' =>  $fileName,
+    //         'parent_id' =>  $selectedCategoryId,
+    //     ]);
 
-        if ($addCategory)
-        {
+    //     if ($addCategory)
+    //     {
 
-            return true;
+    //         return true;
 
-        } else {
+    //     } else {
 
-            return false;
+    //         return false;
 
-        }
-    }
+    //     }
+    // }
 
     public function getcategory()
     {
