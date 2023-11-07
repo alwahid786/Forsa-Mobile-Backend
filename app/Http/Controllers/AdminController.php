@@ -69,7 +69,7 @@ class AdminController extends Controller
     // Get Sizes 
 public function getSizes(Request $request)
 {
-    $sizes = Size::get();
+    $sizes = Size::with('categories')->get();
 
     if ($request->has('category') && $request->category != '') {
         $sizes = Size::where('category', $request->category)->with('categories')->get();
