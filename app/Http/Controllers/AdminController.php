@@ -72,7 +72,7 @@ public function getSizes(Request $request)
     $sizes = Size::get();
 
     if ($request->has('category') && $request->category != '') {
-        $sizes = Size::where('category', $request->category)->get();
+        $sizes = Size::where('category', $request->category)->with("category")->get();
     }
 
     
