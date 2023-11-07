@@ -69,20 +69,21 @@ class AdminController extends Controller
     // Get Sizes 
 public function getSizes(Request $request)
 {
-    $query = Size::query();
+    $sizes = Size::get();
 
     if ($request->has('category') && $request->category != '') {
-     
-        $query->where('category_id', $request->category);
+        $sizes = Size::where('category', $request->category)->get();
     }
-    
-    $sizes = $query->get();
+           
+          $sizes =  $size->category_id;
+          $sizes = Category::where('id',$sizes )->get();
 
     foreach ($sizes as $size) {
+        
         $size->type = (preg_match('/^[A-Z]+$/', $size->size)) ? 0 : 1;
     }
 
-    return $this->sendResponse($sizes, 'List of Sizes');
+    return $this->sendResponse($sizes, 'List of all Sizes');
 }
 
 
