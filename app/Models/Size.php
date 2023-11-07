@@ -9,9 +9,9 @@ class Size extends Model
 {
     use HasFactory;
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(Category::class);
     }
 
 }
