@@ -32,9 +32,7 @@
                     <select id="categoryNameField" name="selected_category_id">
                         <option value="" disabled selected>Select Category</option>
                         @foreach ($category as $cat)
-                            @if ($cat->parent_id == null)
                                 <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
-                            @endif
                         @endforeach
                     </select>
 
