@@ -12,45 +12,65 @@
                 <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('error') }}</p>
             @endif
 
-            <form class="categoryForm d-flex flex-column justify-content-center align-items-center" id="subcategoryForm" method="post"
-                action="{{ route('subcategory.post') }}" enctype="multipart/form-data">
+            <form class="categoryForm d-flex flex-column justify-content-center align-items-center" id="subcategoryForm"
+                method="post" action="{{ route('subcategory.post') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">
-
                     <label class="picture mt-5" for="picture__input" tabIndex="0">
                         <span class="picture__image"></span>
                     </label>
-
-                    <input type="file" name="category_image" id="picture__input" >
-
-                    <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="imageErrorMessage">Category
+                    <input type="file" name="category_image" id="picture__input">
+                    <p style="color: red; font-size: 14px; padding-top: 10px;" class="d-none" id="imageErrorMessage">
+                        Category
                         image field is required</p>
-
                 </div>
+
                 <div class="form-group select_field">
                     <select id="categoryNameField" name="selected_category_id">
                         <option value="" disabled selected>Select Category</option>
                         @foreach ($category as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
+                            <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
                         @endforeach
                     </select>
-
-                    <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="categoryErrorMessage">Category
+                    <p style="color: red; font-size: 14px; padding-top: 10px;" class="d-none" id="categoryErrorMessage">
+                        Category
                         name field is required</p>
+                </div>
 
+                <div class="form-group">
+                    <input type="text" name="category_name" class="form-control" style="width: 400px; height: 50px;"
+                        id="subcategoryNameField" placeholder="Sub Category Name">
+                    <p style="color: red; font-size: 14px; padding-top: 10px;" class="d-none" id="subCategoryErrorMessage">
+                        Sub
+                        Category name field is required</p>
                 </div>
                 <div class="form-group">
-                    <input type="text" name="category_name" class="form-control" style="width: 400px;height: 50px;"
-                        id="subcategoryNameField" placeholder="Sub Category Name" >
-
-                    <p style="color: red;font-size: 14px;padding-top: 10px;" class="d-none" id="subCategoryErrorMessage">Sub Category
-                        name field is required</p>
+                    <select name="size" class="form-control" style="width: 400px; height: 50px;" id="size">
+                        <option value="">Select Size</option>
+                        <option value="3XS">3XS</option>
+                        <option value="XXS">XXS</option>
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="2Xl">2XL</option>
+                        <option value="3XL">3XL</option>
+                        <option value="3XL">4XL</option>
+                        <option value="5XL">5XL</option>
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="2Xl">2XL</option>
+                        <option value="3XL">3XL</option>
+                    </select>
 
                 </div>
                 <button type="submit" class="btn btn-success">Add SubCategory</button>
             </form>
-
         </div>
 
 
@@ -75,8 +95,9 @@
                                     <td>{{ $cat->parentCategory->category_name ?? '' }}</td>
                                     <td>{{ $cat->category_name }}</td>
                                     <td>
-                                        <a target="_blank" href="{{ $cat->category_image }}"><img style="width: 100px;height: 100px;border-radius: 5px;" src="{{ $cat->category_image }}"
-                                            alt="{{ $cat->category_image }}"></a>
+                                        <a target="_blank" href="{{ $cat->category_image }}"><img
+                                                style="width: 100px;height: 100px;border-radius: 5px;"
+                                                src="{{ $cat->category_image }}" alt="{{ $cat->category_image }}"></a>
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-primary"
@@ -136,7 +157,8 @@
                             {{-- image --}}
 
                             <label class="picture_d" for="picture__input_modal" tabIndex="0">
-                                <span class="picture__image_d"><img src="" alt="" id="modalImageSrc"></span>
+                                <span class="picture__image_d"><img src="" alt=""
+                                        id="modalImageSrc"></span>
                             </label>
 
                             <input type="file" name="category_image" id="picture__input_modal">
@@ -180,42 +202,38 @@
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
     <script>
+        $("#subcategoryForm").on('submit', function() {
+            var name = $("#categoryNameField").val();
+            var image = $("#picture__input").val();
+            var subCategoryName = $("#subcategoryNameField").val();
 
-    $("#subcategoryForm").on('submit', function(){
-        var name = $("#categoryNameField").val();
-        var image = $("#picture__input").val();
-        var subCategoryName = $("#subcategoryNameField").val();
+            var hasError = false;
 
-        var hasError = false;
+            if (name == null) {
+                $("#categoryErrorMessage").removeClass('d-none');
+                hasError = true;
+            } else {
+                $("#categoryErrorMessage").addClass('d-none');
+            }
 
-        if(name == null)
-        {
-            $("#categoryErrorMessage").removeClass('d-none');
-            hasError = true;
-        } else {
-            $("#categoryErrorMessage").addClass('d-none');
-        }
+            if (image == '') {
+                $("#imageErrorMessage").removeClass('d-none');
+                hasError = true;
+            } else {
+                $("#imageErrorMessage").addClass('d-none');
+            }
 
-        if(image == '')
-        {
-            $("#imageErrorMessage").removeClass('d-none');
-            hasError = true;
-        } else {
-            $("#imageErrorMessage").addClass('d-none');
-        }
+            if (subCategoryName == '') {
+                $("#subCategoryErrorMessage").removeClass('d-none');
+                hasError = true;
+            } else {
+                $("#subCategoryErrorMessage").addClass('d-none');
+            }
 
-        if(subCategoryName == '')
-        {
-            $("#subCategoryErrorMessage").removeClass('d-none');
-            hasError = true;
-        } else {
-            $("#subCategoryErrorMessage").addClass('d-none');
-        }
-
-        if(hasError) {
-            return false;
-        }
-    });
+            if (hasError) {
+                return false;
+            }
+        });
 
 
         function deleteModal(id) {

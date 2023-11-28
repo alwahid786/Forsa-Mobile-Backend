@@ -310,7 +310,12 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         if ($addCategory)
         {
-
+          if ($request->has('size') && !empty($request->size)) {
+           $size = new Size();
+           $size->category_id = $addCategory->id;
+           $size->size = $request->size;
+            $size->save();
+    }
             return true;
 
         } else {
