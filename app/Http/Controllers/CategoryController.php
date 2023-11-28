@@ -62,11 +62,11 @@ public function addCategory(Request $request)
 {
     if ($request->has('category_id')) {
         $categories = Category::where('id', $request->category_id)
-            ->with('parentCategory', 'subCategories.thirdCategories') 
+            ->with('parentCategory', 'subCategories.thirdCategories.forthCategories') 
             ->get();
     } else {
         $categories = Category::where('parent_id', null)
-            ->with('parentCategory', 'subCategories.thirdCategories')
+            ->with('parentCategory', 'subCategories.thirdCategories.forthCategories')
             ->get();
     }
     return $this->sendResponse($categories, 'All Categories list');
