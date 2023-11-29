@@ -69,19 +69,22 @@ class AdminController extends Controller
     // Get Sizes 
 public function getSizes(Request $request)
 {
-    $sizes = Size::with('categories')->get();
-
-    if ($request->has('category') && $request->category != '') {
-        $sizes = Size::where('category', $request->category)->with('categories')->get();
-    }
-
     
-    foreach ($sizes as $size) {
-        
-        $size->type = (preg_match('/^[A-Z]+$/', $size->size)) ? 0 : 1;
-    }
+    $validator = Validator::make($request->all(), [
+        'category_id' => 'required|exists:categories,id',
+    ]);
 
-    return $this->sendResponse($sizes, 'List of all Sizes');
+    if ($validator->fails()) {
+        return $this->sendError(implode(",", $validator->messages()->all()));
+    }
+    $categoryId = $request->input('category_id');
+    $sizes = Size::where('category_id', $categoryId)->get();
+
+    if ($sizes->count() > 0) {
+        return $this->sendResponse($sizes, 'Sizes retrieved successfully');
+    } else {
+        return $this->sendError('No sizes found for the provided category_id');
+    }
 }
 
 
