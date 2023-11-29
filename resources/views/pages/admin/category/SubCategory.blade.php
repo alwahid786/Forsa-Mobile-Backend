@@ -46,28 +46,9 @@
                         Category name field is required</p>
                 </div>
                 <div class="form-group">
-                    <select name="size" class="form-control" style="width: 400px; height: 50px;" id="size">
-                        <option value="">Select Size</option>
-                        <option value="3XS">3XS</option>
-                        <option value="XXS">XXS</option>
-                        <option value="XS">XS</option>
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                        <option value="2Xl">2XL</option>
-                        <option value="3XL">3XL</option>
-                        <option value="3XL">4XL</option>
-                        <option value="5XL">5XL</option>
-                        <option value="XS">XS</option>
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                        <option value="2Xl">2XL</option>
-                        <option value="3XL">3XL</option>
-                    </select>
-
+                    <input type="text" name="size" class="form-control" style="width: 400px; height: 50px;"
+                         placeholder="Select SIze">
+        
                 </div>
                 <button type="submit" class="btn btn-success">Add SubCategory</button>
             </form>
