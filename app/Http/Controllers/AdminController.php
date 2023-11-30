@@ -83,7 +83,7 @@ public function getSizes(Request $request)
     if ($sizes->count() > 0) {
         return $this->sendResponse($sizes, 'Sizes retrieved successfully');
     } else {
-        return $this->sendError('No sizes found for the provided category_id');
+        return $this->sendResponse([], 'No sizes found for the provided category_id');
     }
 }
 
