@@ -51,14 +51,11 @@ class UserController extends Controller
         }
         $banners = Banner::all();
         $categories = Category::all();
-        $brands = Brand::withCount('products')
-            ->orderByDesc('products_count')
-            ->get();
+        $brands = Brand::whereBetween('id', [1, 5])
+        ->withCount('products')
+        ->orderByDesc('products_count')
+        ->get();
 
-        $topBrands = $brands->take(5); // Get the top 5 most used brands
-        $remainingBrands = $brands->slice(5); // Get the rest of the brands
-
-        $sortedBrands = $topBrands->concat($remainingBrands);
         $success = [];
         $success['lowestPrice'] = $lowestPrice;
         $success['highestPrice'] = $highestPrice;
@@ -67,7 +64,7 @@ class UserController extends Controller
         $success['allProducts'] = $allProducts;
         $success['saleProducts'] = $saleProducts;
         $success['popularProducts'] = $favouriteProducts;
-        $success['brands'] = $sortedBrands;
+        $success['brands'] = $brands;
         return $this->sendResponse($success, 'User Dashboard data.');
     }
 
