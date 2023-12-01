@@ -56,10 +56,9 @@ class UserController extends Controller
             ->take(5)
             ->get();
 
-        $topBrands = $brands->take(5); // Get the top 5 most used brands
-        $remainingBrands = $brands->slice(5); // Get the rest of the brands
+        // Get the top 5 most used brands
+        // Get the rest of the brands
 
-        $sortedBrands = $topBrands->concat($remainingBrands);
         $success = [];
         $success['lowestPrice'] = $lowestPrice;
         $success['highestPrice'] = $highestPrice;
@@ -68,7 +67,7 @@ class UserController extends Controller
         $success['allProducts'] = $allProducts;
         $success['saleProducts'] = $saleProducts;
         $success['popularProducts'] = $favouriteProducts;
-        $success['brands'] = $sortedBrands;
+        $success['brands'] = $brands;
         return $this->sendResponse($success, 'User Dashboard data.');
     }
 
