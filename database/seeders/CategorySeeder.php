@@ -18,23 +18,23 @@ class CategorySeeder extends Seeder
 $data = [
     [
         'category_name' => 'WomenWear',
-        'category_image' => 'http://localhost/forsa/public/category/1701153831_realwomwnwear.avif',
+        'category_image' => 'http://kodextech.net/forsa/public/category/1701153831_realwomwnwear.avif',
     ],
     [
         'category_name' => 'MenWear',
-        'category_image' => 'http://localhost/forsa/public/category/1701155563_Mens wear.jpg',
+        'category_image' => 'http://kodextech.net/forsa/public/category/1701155563_Mens wear.jpg',
     ],
     [
         'category_name' => 'Kidswear',
-        'category_image' => 'http://localhost/forsa/public/category/1701155758_kids waer.jpg',
+        'category_image' => 'http://kodextech.net/forsa/public/category/1701155758_kids waer.jpg',
     ],
     [
         'category_name' => 'Home',
-        'category_image' => 'http://localhost/forsa/public/category/1701155798_Home-Decorative-Accessories.webp',
+        'category_image' => 'http://kodextech.net/forsa/public/category/1701155798_Home-Decorative-Accessories.webp',
     ],
     [
         'category_name' => 'Electronics',
-        'category_image' => 'http://localhost/forsa/public/category/1701155837_electronics-setaccessoires-travel-concept_529200-118.avif',
+        'category_image' => 'http://kodextech.net/forsa/public/category/1701155837_electronics-setaccessoires-travel-concept_529200-118.avif',
     ],
     [
         'category_name' => 'Women Clothing',
