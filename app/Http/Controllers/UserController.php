@@ -53,6 +53,7 @@ class UserController extends Controller
         $categories = Category::all();
         $brands = Brand::withCount('products')
             ->orderByDesc('products_count')
+            ->take(5)
             ->get();
 
         $topBrands = $brands->take(5); // Get the top 5 most used brands
