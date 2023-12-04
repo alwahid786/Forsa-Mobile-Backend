@@ -14,8 +14,8 @@ class AddCategoryIdToSizesTable extends Migration
     public function up()
     {
         Schema::table('sizes', function (Blueprint $table) {
-            // $table->unsignedBigInteger('category_id');
-            // $table->foreign('category_id')->references('id')->on('categories');
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
