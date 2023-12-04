@@ -150,19 +150,14 @@ public function getreview(Request $request){
 }
 public function getBrands(Request $request)
 {
-    $validator = Validator::make($request->all(), [
-        'brand_id' => 'exists:brands,id', 
-    ]);
-    if ($validator->fails()) {
-        return $this->sendError(implode(",", $validator->errors()->all()));
-    }
     $brandId = $request->input('brand_id');
+    
     if ($brandId) {
-        $barnds = Brand::where('id', $brandId)->get();
+        $brands = Brand::where('id', $brandId)->get();
     } else {
-     
-        $barnds = Brand::all();
+        $brands = Brand::all();
     }
-    return $this->sendResponse($barnds, 'brands information');
+
+    return $this->sendResponse($brands, 'Brands information');
 }
 }
