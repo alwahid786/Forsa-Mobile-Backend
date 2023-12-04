@@ -148,4 +148,21 @@ public function getreview(Request $request){
     })->get();
     return $this->sendResponse($reviews, 'Reviews information');
 }
+public function getBrands(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'brand_id' => 'exists:brands,id', 
+    ]);
+    if ($validator->fails()) {
+        return $this->sendError(implode(",", $validator->errors()->all()));
+    }
+    $brandId = $request->input('brand_id');
+    if ($brandId) {
+        $barnds = Brand::where('id', $brandId)->get();
+    } else {
+     
+        $barnds = Brand::all();
+    }
+    return $this->sendResponse($barnds, 'brands information');
+}
 }

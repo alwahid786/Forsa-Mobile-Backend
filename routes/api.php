@@ -103,6 +103,7 @@ Route::group(
         Route::get('/get-user-cart', [ProductController::class, 'getUserCarts']);
         Route::post('/profile-detail', [UserController::class, 'profiledetail']);
         Route::post('/get-review', [UserController::class, 'getreview']);
+        Route::post('/brands', [UserController::class, 'getbrands']);
 
     }
 );
