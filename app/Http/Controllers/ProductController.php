@@ -35,7 +35,6 @@ class ProductController extends Controller
         // $businessProfile = Auth::user()->buisnessProfile;
         $rules = [
             'title' => 'required',
-            'size_id' => 'required',
             'condition' => 'required',
             'category_id' => 'required',
             'sub_category_id' => 'required',
@@ -69,6 +68,8 @@ class ProductController extends Controller
         if ($request->sub_category_id != "" || $request->sub_category_id !=  null) {
             $product->sub_categoryId = $request->sub_category_id;
         }
+        $product->third_category_id = $request->has('third_category_id') ? $request->third_category_id : null;
+        $product->fourth_category_id = $request->has('fourth_category_id') ? $request->fourth_category_id : null;
         $product->size_id = $request->size_id;
         $product->condition = $request->condition;
         $product->brand_id = $request->brand_id;
