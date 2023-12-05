@@ -60,20 +60,19 @@ public function addCategory(Request $request)
     // Get categories List
 public function categoryList(Request $request)
 {
-    $categoryName = 'Kidswear'; 
-
-    $query = Category::where('parent_id', null);
+    $categories = Category::where('parent_id', null);
 
     if ($request->has('category_id')) {
-        $query->where('id', $request->category_id);
+        $categories->where('id', $request->category_id);
     }
 
-    $categories = $query->with(
+    $categories = $categories->with([
         'parentCategory',
-        $categoryName === 'Kidswear' 
-            ? 'subCategories.subCategories.subCategories' 
-            : 'subCategories.thirdCategories.forthCategories'
-    )->get();
+        'subCategories.thirdCategories.forthCategories',
+        'subCategories.subCategories.subCategories' => function ($query) {
+            $query->where('name', 'Kidswear');
+        }
+    ])->get();
 
     return $this->sendResponse($categories, 'All Categories list');
 }
