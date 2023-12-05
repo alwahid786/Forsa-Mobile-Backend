@@ -70,7 +70,7 @@ public function categoryList(Request $request)
         'parentCategory',
         'subCategories.thirdCategories.forthCategories',
         'subCategories.subCategories.subCategories' => function ($query) {
-            $query->where('name', 'Kidswear');
+            $query->where('category_name', 'Kidswear');
         }
     ])->get();
 
