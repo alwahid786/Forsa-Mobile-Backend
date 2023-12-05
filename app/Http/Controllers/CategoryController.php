@@ -67,11 +67,14 @@ public function categoryList(Request $request)
         $categoriesQuery->where('id', $request->category_id);
     }
 
-    $categories = $categoriesQuery
-        ->when($request->has('include_Kidswear'), function ($query) {
-            return $query->with('subCategories.subCategories.subCategories');
-        })
-        ->get();
+    $categories = $categoriesQuery->get();
+
+    $categories->map(function ($category) {
+        if ($category->category_name === 'Kidswear') {
+            $category->load('subCategories.subCategories.subCategories');
+        }
+        return $category;
+    });
 
     return $this->sendResponse($categories, 'All Categories list');
 }
