@@ -65,14 +65,22 @@ public function categoryList(Request $request)
     if ($request->has('category_id')) {
         $categoriesQuery->where('id', $request->category_id);
     } else {
-        $categoriesQuery->where('parent_id', 'subCategories.thirdCategories.forthCategories');
+        $categoriesQuery->where('parent_id', null);
     }
 
     $categories = $categoriesQuery
-        ->with('parentCategory')
-        ->when($request->category_name === 'kidswear', function ($query) {
-            $query->with('subCategories.subCategories.subCategories');
-        })
+        ->with(['parentCategory', 'subCategories' => function ($query) {
+            $categoryName = 'kidswear'; // Set the default category name
+            if (isset($query->category_name)) {
+                $categoryName = $query->category_name;
+            }
+
+            if ($categoryName === 'kidswear') {
+                $query->with('subCategories.subCategories.subCategories');
+            } else {
+                $query->with('thirdCategories.forthCategories');
+            }
+        }])
         ->get();
 
     return $this->sendResponse($categories, 'All Categories list');
