@@ -68,7 +68,7 @@ public function categoryList(Request $request)
     }
 
     $categories = $categoriesQuery
-        ->when($request->has('include_kidswear'), function ($query) {
+        ->when($request->has('include_Kidswear'), function ($query) {
             return $query->with('subCategories.subCategories.subCategories');
         })
         ->get();
