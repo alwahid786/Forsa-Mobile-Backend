@@ -63,6 +63,9 @@ public function newOrderHistory()
     public function cart(){
         return $this->hasOne(Cart::class, 'product_id');
     }
-
+    public function priceUnit()
+    {
+        return $this->belongsTo(PriceUnit::class, 'unit_id');
+    }
 
 }

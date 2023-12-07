@@ -135,7 +135,7 @@ class ProductController extends Controller
     public function productDetail(Request $request)
     {
         $productId = $request->product_id;
-        $product = Product::where('id', $productId)->with('productImages', 'vendor', 'vendor.businessProfile', 'brand')->first();
+        $product = Product::where('id', $productId)->with('productImages', 'vendor', 'vendor.businessProfile', 'brand','priceUnit')->first();
         $product = json_decode($product);
 
         $category = Category::find($product->category_id);
