@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {  
           $this->call(CategorySeeder::class);
           $this->call(BrandSeeder::class);
+          $this->call(PriceUnitSeeder::class);
         // \App\Models\User::factory(10)->create();
     }
 }

@@ -41,6 +41,7 @@ class ProductController extends Controller
             'description' => 'required',
             'brand_id' => 'required|exists:brands,id',
             'price' => 'required',
+            'unit_id' => 'required',
             'quantity' => 'required',
             'pick_profile_location' => 'required|boolean',
             'images' => 'required|array'
@@ -65,6 +66,8 @@ class ProductController extends Controller
         $product->vendor_id = $loginUserId;
         $product->description = $request->description;
         $product->category_id = $request->category_id;
+        $product->unit_id = $request->unit_id;
+
         if ($request->sub_category_id != "" || $request->sub_category_id !=  null) {
             $product->sub_categoryId = $request->sub_category_id;
         }
