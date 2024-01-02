@@ -181,6 +181,7 @@ class ProductController extends Controller
     public function searchProducts(Request $request)
     {
         // DB::enableQueryLog();
+
         if ($request->has('name') && $request->name != '-1') {
             $productsData = Product::where('title', 'LIKE', '%' . $request->name . '%');
         } else {
@@ -190,6 +191,12 @@ class ProductController extends Controller
             }
             if ($request->has('sub_category') && $request->sub_category != 0) {
                 $productsData->where('sub_categoryId', $request->sub_category);
+            }
+            if ($request->has('third_category') && $request->third_category != 0) {
+                $productsData->where('third_category_id', $request->third_category);
+            }
+            if ($request->has('fourth_category') && $request->fourth_category != 0) {
+                $productsData->where('fourth_category_id', $request->fourth_category);
             }
             if (!$request->has('sub_category') || $request->sub_category == 0) {
                 if ($request->has('category_id') && $request->category_id != 0) {
@@ -405,7 +412,7 @@ class ProductController extends Controller
     $query = Product::whereHas('cart', function($query) use ($user) {
         $query->where('user_id', $user->id);
     })
-    ->with(['brand', 'productImages']) 
+    ->with(['brand', 'productImages'])
     ->get();
 
     // Calculate the total price
