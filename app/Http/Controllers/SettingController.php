@@ -29,9 +29,10 @@ class SettingController extends Controller
     use ResponseTrait;
 
     // Upload File and Get Link
-    public function uploadFile(UploadFileRequest $request)
+    // public function uploadFile(UploadFileRequest $request)
+    public function uploadFile(Request $request)
     {
-        dd('cooming');
+        // dd('cooming');
         $fileNames = [];
         if ($request->hasFile('files')) {
             try {
@@ -39,9 +40,9 @@ class SettingController extends Controller
                     dd('comming');
                     $name = time() . $file->getClientOriginalName();
                     $path = public_path('/files');
-                    // if (!is_dir($path)) {
-                    //     mkdir($path, 777, true);
-                    // }
+                    if (!is_dir($path)) {
+                        mkdir($path, 777, true);
+                    }
                     $file->move($path, $name);
                     // $fileNames = $name;
                     $fileNames[] = url('public/files') . '/' .  $name;
