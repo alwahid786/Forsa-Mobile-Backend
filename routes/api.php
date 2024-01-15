@@ -137,7 +137,7 @@ Route::group(
 Route::group(
     ['prefix' => 'settings'],
     function () {
-        Route::post('/get-fileLink', [SettingController::class, 'uploadFile']);
+        Route::post('/get-fileLinks', [SettingController::class, 'uploadFilesss']);
     }
 );
 
