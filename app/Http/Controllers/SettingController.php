@@ -35,6 +35,7 @@ class SettingController extends Controller
         if ($request->hasFile('files')) {
             try {
                 foreach ($request->file('files') as $file) {
+                    dd('comming');
                     $name = time() . $file->getClientOriginalName();
                     $path = public_path('/files');
                     // if (!is_dir($path)) {
