@@ -29,8 +29,7 @@ class SettingController extends Controller
     use ResponseTrait;
 
     // Upload File and Get Link
-    // public function uploadFile(UploadFileRequest $request)
-    public function uploadFilesss(Request $request)
+    public function uploadFile(UploadFileRequest $request)
     {
         // dd('cooming');
         $fileNames = [];
