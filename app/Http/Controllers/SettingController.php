@@ -31,6 +31,7 @@ class SettingController extends Controller
     // Upload File and Get Link
     public function uploadFile(UploadFileRequest $request)
     {
+        dd('cooming');
         $fileNames = [];
         if ($request->hasFile('files')) {
             try {
