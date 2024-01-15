@@ -28,7 +28,7 @@ class SettingController extends Controller
 {
     use ResponseTrait;
 
-    // Upload File and Get Link 
+    // Upload File and Get Link
     public function uploadFile(UploadFileRequest $request)
     {
         $fileNames = [];
@@ -37,9 +37,9 @@ class SettingController extends Controller
                 foreach ($request->file('files') as $file) {
                     $name = time() . $file->getClientOriginalName();
                     $path = public_path('/files');
-                    if (!is_dir($path)) {
-                        mkdir($path, 777, true);
-                    }
+                    // if (!is_dir($path)) {
+                    //     mkdir($path, 777, true);
+                    // }
                     $file->move($path, $name);
                     // $fileNames = $name;
                     $fileNames[] = url('public/files') . '/' .  $name;
