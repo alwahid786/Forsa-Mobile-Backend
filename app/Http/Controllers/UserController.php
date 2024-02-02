@@ -26,7 +26,7 @@ class UserController extends Controller
 {
     use ResponseTrait;
 
-    // Get dashboard data for User 
+    // Get dashboard data for User
     public function dashboardData(Request $request)
     {
         $lowestPrice = Product::min('price');
@@ -53,7 +53,6 @@ class UserController extends Controller
         $categories = Category::all();
         $brands = Brand::whereBetween('id', [1, 5])
         ->withCount('products')
-        ->orderByDesc('products_count')
         ->get();
 
         $success = [];
@@ -68,7 +67,7 @@ class UserController extends Controller
         return $this->sendResponse($success, 'User Dashboard data.');
     }
 
-    // Update profile function 
+    // Update profile function
     public function updateProfile(Request $request)
     {
         $data = $request->except('_token');
@@ -143,15 +142,15 @@ public function getreview(Request $request){
     }
     $vendorId = $request->input('profile_id');
     $reviews = Review::where(function ($query) use ($vendorId) {
-        $query->where('vendor_id', $vendorId) 
-              ->orWhere('user_id', $vendorId);  
+        $query->where('vendor_id', $vendorId)
+              ->orWhere('user_id', $vendorId);
     })->get();
     return $this->sendResponse($reviews, 'Reviews information');
 }
 public function getBrands(Request $request)
 {
     $brandId = $request->input('brand_id');
-    
+
     if ($brandId) {
         $brands = Brand::where('id', $brandId)->get();
     } else {
