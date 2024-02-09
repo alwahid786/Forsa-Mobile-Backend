@@ -78,10 +78,12 @@ class ProductController extends Controller
         $product->brand_id = $request->brand_id;
         $product->price = $request->price;
         if ($request->has('discount')) {
-            $discount = ($request->price * $request->discount) / 100;
-            $product->discount = $request->discount;
-            $product->discount_price = $request->price - $discount;
+        //     $discount = ($request->price * $request->discount) / 100;
+        //     $product->discount = $request->discount;
+        //     $product->discount_price = $request->price - $discount;
+           $product->discount_price = $request->discount;
         }
+
         if ($request->pick_profile_location == 1) {
             $location = Location::where('user_id', $loginUserId)->first();
             if (empty($location) || $location == null) {
